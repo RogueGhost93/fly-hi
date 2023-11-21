@@ -296,9 +296,12 @@ if [ $option == "uninstall" ]; then
         read -p "Would you like to also uninstall and purge your docker installation? [N,y]:" uninstall_docker
         uninstall_docker=${uninstall_docker:-"n"}
         if [ "$uninstall_docker" == "y" ]; then
-        fly-hi destroy
-        docker network rm fly-hi
-        sudo rm -r <install_location>
+        fly-hi destroy media || true
+        fly-hi destroy starrs || true
+        fly-hi destroy network || true
+        fly-hi destroy management || true
+        docker network rm fly-hi || true
+        sudo rm -r <install_location> || true
         sudo docker system prune -a
         sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin docker* || true
         sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin || true
@@ -311,10 +314,14 @@ if [ $option == "uninstall" ]; then
         sudo rm -rf /var/lib/containerd || true
         sudo rm /usr/local/lib/docker/cli-plugins/docker-compose || true
         echo "You are ready for a fresh install of docker!"
+        sudo rm /usr/local/bin/fly-hi
         else
-        fly-hi destroy
-        docker network rm fly-hi
-        sudo rm -r <install_location>
+        fly-hi destroy media || true
+        fly-hi destroy starrs || true
+        fly-hi destroy network || true
+        fly-hi destroy management || true
+        docker network rm fly-hi || true
+        sudo rm -r <install_location> || true
         sudo docker system prune -a
         echo "You successefully uninstalled your fly-hi-media!"
         sudo rm /usr/local/bin/fly-hi
