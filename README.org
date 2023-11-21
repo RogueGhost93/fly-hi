@@ -195,7 +195,7 @@ They are the ones doing the real work, I just created a docker-compose files and
 
 Just let them know Fly-Hi sent you there 😎
 
-* todo [0/4]
+* To-Do [0/4]
 :PROPERTIES:
 :ID:       eba4712e-fa8a-42c8-bc32-b593141c99a4
 :END:
