@@ -1,0 +1,239 @@
+# ============================================================================================
+# Functions to ease development
+# ============================================================================================
+send_warning_message() {
+    echo -e $(printf "\e[33m$1\e[0m")
+}
+
+
+send_success_message() {
+    echo -e $(printf "\e[32m$1\e[0m")
+}
+
+send_error_message() {
+    echo -e $(printf "\e[31m$1\e[0m")
+    exit 255
+}
+send_message_in_cyan() {
+    echo -e $(printf "\e[36m$1\e[0m")
+}
+send_message_in_blue() {
+    echo -e $(printf "\e[34m$1\e[0m")
+}
+
+check_dependencides() {
+    if command -v $1 &> /dev/null; then
+        send_success_message "$1 exists ✅ "
+    else
+        echo -e $(printf "\e[31m ⚠️ $1 not found! ⚠️\e[0m")
+        read -p "Would you like Fly-Hi to install docker and docker-compose? IT ONLY WORKS ON DEBIAN AND UBUNTU! [y/N]: " install_docker
+        install_docker=${install_docker:-"n"}
+
+        if [ "$install_docker" == "y" ]; then
+            send_warning_message "After installation is complete just run this script again!"
+            sleep 2
+            bash ./docker.sh
+        else
+            send_error_message "Install docker and docker-compose and come back later!"
+        fi
+    fi
+}
+
+add_service() {
+    unset service_name
+    unset comment
+    local service_name="$1"
+    local comment="$2"
+
+    read -p "Would you like to install ${service_name^}? ${comment:+ ($comment)} [n/Y]:" y_n
+    y_n=${y_n:-"y"}
+
+    if [ "$y_n" == "y" ]; then
+        send_success_message "Adding service: ${service_name^}"
+        sed -i "/^#${service_name}start/,/^#${service_name}end$/{/^\(#${service_name}start\|#${service_name}end\)$/!s/^#//}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
+        eval "${service_name}=y"
+    else
+        send_warning_message "Skipping ${service_name^} configuration!"
+    fi
+
+
+    send_message_in_blue "=============================================================================="
+    send_message_in_blue "=============================================================================="
+}
+
+
+get_password() {
+    local service="$1"
+    local password
+
+    unset password
+    charcount=0
+    prompt="What will be your ${service^} password?: "
+
+    while IFS= read -p "$prompt" -r -s -n 1 char; do
+        if [[ $char == $'\0' ]]; then
+            break
+        fi
+        if [[ $char == $'\177' ]]; then
+            if [ $charcount -gt 0 ]; then
+                charcount=$((charcount - 1))
+                prompt=$'\b \b'
+                password="${password%?}"
+            else
+                prompt=''
+            fi
+        else
+            charcount=$((charcount + 1))
+            prompt='*'
+            password+="$char"
+        fi
+    done
+#    echo "$password"
+     echo "${password:-"changeme"}" | sed 's/[\/&]/\\&/g'  # Escape special characters for sed
+}
+
+running_services_location() {
+    host_ip=$(hostname -I | awk '{ print $1 }')
+    echo
+    echo "========= MANAGEMENT ========="
+    echo "WhoAmI:         http://$host_ip:$(docker port whoami 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Portainer:      http://$host_ip:$(docker port portainer 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Dozzle:         http://$host_ip:$(docker port dozzle 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Heimdall:       http://$host_ip:$(docker port heimdall 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Glances:        http://$host_ip:$(docker port glances 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Uptime-Kuma:    http://$host_ip:$(docker port uptime-kuma 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Scrutiny:       http://$host_ip:$(docker port scrutiny 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Ntfy:           http://$host_ip:$(docker port ntfy 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "PhpMyAdmin:     http://$host_ip:$(docker port phpmyadmin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "PgAdmin:        http://$host_ip:$(docker port pgadmin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Vaultwarden:    http://$host_ip:$(docker port vaultwarden 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Cockpit:        http://$host_ip:9090"
+    echo "Graylog:        http://$host_ip:$(cat $install_location/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
+    echo
+    echo "========= NETWORK ========="
+    echo "Traefik:        http://$host_ip:80/"
+    echo "Traefik:        http://$host_ip:443/"
+    echo "Traefik:        http://$host_ip:8880/"
+    echo "Speedtest:      http://$host_ip:$(docker port speedtest 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Flaresolverr:   http://$host_ip:$(docker port flaresolverr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "WG-Easy:        http://$host_ip:$(cat $install_location/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
+
+    echo
+    echo "========= MEDIA ========="
+    echo "Jellyfin:       http://$host_ip:$(docker port jellyfin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Emby:           http://$host_ip:$(docker port emby 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Plex:           http://$host_ip:$(cat $install_location/media/docker-compose.yaml | grep webUI | awk -F":" '{ print $2 }' | awk '{ print $1 }')"
+    echo "Jellyseerr:     http://$host_ip:$(docker port jellyseerr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Overseerr:      http://$host_ip:$(docker port overseerr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Ombi:           http://$host_ip:$(docker port ombi 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Airsonic:       http://$host_ip:$(docker port airsonic 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "CalibreLibrary: http://$host_ip:$(docker port calibre 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Calibreweb:     http://$host_ip:$(docker port calibre_web 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Audiobookshelf: http://$host_ip:$(docker port audiobookshelf 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Photoprism:     http://$host_ip:$(docker port photoprism 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Nextcloud:      http://$host_ip:$(docker port nextcloud 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Linkding:       http://$host_ip:$(docker port linkding 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Joplin-Server:  http://$host_ip:$(docker port joplin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "FreshRSS:       http://$host_ip:$(docker port freshrss 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Stirling-PDF:   http://$host_ip:$(docker port stirling_pdf 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Filebrowser:    http://$host_ip:$(docker port filebrowser 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo
+    echo "========== STARRS =========="
+    echo "qBittorrent:    http://$host_ip:$(cat $install_location/network/docker-compose.yaml | grep qbittorrentport | grep -Eo '[0-9]{1,4}' | head -1)/"
+    echo "qBittorrentpub: http://$host_ip:$(cat $install_location/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1)/"
+    echo "Radarr:         http://$host_ip:$(docker port radarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Sonarr:         http://$host_ip:$(docker port sonarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Lidarr:         http://$host_ip:$(docker port lidarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Readarr:        http://$host_ip:$(docker port readarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Prowlarr:       http://$host_ip:$(docker port prowlarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Bazarr:         http://$host_ip:$(docker port bazarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Tubesync:       http://$host_ip:$(docker port tubesync 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo
+    echo "Use 'fly-hi help' to see how to use the script"
+    echo
+if [[ $traefik == "y" ]]; then
+    echo "Your services can also be reached by "service-name".$my_domain  (e. g. https://heimdall.$my_domain)"
+fi
+echo
+if [ "$install_vpn_server" == "y" ]; then
+    echo "To add or remove clients from your Private VPN Server run fly-hi vpn"
+fi
+echo
+if [ "$tailscale" == "y" ]; then
+    echo "To start up Tailscale run 'sudo tailscale up' "
+fi
+echo
+}
+
+running_services_management() {
+echo "=============================================================================="
+send_message_in_cyan "System Management Services"
+echo "- WhoAmI         - Gives you basic information about your Host - Used for testing and troubleshooting docker containers"
+echo "- Portainer      - Keep your docker containers in check! (https://www.portainer.io/)"
+echo "- Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
+echo "- Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
+echo "- Glances        - System Information (https://nicolargo.github.io/glances/)"
+echo "- Uptime-Kuma    - Real time monitoring of your services (https://github.com/louislam/uptime-kuma)"
+echo "- Scrutiny       - HDD/SSD monitoring tool with a nice dashboard (https://github.com/AnalogJ/scrutiny)"
+echo "- Ntfy           - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
+echo "- Vaultwarden    - Password Manager (https://hub.docker.com/r/vaultwarden/server)"
+echo "- PhpMyAdmin     - WEBui for managing MySQL/MariaDB databases, tables, columns, relations, indexes, users, permissions, etc (https://hub.docker.com/r/phpmyadmin/phpmyadmin/)"
+echo "- PgAdmin        - WEBui for managing Postgres databases, tables, columns, relations, indexes, users, permissions, etc (https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html)"
+echo "- CockpitProject - System Management Tool (https://cockpit-project.org)"
+echo "- Dozzle         - All docker logs in one place on a nice WEB-UI (https://dozzle.dev/)"
+echo "- Graylog        - Log Aggregator with a WEB-UI (https://graylog.org/)"
+echo "=============================================================================="
+}
+running_services_network() {
+echo "=============================================================================="
+send_message_in_cyan "Network Services"
+echo "- Flaresolverr           - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)"
+echo "- Traefik                - Reverse Proxy (https://traefik.io/traefik/)"
+echo "- Gluetun                - VPN Client (https://github.com/qdm12/gluetun)"
+echo "- Wireguard (wg-easy)    - Connect to your home network from anywhere in the world! (https://github.com/wg-easy/wg-easy)"
+echo "- Wireguard (bash)       - Connect to your home network from anywhere in the world! (https://github.com/angristan/wireguard-install)"
+echo "- OpenVPN (bash)         - Connect to your home network from anywhere in the world! (https://github.com/angristan/openvpn-install)"
+echo "- Tailscale              - Easier, closed source alternative to private OpenVPN/Wireguard server for access from anywhere in the world! (https://tailscale.com/)"
+echo "- DDclient (Dynamic DNS) - Keep your Domain updated at all times (Unnecessary if you are NOT exposing any of your service to public!) (https://github.com/ddclient/ddclient)"
+echo "- Speedtest-tracker      - Monitor your internet speed on a scheduled basis (https://github.com/alexjustesen/speedtest-tracker)"
+echo "=============================================================================="
+}
+running_services_media() {
+echo "=============================================================================="
+send_message_in_cyan "Media Services"
+echo "- Jellyfin        - Media Streaming Service (open-source, fork of Emby, recommended) (https://jellyfin.org/)"
+echo "- Emby            - Media Streaming Service (closed-source) (https://emby.media/)"
+echo "- Plex            - Media Streaming Service (closed-source) (https://www.plex.tv/)"
+echo "- Airsonic        - Music Server (https://airsonic.github.io/)"
+echo "- Jellyseer       - Jellyfin Media Requests (https://github.com/Fallenbagel/jellyseerr)"
+echo "- Overseerr       - Plex Media Requests (https://overseerr.dev/)"
+echo "- Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)"
+echo "- Calibre Library - Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)"
+echo "- Calibre web     - Read your favorite Books (https://github.com/janeczku/calibre-web)"
+echo "- Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)"
+echo "- Photoprism      - Browse Your Life in Pictures (https://www.photoprism.app/)"
+echo "- Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)"
+echo "- Tubesync        - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
+echo "- Linkding        - Very fancy bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)"
+echo "- Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)"
+echo "- Joplin-Server   - Nice and very popular Notes-taking app (https://joplinapp.org/)"
+echo "- FreshRSS        - Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)"
+echo "- Stirling-PDF    - Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)"
+echo "- Filebrowser     - Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
+echo "- Samba Server    - Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc."
+echo "- Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
+echo "=============================================================================="
+}
+running_services_download() {
+echo "=============================================================================="
+send_message_in_cyan "Download Services"
+echo "- Radarr      - Manage your Movies (https://radarr.video/)"
+echo "- Sonarr      - Manage your TV Shows (https://sonarr.tv/)"
+echo "- Readarr     - Manage your Books (https://readarr.com/)"
+echo "- Lidarr      - Manage your Music (https://lidarr.audio/)"
+echo "- Bazarr      - Manage Subtitles for you Media Collection (https://www.bazarr.media/)"
+echo "- Prowlarr    - Indexer aggregator for Sonarr and Radarr (https://github.com/Prowlarr/Prowlarr)"
+echo "- qBittorrent - Does the actual download...(https://www.qbittorrent.org/)"
+echo "- Tubesync    - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
+echo "=============================================================================="
+}

@@ -1,0 +1,305 @@
+############################################################################################################
+                              ##### STARRS AND DOWNLOADS #####
+############################################################################################################
+version: "3"
+
+services:
+
+# Sonarr      - Manage downloads of your TV Shows (https://sonarr.tv/)
+#sonarrstart
+#  sonarr:
+#    image: lscr.io/linuxserver/sonarr:develop
+#    #image: randomninjaatk/sonarr-extended:latest
+#    container_name: sonarr
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+# #Left this here for reference when editing extended.conf for randomninja-scripts
+#      #- enableAutoConfig=true
+#      #- enableRecyclarr=false
+#      #- enableQueueCleaner=false
+#      #- enableYoutubeSeriesDownloader=false
+#      #- enableExtras=true
+#      #- extrasType=all
+#      #- extrasLanguages=en-US
+#      #- extrasOfficialOnly=false
+#      #- maximumDailyEpisodes=7
+#    volumes:
+# #add cookies.txt file to /config/cookies.txt for using randomninja extra scripts https://github.com/RandomNinjaAtk/arr-scripts
+#      - ${DATA_ROOT}:/data
+#      - ${INSTALL_LOCATION}/starrs/sonarr:/config
+# #these are required for using randomninja scripts https://github.com/RandomNinjaAtk/arr-scripts - config is located at ${INSTALL_LOCATION}/starrs/sonarr/extended.conf
+#      - ${INSTALL_LOCATION}/starrs/sonarr/scripts/custom-services.d:/custom-services.d
+#      - ${INSTALL_LOCATION}/starrs/sonarr/scripts/custom-cont-init.d:/custom-cont-init.d
+#    restart: unless-stopped
+#    ports:
+#      - 8989:8989
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.sonarr.loadbalancer.server.port=8989" #traefik#
+#      - "traefik.http.routers.sonarr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.sonarr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.sonarr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.sonarr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.sonarr.entrypoints=websecure"                         #httpchallenge# #traefik#
+#sonarrend
+
+
+# Radarr      - Manage downloads of your Movies (https://radarr.video/)
+#radarrstart
+#  radarr:
+#    image: lscr.io/linuxserver/radarr:develop
+#    #image: randomninjaatk/radarr-extended:latest
+#    container_name: radarr
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+# #Left this here for reference when editing extended.conf for randomninja-scripts
+#      #- enableAutoConfig=true
+#      #- enableRecyclarr=false
+#      #- enableQueueCleaner=false
+#      #- enableExtras=true
+#      #- extrasType=trailer
+#      #- extrasLanguages=en-US
+#      #- extrasOfficialOnly=false
+#      #- extrasSingle=false
+#      #- extrasKodiCompatibility=false
+#    volumes:
+# #add cookies.txt file to /config/cookies.txt for using randomninja extra scripts https://github.com/RandomNinjaAtk/arr-scripts
+#      - ${DATA_ROOT}:/data
+#      - ${INSTALL_LOCATION}/starrs/radarr:/config
+# #these are required for using randomninja scripts https://github.com/RandomNinjaAtk/arr-scripts - config is located at ${INSTALL_LOCATION}/starrs/radarr/extended.conf
+#      - ${INSTALL_LOCATION}/starrs/radarr/scripts/custom-services.d:/custom-services.d
+#      - ${INSTALL_LOCATION}/starrs/radarr/scripts/custom-cont-init.d:/custom-cont-init.d
+#    restart: unless-stopped
+#    ports:
+#      - 7878:7878
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.radarr.rule=Host(`radarr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.radarr.loadbalancer.server.port=7878" #traefik#
+#      - "traefik.http.routers.radarr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.radarr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.radarr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.radarr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.radarr.entrypoints=websecure"                         #httpchallenge# #traefik#
+#radarrend
+
+
+# Bazarr      - Manage Subtitles for you Media Collection (https://www.bazarr.media/)
+#bazarrstart
+#  bazarr:
+#    image: lscr.io/linuxserver/bazarr
+#    container_name: bazarr
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#      - ${DATA_ROOT}/Movies:/data/Movies
+#      - ${DATA_ROOT}/TV-Shows:/data/TV-Shows
+#      - ${INSTALL_LOCATION}/starrs/bazarr:/config
+#    restart: unless-stopped
+#    ports:
+#      - 6767:6767
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.bazarr.loadbalancer.server.port=6767" #traefik#
+#      - "traefik.http.routers.bazarr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.bazarr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.bazarr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.bazarr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.bazarr.entrypoints=websecure"                         #httpchallenge# #traefik#
+#bazarrend
+
+
+# Prowlarr    - Indexer aggregator for Sonarr and Radarr (https://github.com/Prowlarr/Prowlarr)
+#prowlarrstart
+#  prowlarr:
+#    image: lscr.io/linuxserver/prowlarr
+#    container_name: prowlarr
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#      - ${INSTALL_LOCATION}/starrs/prowlarr:/config
+#    restart: unless-stopped
+#    ports:
+#      - 9696:9696
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696" #traefik#
+#      - "traefik.http.routers.prowlarr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.prowlarr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.prowlarr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.prowlarr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.prowlarr.entrypoints=websecure"                         #httpchallenge# #traefik#
+#prowlarrend
+
+
+
+# Lidarr      - Manage downloads of your Music (https://lidarr.audio/)
+#lidarrstart
+#  lidarr:
+#    image: lscr.io/linuxserver/lidarr
+#    container_name: lidarr
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#      - ${DATA_ROOT}/Music:/data/Music
+#      - ${INSTALL_LOCATION}/starrs/lidarr:/config
+#    restart: unless-stopped
+#    ports:
+#      - 8686:8686
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.lidarr.rule=Host(`lidarr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.lidarr.loadbalancer.server.port=8686" #traefik#
+#      - "traefik.http.routers.lidarr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.lidarr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.lidarr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.lidarr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.lidarr.entrypoints=websecure"                         #httpchallenge# #traefik#
+#lidarrend
+
+
+
+# Readarr     - Manage downloads of your Books (https://readarr.com/)
+#readarrstart
+#  readarr:
+#    image: lscr.io/linuxserver/readarr:develop
+#    container_name: readarr
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#      - ${DATA_ROOT}/Books:/data/Books
+#      - ${INSTALL_LOCATION}/starrs/readarr:/config
+#    restart: unless-stopped
+#    ports: # readarr
+#      - 8787:8787 # readarr
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.readarr.rule=Host(`readarr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.readarr.loadbalancer.server.port=8787" #traefik#
+#      - "traefik.http.routers.readarr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.readarr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.readarr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.readarr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.readarr.entrypoints=websecure"                         #httpchallenge# #traefik#
+#readarrend
+
+
+
+# qBittorrent - Does the actual download...(https://www.qbittorrent.org/)
+#qbittorrentstart
+#  qbittorrent:
+#    image: lscr.io/linuxserver/qbittorrent
+#    container_name: qbittorrent
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - WEBUI_PORT=8833
+##      - ${FIREWALL_VPN_INPUT_PORTS}:${FIREWALL_VPN_INPUT_PORTS} # qbittorrent #gluetun# #port_forwarding#
+#    volumes:
+#      - ${DATA_ROOT}/Torrents/Books:/data/Torrents/Books
+#      - ${DATA_ROOT}/Torrents/Movies:/data/Torrents/Movies
+#      - ${DATA_ROOT}/Torrents/Shows:/data/Torrents/Shows
+#      - ${INSTALL_LOCATION}/starrs/qbittorrent:/config
+#    restart: unless-stopped
+#    ports: #yes_gluetun#
+#      - 8833:8833 #yes_gluetun#
+#    networks: #yes_gluetun#
+#      - fly-hi #yes_gluetun#
+#    network_mode: "container:gluetun" #no_gluetun#
+#qbittorrentend
+
+
+
+
+# qBittorrent - Does the actual download...(https://www.qbittorrent.org/) - second instance
+#qbittorrentpubstart
+#  qbittorrentpub:
+#    image: lscr.io/linuxserver/qbittorrent
+#    container_name: qbittorrentpub
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - WEBUI_PORT=8822
+#    volumes:
+#      - ${DATA_ROOT}/Torrents/Books:/data/Torrents/Books
+#      - ${DATA_ROOT}/Torrents/MoviesPub:/data/Torrents/MoviesPub
+#      - ${DATA_ROOT}/Torrents/ShowsPub:/data/Torrents/ShowsPub
+#      - ${INSTALL_LOCATION}/starrs/qbittorrentpub:/config
+#    restart: unless-stopped
+#    ports: #yes_gluetun#
+#      - 8822:8822 #yes_gluetun#
+#    networks: #yes_gluetun#
+#      - fly-hi #yes_gluetun#
+#    network_mode: "container:gluetun" #no_gluetun#
+#qbittorrentpubend
+
+# Tubesync        - Manage downloads of your favorite Youtube Channels (https://github.com/meeb/tubesync)
+#tubesyncstart
+#  tubesync:
+#    image: ghcr.io/meeb/tubesync:latest
+#    container_name: tubesync
+#    restart: unless-stopped
+#    ports:
+#      - 4848:4848
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/tubesync:/config
+#      #- ${DATA_ROOT}:/data/downloads
+#      - ${DATA_ROOT}/Youtube-Channels:/data/downloads
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.tubesync.rule=Host(`tubesync.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.tubesync.loadbalancer.server.port=4848" #traefik#
+#      - "traefik.http.routers.tubesync.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.tubesync.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.tubesync.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.tubesync.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.tubesync.entrypoints=websecure"                         #httpchallenge# #traefik#
+#tubesyncend
+
+
+
+networks:
+  fly-hi:
+    external: true

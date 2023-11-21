@@ -1,0 +1,331 @@
+############################################################################################################
+                                          ##### NETWORK SERVICES #####
+############################################################################################################
+version: "3"
+
+services:
+
+# Speedtest-tracker - Monitor your internet speed on da scheduled basis (https://github.com/alexjustesen/speedtest-tracker)
+#speedteststart
+#  speedtest:
+#    container_name: speedtest
+#    image: ghcr.io/alexjustesen/speedtest-tracker:latest
+#    ports:
+#      - '8044:80'
+#      - '8442:443'
+#    volumes:
+#      - ${INSTALL_LOCATION}/network/speedtest/config:/config
+#      - ${INSTALL_LOCATION}/network/speedtest/web:/etc/ssl/web
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      #- BASE_PATH=https://speedtest.${HOSTNAME}
+#      #- TELEGRAM_BOT_TOKEN=${BOT_TOKEN}
+#      - AUTH=false
+#      - APP_KEY="base64:k019tZ8Nsf/a02QHQWtr5TNA0EIaL6R2bvMwJ/qkxc8="  # fixes 500 server error - "https://github.com/alexjustesen/speedtest-tracker/issues/849"
+##      - DB_CONNECTION=sqlite
+##      - DB_DATABASE=/config/database.sqlite
+#      - DB_CONNECTION=pgsql
+#      - DB_DATABASE=speedy
+#      - DB_USERNAME=speedy
+#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#      - DB_PORT=5435
+#      - DB_HOST=postgres5
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.speedtest.rule=Host(`speedtest.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.speedtest.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.speedtest.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.speedtest.tls=true" #traefik#
+##      - "traefik.http.routers.speedtest.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.speedtest.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - traefik.http.routers.speedtest.entrypoints=websecure                            #httpchallenge# #traefik#
+#  postgres5:
+#    image: postgres:15
+#    container_name: postgres5
+#    volumes:
+#      - ${INSTALL_LOCATION}/network/speedtest/database:/var/lib/postgresql/data
+##    command: -p 5434 this is equivalent to environment - PGPORT=5433 and can be used to change the listening port>
+#    ports:
+#      - "5435:5435"
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - POSTGRES_USER=speedy
+#      - POSTGRES_DB=speedy
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - PGPORT=5435
+#speedtestend
+
+
+# Flaresolverr  - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)
+#flaresolverrstart
+#  flaresolverr:
+#    # DockerHub mirror flaresolverr/flaresolverr:latest
+#    image: ghcr.io/flaresolverr/flaresolverr:latest
+#    container_name: flaresolverr
+#    environment:
+#      - LOG_LEVEL=info
+#      - LOG_HTML=false
+#      - CAPTCHA_SOLVER=none
+#      - TZ=${TIMEZONE}
+#    ports:
+#      - 8191:8191
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.flaresolverr.rule=Host(`flaresolverr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.flaresolverr.loadbalancer.server.port=8191" #traefik#
+#      - "traefik.http.routers.flaresolverr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.flaresolverr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.flaresolverr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.flaresolverr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - traefik.http.routers.flaresolver.entrypoints=websecure                            #httpchallenge# #traefik#
+#flaresolverrend
+
+
+
+
+# Gluetun  - VPN Client (https://github.com/qdm12/gluetun)
+#  TO LIST SERVER_CITIES OR SERVER_COUNTRIES USE THE FOLLOWING COMMAND
+#  docker run --rm -v ${INSTALL_LOCATION}/network/gluetun:/gluetun qmcgaw/gluetun format-servers -mullvad
+#  docker run --rm -v /yourpath:/gluetun qmcgaw/gluetun format-servers -yourprovider
+#  yourpath is the path to your bind mounted directory
+#  yourprovider is your VPN provider in lowercase without quotes, for example protonvpn or private-internet-access
+# be careful with the formating, some countries and cities need capital
+# letters or two words. Run 'docker logs gluetun' to see if it connected properly
+#gluetunstart
+#  gluetun:
+#    image: qmcgaw/gluetun
+#    container_name: gluetun
+#    cap_add:
+#      - NET_ADMIN
+#    devices:
+#      - /dev/net/tun:/dev/net/tun
+#    ports:
+#      - 8888:8888/tcp # HTTP proxy
+#      - 8388:8388/tcp # Shadowsocks
+#      - 8388:8388/udp # Shadowsocks
+#      - 8833:8833/tcp # qbittorrentport
+#      - 8822:8822/tcp # qbittorrentpubport
+##      - ${FIREWALL_VPN_INPUT_PORTS}:${FIREWALL_VPN_INPUT_PORTS} # qbittorrent #port_forwarding#
+#    networks:
+#      - fly-hi
+#    #dns:
+#      #- 8.8.8.8
+#      #- 9.9.9.9
+#    volumes:
+#      - ${INSTALL_LOCATION}/network/gluetun:/config
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
+#      - VPN_TYPE=openvpn
+#      - OPENVPN_USER=${OPENVPN_USER}
+#      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+#      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+#      - SERVER_CITIES=${SERVER_CITIES}
+##      - FIREWALL_VPN_INPUT_PORTS=${FIREWALL_VPN_INPUT_PORTS} #port_forwarding#
+#      #- WIREGUARD_PUBLIC_KEY=
+#      #- WIREGUARD_PRIVATE_KEY=
+#      #- WIREGUARD_PRESHARED_KEY=
+#      #- WIREGUARD_ADDRESSES=
+#      #- OPENVPN_CUSTOM_CONFIG=/config/custom.conf
+#      # Uncomment this if enabling gluetun for other than qbittorrent during the installation, used for Arrs to be able to access each other
+#      #- FIREWALL_OUTBOUND_SUBNETS=(comma separated subnets e.g. your.private.ip.network/24,172.20.0.0/24)
+## This seems to fix OpenVPN 2.6 issue with compression and cipher problem, at least temporarily
+## https://github.com/qdm12/gluetun/issues/1569
+## https://github.com/qdm12/gluetun/discussions/1568
+## https://www.reddit.com/r/mullvadvpn/comments/13igv2e/pfsense_cant_connect/
+## https://mullvad.net/en/help/using-pfsense-mullvad/
+## https://github.com/OpenVPN/openvpn/blob/master/doc/man-sections/cipher-negotiation.rst
+#      - OPENVPN_CIPHERS=AES-256-GCM
+#      #- OPENVPN_VERSION=2.6 # might be needed
+#    restart: unless-stopped
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.docker.network=fly-hi" #traefik#
+#      # Aplications #traefik#
+##qbittorrentstart
+##      # qBittorrent
+##      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${HOSTNAME}`)" #traefik#
+##      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8833" #traefik#
+##      - "traefik.http.routers.qbittorrent.tls.certresolver=myresolver" #traefik#
+##      - "traefik.http.routers.qbittorrent.tls=true" #traefik#
+##      - "traefik.http.routers.qbittorrent.service=qbittorrent"                               # This is needed to link services to gluetun #traefik#
+##      # DNS/HTTP #traefik#
+###      - "traefik.http.routers.qbittorrent.tls.domains[0].main=${HOSTNAME}"                  #dnschallenge# #traefik#
+###      - "traefik.http.routers.qbittorrent.tls.domains[0].sans=*.${HOSTNAME}"                #dnschallenge# #traefik#
+###      - "traefik.http.routers.qbittorrent.entrypoints=websecure"                            #httpchallenge# #traefik#
+##qbittorrentend
+##qbittorrentpubstart
+##      # qBittorrent_public #traefik#
+##      - "traefik.http.routers.qbittorrentpub.rule=Host(`qbittorrentpub.${HOSTNAME}`)" #traefik#
+##      - "traefik.http.services.qbittorrentpub.loadbalancer.server.port=8822" #traefik#
+##      - "traefik.http.routers.qbittorrentpub.tls.certresolver=myresolver" #traefik#
+##      - "traefik.http.routers.qbittorrentpub.tls=true" #traefik#
+##      - "traefik.http.routers.qbittorrentpub.service=qbittorrentpub"                         # This is needed to link services to gluetun #traefik#
+##      # DNS/HTTP #traefik#
+###      - "traefik.http.routers.qbittorrentpub.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+###      - "traefik.http.routers.qbittorrentpub.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+###      - "traefik.http.routers.qbittorrent_public.entrypoints=websecure"                     #httpchallenge# #traefik#
+##qbittorrentpubend
+#gluetunend
+
+
+
+#traefikstart
+#  traefik:
+#    image: traefik:v2.9
+#    container_name: traefik
+#    restart: always
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - LETS_ENCRYPT_EMAIL=${LETS_ENCRYPT_EMAIL}
+##      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}                                              #dnschallenge#
+##      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}                              #dnschallenge#
+##      - CLOUDFLARE_ZONE_API_TOKEN=${CLOUDFLARE_ZONE_API_TOKEN}                            #dnschallenge#
+#    command:
+#      - --api.dashboard=true
+#      - --api.insecure=true
+#       # Docker provider configuration
+#      - --providers.docker=true
+#        # Traefik will listen to incoming request on the port 80 (http)
+#      - --entrypoints.web.address=:80
+#       # Traefik will listen to incoming request on the port 443 (https)
+#      - --entrypoints.websecure.address=:443
+#       # Makes sure that services have to explicitly direct Traefik to expose them
+#      - --providers.docker.exposedbydefault=false
+#       # Redirection
+#      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+#      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+#      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+##
+#        # WILDCARD certificates work ONLY with DNS Challenge
+#        # Enable a dns challenge named "myresolver"
+##      - --certificatesresolvers.myresolver.acme.dnschallenge=${DNS_CHALLENGE:-true}       #dnschallenge#
+##      - --certificatesresolvers.myresolver.acme.dnschallenge.provider=${DNS_CHALLENGE_PROVIDER:-cloudflare}   #dnschallenge#
+#       # Enable a http challenge named "myresolver"
+##      - --certificatesresolvers.myresolver.acme.httpchallenge=true                        #httpchallenge#
+#        # Tell it to use our predefined entrypoint named "web"
+##      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web              #httpchallenge#
+##
+#      # Default docker network to use for connections to all containers
+#      - --providers.docker.network=fly-hi
+#      # Logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
+#      - --log.level=info
+#      # Tell to store the certificate on a path under our volume
+#      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+#      # Lets Encrypt Email
+#      - --certificatesresolvers.myresolver.acme.email=${LETS_ENCRYPT_EMAIL}
+#      - --certificatesresolvers.myresolver.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53
+#      # uncomment for testing letsencrypt
+##      - --certificatesresolvers.myresolver.acme.caserver=${LETS_ENCRYPT_CA_SERVER:-https://acme-v02.api.letsencrypt.org/directory}
+
+
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#      - "8880:8080"
+#    networks:
+#      - fly-hi
+#    volumes:
+#      - ${INSTALL_LOCATION}/network/traefik/letsencrypt:/letsencrypt
+#      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+#    labels:
+#       # Explicitly instruct Traefik to expose this service
+#      - traefik.enable=true
+#      - traefik.http.routers.traefik.rule=Host(`traefik.${HOSTNAME}`)
+#       # 8080 is the port that the traefik dashboard container is listening to
+#      - traefik.http.services.traefik.loadbalancer.server.port=8080
+#       # Uses the Host rule to define which certificate to issue
+#      - traefik.http.routers.traefik.tls.certresolver=myresolver
+#      - traefik.http.routers.traefik.tls=true
+#       # DNS/HTTP
+##      - traefik.http.routers.traefik.tls.domains[0].main=${HOSTNAME}                   #dnschallenge#
+##      - traefik.http.routers.traefik.tls.domains[0].sans=*.${HOSTNAME}                 #dnschallenge#
+##      - serversTransport.insecureSkipVerify=true                                       #dnschallenge#
+##      - traefik.http.routers.traefik.entrypoints=websecure                             #httpchallenge#
+## exclude watchtower update
+#      - com.centurylinklabs.watchtower.enable=false
+#      - com.centurylinklabs.watchtower.monitor-only=true
+#traefikend
+
+
+
+# ddclient - Dynamic DNS Updater (https://hub.docker.com/r/linuxserver/ddclient)
+#ddclientstart
+#  ddclient:
+#    image: lscr.io/linuxserver/ddclient:latest
+#    container_name: ddclient
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#      - ${INSTALL_LOCATION}/network/ddclient:/config
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#ddclientend
+
+
+# Wireguard (wg-easy) - Connect to your home network from anywhere in the world! (https://github.com/wg-easy/wg-easy)
+#wgeasystart
+#  wg-easy:
+#    image: weejewel/wg-easy
+#    container_name: wg-easy
+#    environment:
+#      - TZ=${TIMEZONE}
+#      # Change this to your host's public address or whichever DynDNS will be updated with your public IP eg. ${HOSTNAME}
+#      - WG_HOST=${WG_HOSTNAME}
+#      # Optional:
+#      - PASSWORD=${WG_EASY_PASSWORD}
+#      - WG_PORT=${WG_EASY_PORT:-51820} # port to the port you forwarded on your router
+#      - WG_DEFAULT_ADDRESS=10.44.0.x
+#      - WG_DEFAULT_DNS=${WG_EASY_PRIMARY_DNS:-1.1.1.1},8.8.8.8
+#      # - WG_MTU=1420
+#      # - WG_ALLOWED_IPS=192.168.15.0/24, 10.0.1.0/24
+#      # - WG_PRE_UP=echo "Pre Up" > /etc/wireguard/pre-up.txt
+#      # - WG_POST_UP=echo "Post Up" > /etc/wireguard/post-up.txt
+#      # - WG_PRE_DOWN=echo "Pre Down" > /etc/wireguard/pre-down.txt
+#      # - WG_POST_DOWN=echo "Post Down" > /etc/wireguard/post-down.txt
+#    volumes:
+#      - ${INSTALL_LOCATION}/network/wireguard:/etc/wireguard
+#    ports:
+#      - "${WG_EASY_PORT:-51820}:51820/udp" # map left port to the port you forwarded on your router
+#      - "51821:51821/tcp" #WEBui
+#    restart: unless-stopped
+#    cap_add:
+#      - NET_ADMIN
+#      - SYS_MODULE
+#    sysctls:
+#      - net.ipv4.ip_forward=1
+#      - net.ipv4.conf.all.src_valid_mark=1
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.wireguard.rule=Host(`wireguard.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.wireguard.loadbalancer.server.port=51821" #traefik#
+#      - "traefik.http.routers.wireguard.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.wireguard.tls=true" #traefik#
+##      - "traefik.http.routers.wireguard.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.wireguard.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - traefik.http.routers.wireguard.entrypoints=websecure                           #httpchallenge# #traefik#
+#wgeasyend
+
+
+networks:
+  fly-hi:
+    external: true

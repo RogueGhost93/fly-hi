@@ -1,0 +1,217 @@
+#+title: Fly-Hi: Self-Hosted Power House!
+
+
+*Credits:*
+
+
+This project is a fork and combination of https://yams.media and https://github.com/AdrienPoupa/docker-compose-nas. 
+Special thanks to these contributors for the foundation of this repository.
+
+I've repurposed it to suit my needs and wanted to share it with you!
+
+
+
+* Description
+:PROPERTIES:
+:ID:       280135a0-2cff-4e93-8679-7d1a6d56b7b2
+:END:
+
+Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes, subtitles, and serves all your media. The script offers options to install the following software:
+
+
+*Management:*
+- Portainer      - Keep your docker containers in check! (https://www.portainer.io/)"
+- Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
+- Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
+- Glances        - System Information (https://nicolargo.github.io/glances/)"
+- Uptime-Kuma    - Real time monitoring of your services (https://github.com/louislam/uptime-kuma)"
+- Scrutiny       - HDD/SSD monitoring tool with a nice dashboard (https://github.com/AnalogJ/scrutiny)"
+- Ntfy           - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
+- Vaultwarden    - Password Manager (https://hub.docker.com/r/vaultwarden/server)"
+- PhpMyAdmin     - WEBui for managing MySQL/MariaDB databases, tables, columns, relations, indexes, users, permissions, etc (https://hub.docker.com/r/phpmyadmin/phpmyadmin/)"
+- PgAdmin        - WEBui for managing Postgres databases, tables, columns, relations, indexes, users, permissions, etc (https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html)"
+- CockpitProject - System Management Tool (https://cockpit-project.org)"
+- Dozzle         - All docker logs in one place on a nice WEB-UI (https://dozzle.dev/)
+- Graylog        - Log Aggregator with a WEB-UI (https://graylog.org/)"
+
+
+
+*Network:*
+- Flaresolverr           - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)"
+- Traefik                - Reverse Proxy (https://traefik.io/traefik/)"
+- Gluetun                - VPN Client (https://github.com/qdm12/gluetun)"
+- Wireguard (wg-easy)    - Connect to your home network from anywhere in the world! (https://github.com/wg-easy/wg-easy)"
+- Tailscale              - Easier, closed source alternative to private OpenVPN/Wireguard server for access from anywhere in the world! (https://tailscale.com/)"
+- DDclient (Dynamic DNS) - Keep your Domain updated at all times (Unnecessary if you are NOT exposing any of your service to public!) (https://github.com/ddclient/ddclient)"
+- Speedtest-tracker      - Monitor your internet speed on a scheduled basis (https://github.com/alexjustesen/speedtest-tracker)"
+
+The bash versions of VPN servers are really for little more advanced users so please skip if youre not sure how to use this!
+- Wireguard (bash)       - Connect to your home network from anywhere in the world! (https://github.com/angristan/wireguard-install)"
+- OpenVPN (bash)         - Connect to your home network from anywhere in the world! (https://github.com/angristan/openvpn-install)"
+
+
+
+*Media:*
+- Jellyfin        - Media Streaming Service (open-source, fork of Emby, recommended) (https://jellyfin.org/)"
+- Emby            - Media Streaming Service (closed-source) (https://emby.media/)"
+- Plex            - Media Streaming Service (closed-source) (https://www.plex.tv/)"
+- Airsonic        - Music Server (https://airsonic.github.io/)"
+- Jellyseer       - Jellyfin Media Requests (https://github.com/Fallenbagel/jellyseerr)"
+- Overseerr       - Plex Media Requests (https://overseerr.dev/)"
+- Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)"
+- Calibre Library - Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)"
+- Calibre web     - Read your favorite Books (https://github.com/janeczku/calibre-web)"
+- Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)"
+- Photoprism      - Browse Your Life in Pictures (https://www.photoprism.app/)"
+- Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)"
+- Tubesync        - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
+- Linkding        - Very fancy bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)"
+- Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)"
+- Joplin-Server   - Nice and very popular Notes-taking app (https://joplinapp.org/)"
+- FreshRSS        - Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)"
+- Stirling-PDF    - Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)"
+- Filebrowser     - Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
+- Samba Server    - Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc."
+- Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
+
+
+*Starrs and Download:*
+- Radarr      - Manage your Movies (https://radarr.video/)"
+- Sonarr      - Manage your TV Shows (https://sonarr.tv/)"
+- Readarr     - Manage your Books (https://readarr.com/)"
+- Lidarr      - Manage your Music (https://lidarr.audio/)"
+- Bazarr      - Manage Subtitles for you Media Collection (https://www.bazarr.media/)"
+- Prowlarr    - Indexer aggregator for Sonarr and Radarr (https://github.com/Prowlarr/Prowlarr)"
+- qBittorrent - Does the actual download...(https://www.qbittorrent.org/)"
+- Tubesync    - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
+
+
+* Disclaimer
+:PROPERTIES:
+:ID:       280135a0-2cff-4e93-8679-7d1a6d56b7b2
+:END:
+
+
+*This is a beta version and over time, and I mean a long time, Im looking to improve on security and additional functionality when it comes to permissions and network stuff like traefik. Im a beginner at this kind of stuff so any contributions and suggestions are very welcome. Documentation also needs a lot of work which I simply dont have time to do. If you notice any typos in any of the files, please let me know!*
+
+*If you are a complete noob and want to run this locally only, it might be better to skip Traefik reverse-proxy setup, however if you are familiar with it and have a public domain already, please use it and test it! Also, if you don't have a Static Public IP address some stuff like VPN Servers usually work best if you have a public domain which can be regularly updated with Dynamic DNS client.*
+
+
+
+
+* Dependencies
+:PROPERTIES:
+:ID:       01577a0a-852e-481a-b9b3-791b68594f96
+:END:
+You need to have:
+- [[https://www.docker.com/][docker]]
+- [[https://docs.docker.com/compose/][docker-compose]]
+
+If you haven't installed them, don't worry! The script will attempt to run both installations (it only
+works in Debian and Ubuntu!)
+
+* Before running
+:PROPERTIES:
+:ID:       1c609bfc-4e6e-4fd8-8129-1b722fd7cda8
+:END:
+Before installing, make sure you have:
+- *An installation location*: The script is going to ask you for a install location, but it will default
+  to ~/opt/fly-hi~. Just make sure your current user has permissions to write on the selected directory.
+- *A media folder*: This is the folder where all your files are going to be downloaded and categorized. If
+  you choose ~/media/data~, the script is going to create the following folders:
+  + ~/media/data/Movies~: For your Movies
+  + ~/media/data/TV-Shows~: For your TV shows
+  + ~/media/data/Music~: For your Music
+  + ~/media/data/Photos~: For your Photos
+  + ~/media/data/Books~: For your Books
+  + ~/media/data/Podcasts~: For your Podcasts
+  + ~/media/data/Torrents~: For your Torrents
+
+
+- *A VPN service (optional but STRONGLY recommended):* If you can, choose one from [[https://yams.media/advanced/vpn#official-supported-vpns][this list]]. The VPN I
+  always recommend is [[https://mullvad.net/en/][Mullvad]] because:
+  + They don’t require your email or information to create a new account.
+  + It’s simple to configure.
+  + They only have monthly subscriptions, so you can leave them whenever you want.
+  + You can pay with crypto.
+
+* To run
+:PROPERTIES:
+:ID:       a0417c61-3fd8-40a0-9385-6c5aaed37337
+:END:
+
+#+begin_src bash
+$ git clone https://github.com/RogueGhost93/fly-hi
+$ cd fly-hi
+$ chmod +x install.sh reinstall.sh wireguard-install.sh openvpn-install.sh docker.sh permissions.sh 
+$ ./install.sh
+#+end_src
+
+And follow the instructions.
+*There are a few things that need to be done after containers are up and running but sometimes containers fail to start properly if your system already has some conflicting ports in use. In order to finalize the installation you will need to run the reinstall.sh script after you fix the port conflicts or some other errors preventing containers to start up.*
+
+
+* Usage
+:PROPERTIES:
+:ID:       9e995141-b386-4962-9842-7209bedc5651
+:END:
+When the script finishes installing without issues, just run:
+#+begin_src
+$ fly-hi
+Fly-Hi Media
+
+Usage: fly-hi [help|option] [compose-file]
+options:
+help        displays this help message
+restart     restarts Fly-Hi services
+stop        stops all Fly-Hi services
+start       starts Fly-Hi services
+update      updates Fly-Hi services
+destroy     destroy Fly-Hi services but preserve container data
+uninstall   completely remove all containers and their data from the system
+ip          checks if the VPN is working as expected
+ports       shows all ports currently used and opened by docker containers
+links       shows links to access your services
+vpn         Manage your VPN server
+
+#+end_src
+* How to configure?
+:PROPERTIES:
+:ID:       242b8dfa-82ab-4d86-b3ea-0a0af6cf3ad5
+:END:
+
+This guy has a very nice documentation for setting up some of these apps, mostly media and starr services!
+Go to [[https://yams.media/config/][https://yams.media/config/]] and follow the config instructions.
+
+* Donations
+:PROPERTIES:
+:ID:       992fb05d-c171-4ba9-9207-3dd1d467656e
+:END:
+If you *really* wish to donate, first I would like to say thank you from the bottom of my heart! ❤️ Second, I
+would prefer you donate to any of the projects used in this script.
+
+They are the ones doing the real work, I just created a docker-compose files and a couple of bash scripts:
+
+
+Just let them know Fly-Hi sent you there 😎
+
+* todo [0/4]
+:PROPERTIES:
+:ID:       eba4712e-fa8a-42c8-bc32-b593141c99a4
+:END:
+
+- [ ] Documentation Improvements.
+- [ ] Security Improvements.
+- [ ] Integrate a way for easily adding your own custom docker-compose services.
+- [ ] Support for Caddy (in testing).
+- [x] Support for Graylog.
+- [ ] Support for Immich (In testing).
+
+
+
+** And finally:
+:PROPERTIES:
+:ID:       126d4a9c-08a5-47f4-bffb-61b251ef394c
+:END:
+- You 🫵, for being such an amazing human being, checking out my repo and (hopefully!) using it on your
+  media server. Thank you! 🙇

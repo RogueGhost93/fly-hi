@@ -1,0 +1,460 @@
+############################################################################################################
+                                    ##### MANAGEMENT SERVICES #####
+############################################################################################################
+version: "3"
+
+services:
+
+# Scrutiny    - HDD/SSD monitoring tool with a nice dashboard (https://github.com/AnalogJ/scrutiny)
+#scrutinystart
+#  scrutiny:
+#    container_name: scrutiny
+#    image: ghcr.io/analogj/scrutiny:master-omnibus
+#    environment:
+#      - TZ=${TIMEZONE}
+#    cap_add:
+#      - SYS_RAWIO
+#    ports:
+#     - "8033:8080" # webapp
+#     - "8086:8086" # influxDB admin
+#    volumes:
+#      - /run/udev:/run/udev:ro
+#      - ${INSTALL_LOCATION}/management/scrutiny/config:/opt/scrutiny/config
+#      - ${INSTALL_LOCATION}/management/scrutiny/influxdb:/opt/scrutiny/influxdb
+##    devices:
+##      - "/dev/sda"
+##      - "/dev/sdc"
+#      #- "/dev/sdd"
+#      #- "/dev/sdd1"
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.scrutiny.rule=Host(`scrutiny.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.scrutiny.loadbalancer.server.port=8080" #traefik#
+#      - "traefik.http.routers.scrutiny.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.scrutiny.tls=true" #traefik#
+##      - "traefik.http.routers.scrutiny.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.scrutiny.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.scrutiny.entrypoints=websecure"                         #httpchallenge# #traefik#
+#scrutinyend
+
+
+# Portainer   - Keep your docker containers in check! (https://www.portainer.io/)
+#portainerstart
+#  portainer:
+#    image: portainer/portainer-ce
+#    container_name: portainer
+#    environment:
+#      - TZ=${TIMEZONE}
+#    ports:
+#      - 9000:9000
+#    volumes:
+#      - /etc/localtime:/etc/localtime:ro
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - ${INSTALL_LOCATION}/management/portainer:/data
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.portainer.rule=Host(`portainer.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.portainer.loadbalancer.server.port=9000" #traefik#
+#      - "traefik.http.routers.portainer.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.portainer.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.portainer.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.portainer.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.portainer.entrypoints=websecure"                         #httpchallenge# #traefik#
+#portainerend
+
+
+
+# Watchtower  - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)
+#watchtowerstart
+#  watchtower:
+#    image: containrrr/watchtower
+#    container_name: watchtower
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - WATCHTOWER_LIFECYCLE_HOOKS=True
+#      # For telegram notifications to work you need to add your BOT_TOKEN and CHAT_ID variables to .env files and then uncomment the following line.
+#      #- WATCHTOWER_NOTIFICATION_URL=telegram://${BOT_TOKEN}@telegram/?channels=${CHAT_ID}
+#      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+#      - WATCHTOWER_NOTIFICATION_URL=ntfy://ntfy.${HOSTNAME}/Management?title=WatchtowerUpdates
+#      - WATCHTOWER_DEBUG=true
+#      - WATCHTOWER_CLEANUP=true
+#      - WATCHTOWER_SCHEDULE=0 0 4 * * 5
+#watchtowerend
+
+
+# Heimdall    - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)
+#heimdallstart
+#  heimdall:
+#    image: lscr.io/linuxserver/heimdall:latest
+#    container_name: heimdall
+#    environment:
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - TZ=${TIMEZONE}
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/heimdall:/config
+#    ports:
+#      - 94:80
+#      #- 440:443
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.heimdall.rule=Host(`heimdall.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.heimdall.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.heimdall.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.heimdall.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.heimdall.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.heimdall.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.heimdall.entrypoints=websecure"                         #httpchallenge# #traefik#
+#heimdallend
+
+
+# Glances     - System Information (https://nicolargo.github.io/glances/)
+  #https://github.com/joweisberg/docker-glances
+  #https://github.com/nicolargo/glances/
+
+#glancesstart
+#  glances:
+#    container_name: glances
+#    image: nicolargo/glances:latest-alpine
+#    restart: unless-stopped
+##    pid: host
+#    ports:
+#      - 61208:61208
+#    networks:
+#      - fly-hi
+#    environment:
+#      - TZ=${TIMEZONE}
+#      #- GLANCES_OPT=--webserver
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - GLANCES_OPT=-w
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - ${INSTALL_LOCATION}/management/glances:/glances/conf
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.glances.rule=Host(`glances.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.glances.loadbalancer.server.port=61208" #traefik#
+#      - "traefik.http.routers.glances.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.glances.tls=true" #traefik#
+##      - "traefik.http.routers.glances.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.glances.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.glances.entrypoints=websecure"                         #httpchallenge# #traefik#
+#glancesend
+
+
+
+# Uptime-Kuma - Real time monitoring of your services (https://github.com/louislam/uptime-kuma)
+#uptimekumastart
+#  uptime-kuma:
+#    image: louislam/uptime-kuma:1
+#    container_name: uptime-kuma
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/uptime-kuma:/app/data
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#    environment:
+#      - TZ=${TIMEZONE}
+#    ports:
+#      - 3001:3001  # <Host Port>:<Container Port>
+#    networks:
+#      - fly-hi
+#    restart: always
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.uptimekuma.rule=Host(`uptimekuma.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.uptimekuma.loadbalancer.server.port=3001" #traefik#
+#      - "traefik.http.routers.uptimekuma.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.uptimekuma.tls=true" #traefik#
+##      - "traefik.http.routers.uptimekuma.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.uptimekuma.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.uptime-kuma.entrypoints=websecure"                        #httpchallenge# #traefik#
+#uptimekumaend
+
+#whoamistart
+##WhoAmI - For Testing and Troubleshooting
+#  whoami:
+#    image: "traefik/whoami"
+#    container_name: "whoami"
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    environment:
+#      - TZ=${TIMEZONE}
+#    ports:
+#      - 100:80
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.whoami.rule=Host(`whoami.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.whoami.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.whoami.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.whoami.tls=true" #traefik#
+##      - "traefik.http.routers.whoami.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.whoami.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.whoami.entrypoints=websecure"                         #httpchallenge# #traefik#
+##      - traefik.http.middlewares.geoipwhitelist.ipwhitelist.sourcerange=192.168.0.0/16
+##      - traefik.http.middlewares.geoipwhitelist.ipwhitelist.country=HR
+##      - traefik.http.routers.whoami.middlewares=geoipwhitelist@docker
+#whoamiend
+
+
+
+
+# Ntfy        - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)
+#ntfystart
+#  ntfy:
+#    image: binwiederhier/ntfy
+#    container_name: ntfy
+#    command:
+#      - serve
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/ntfy/var/cache/ntfy:/var/cache/ntfy
+#      - ${INSTALL_LOCATION}/management/ntfy/etc/ntfy:/etc/ntfy
+#    ports:
+#      - 8012:80
+##    healthcheck: # optional: remember to adapt the host:port to your environment
+##        test: ["CMD-SHELL", "wget -q --tries=1 https://ntfy.${HOSTNAME}/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
+##        interval: 60s
+##        timeout: 10s
+##        retries: 3
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.ntfy.rule=Host(`ntfy.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.ntfy.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.ntfy.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.ntfy.tls=true" #traefik#
+##      - "traefik.http.routers.ntfy.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.ntfy.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.ntfy.entrypoints=websecure"                         #httpchallenge# #traefik#
+#ntfyend
+
+
+
+# Vaultwarden - Password Manager (https://hub.docker.com/r/vaultwarden/server)
+#vaultwardenstart
+#  vaultwarden:
+#    container_name: vaultwarden
+#    image: vaultwarden/server:latest
+#    restart: unless-stopped
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/vaultwarden:/data/
+#    ports:
+#      - 55655:80
+#    environment:
+##      - YUBICO_CLIENT_ID=12345
+##      - YUBICO_SECRET_KEY=ABCDEABCDEABCDEABCDE
+#      - TZ=${TIMEZONE}
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.vaultwarden.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.vaultwarden.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.vaultwarden.tls=true" #traefik#
+##      - "traefik.http.routers.vaultwarden.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.vaultwarden.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.vaultwarden.entrypoints=websecure"                         #httpchallenge# #traefik#
+#vaultwardenend
+
+
+# PhpMyAdmin is a WEBui for managing MySQL databases, tables, columns, relations, indexes, users, permissions, etc (https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
+#phpmyadminstart
+#  phpmyadmin:
+#    image: phpmyadmin
+#    container_name: phpmyadmin
+#    restart: always
+#    ports:
+#      - 8040:80
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PMA_ARBITRARY=1
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.phpmyadmin.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.phpmyadmin.tls=true" #traefik#
+##      - "traefik.http.routers.phpmyadmin.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.phpmyadmin.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.phpmyadmin.entrypoints=websecure"                        #httpchallenge# #traefik#
+#phpmyadminend
+
+
+# PgAdmin is a WEBui for managing Postgres databases, tables, columns, relations, indexes, users, permissions, etc (https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html)
+#pgadminstart
+#  pgadmin:
+#    container_name: pgadmin
+#    image: dpage/pgadmin4
+#    restart: always
+#    environment:
+#      TZ: ${TIMEZONE}
+#      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+#      PGADMIN_DEFAULT_PASSWORD: root
+#    ports:
+#      - "5050:80"
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.pgadmin.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.pgadmin.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.pgadmin.tls=true" #traefik#
+##      - "traefik.http.routers.pgadmin.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.pgadmin.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.pgadmin.entrypoints=websecure"                        #httpchallenge# #traefik#
+#pgadminend
+
+#dozzlestart
+#  dozzle:
+#    image: amir20/dozzle:latest
+#    container_name: dozzle
+#    restart: unless-stopped
+#    networks:
+#        - fly-hi
+#    ports:
+#        - "7879:8080"
+#    environment:
+#        DOZZLE_LEVEL: info
+#        DOZZLE_TAILSIZE: 300
+#        DOZZLE_FILTER: "status=running"
+#        # DOZZLE_FILTER: "label=log_me" # limits logs displayed to containers with this label
+#        # DOCKER_HOST: tcp://socket-proxy:2375 # enable when using socket proxy
+#    volumes:
+#        - /var/run/docker.sock:/var/run/docker.sock:ro # disable when using socket proxy
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.dozzle.rule=Host(`dozzle.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.dozzle.loadbalancer.server.port=8080" #traefik#
+#      - "traefik.http.routers.dozzle.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.dozzle.tls=true" #traefik#
+##      - "traefik.http.routers.dozzle.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.dozzle.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.dozzle.entrypoints=websecure"                        #httpchallenge# #traefik#
+#dozzleend
+
+
+#graylogstart
+#  mongodb:
+#    image: "mongo:5.0"
+##    user: "1000:1000"  # Specify user and group ID
+#    volumes:
+#      - "mongodb_data:/data/db"
+#    restart: "on-failure"
+#    networks:
+#        - fly-hi
+#
+#  opensearch:
+#    image: "opensearchproject/opensearch:2.4.0"
+##    user: "1000:1000"  # Specify user and group ID
+#    networks:
+#        - fly-hi
+#    environment:
+#      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+#      - "bootstrap.memory_lock=true"
+#      - "discovery.type=single-node"
+#      - "action.auto_create_index=false"
+#      - "plugins.security.ssl.http.enabled=false"
+#      - "plugins.security.disabled=true"
+#    ulimits:
+#      memlock:
+#        hard: -1
+#        soft: -1
+#      nofile:
+#        soft: 65536
+#        hard: 65536
+#    volumes:
+#      - "os_data:/usr/share/opensearch/data"
+#    restart: "on-failure"
+##try version 5.0 if this doesnt work, 5.0 was default in opensearch mode
+#  graylog:
+#    hostname: "server"
+#    image: "${GRAYLOG_IMAGE:-graylog/graylog:5.2}"
+#    depends_on:
+#      opensearch:
+#        condition: "service_started"
+#      mongodb:
+#        condition: "service_started"
+#    entrypoint: "/usr/bin/tini -- wait-for-it opensearch:9200 --  /docker-entrypoint.sh"
+#    networks:
+#        - fly-hi
+#    environment:
+#      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/config/node-id"
+##pwgen -N 1 -s 96 'use this command to generate password and put the value in this variable'
+##To create the SHA256 string run ‘echo -n YOUR16CHARACTERPASSWORD | sha256sum
+#      GRAYLOG_PASSWORD_SECRET: "${GRAYLOG_PASSWORD_SECRET:?Please configure GRAYLOG_PASSWORD_SECRET in the .env file}"
+##pwgen -N 1 -s 96 'use this command to generate password and put the value in this variable'
+##To create the SHA256 string run ‘echo -n YOUR16CHARACTERPASSWORD | sha256sum
+#      GRAYLOG_ROOT_PASSWORD_SHA2: "${GRAYLOG_ROOT_PASSWORD_SHA2:?Please configure GRAYLOG_ROOT_PASSWORD_SHA2 in the .env file}"
+#      GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9000"
+#      GRAYLOG_HTTP_EXTERNAL_URI: "http://localhost:9000/"
+#      GRAYLOG_ELASTICSEARCH_HOSTS: "http://opensearch:9200"
+#      GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
+##    user: "1000:1000"  # Specify user and group ID
+#    ports:
+#    - "5044:5044/tcp"   # Beats
+#    - "5140:5140/udp"   # Syslog
+#    - "5140:5140/tcp"   # Syslog
+#    - "5555:5555/tcp"   # RAW TCP
+#    - "5555:5555/udp"   # RAW TCP
+#    - "9001:9000/tcp"   # Server API #WEB-UI
+#    - "12201:12201/tcp" # GELF TCP
+#    - "12201:12201/udp" # GELF UDP
+#    #- "10000:10000/tcp" # Custom TCP port
+#    #- "10000:10000/udp" # Custom UDP port
+#    - "13301:13301/tcp" # Forwarder data
+#    - "13302:13302/tcp" # Forwarder config
+#    volumes:
+##https://github.com/Graylog2/docker-compose/issues/34
+##this used to be       - "graylog_data:/usr/share/graylog/data/data"
+#      - "graylog_data:/usr/share/graylog/data"
+#      - "graylog_journal:/usr/share/graylog/data/journal"
+#      - "graylog_cfg:/usr/share/graylog/data/config"
+#    restart: "on-failure"
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.graylog.rule=Host(`graylog.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.graylog.loadbalancer.server.port=8080" #traefik#
+#      - "traefik.http.routers.graylog.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.graylog.tls=true" #traefik#
+##      - "traefik.http.routers.graylog.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.graylog.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.graylog.entrypoints=websecure"                        #httpchallenge# #traefik#
+#
+#volumes:
+#  mongodb_data:
+#  os_data:
+#  graylog_data:
+#  graylog_journal:
+#  graylog_cfg:
+#graylogend
+
+
+networks:
+  fly-hi:
+    external: true

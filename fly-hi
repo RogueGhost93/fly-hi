@@ -1,0 +1,324 @@
+#!/bin/bash
+set -euo pipefail
+
+dc_media="docker compose -f <install_location>/media/docker-compose.yaml"
+dc_starrs="docker compose -f <install_location>/starrs/docker-compose.yaml"
+dc_network="docker compose -f <install_location>/network/docker-compose.yaml"
+dc_management="docker compose -f <install_location>/management/docker-compose.yaml"
+
+option=${1:-"help"}
+compose_file=${2:-""}
+container=${3:-""}
+help() {
+   echo "Fly-Hi Media"
+   echo
+   echo "Usage: fly-hi [help|option] [compose-file]"
+   echo "options:"
+   echo "help        displays this help message"
+   echo "restart     restarts Fly-Hi services"
+   echo "stop        stops all Fly-Hi services"
+   echo "start       starts Fly-Hi services"
+   echo "update      updates Fly-Hi services"
+   echo "destroy     destroy Fly-Hi services but preserve container data"
+   echo "uninstall   completely remove all containers and their data from the system"
+   echo "ip          checks if the VPN is working as expected"
+   echo "ports       shows all ports currently used and opened by docker containers"
+   echo "links       shows links to access your services"
+   echo "vpn         Manage your VPN server" #private_vpn#
+}
+
+send_success_message() {
+    echo -e $(printf "\e[32m$1\e[0m")
+}
+
+send_error_message() {
+    echo -e $(printf "\e[31m$1\e[0m")
+    exit 255
+}
+
+if [ $option == "help" ]; then
+    help
+    exit 0
+fi
+if [ $option == "ports" ]; then
+        docker ps --format '{{.Names}}\t{{.Ports}}'
+fi
+if [ $option == "links" ]; then
+    host_ip=$(hostname -I | awk '{ print $1 }')
+    echo
+    echo -e $(printf "\e[34m===== MANAGEMENT =====\e[0m")
+    echo "WhoAmI:         http://$host_ip:$(docker port whoami 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Portainer:      http://$host_ip:$(docker port portainer 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Dozzle:         http://$host_ip:$(docker port dozzle 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Heimdall:       http://$host_ip:$(docker port heimdall 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Glances:        http://$host_ip:$(docker port glances 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Uptime-Kuma:    http://$host_ip:$(docker port uptime-kuma 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Scrutiny:       http://$host_ip:$(docker port scrutiny 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Ntfy:           http://$host_ip:$(docker port ntfy 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "PhpMyAdmin:     http://$host_ip:$(docker port phpmyadmin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "PgAdmin:        http://$host_ip:$(docker port pgadmin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Vaultwarden:    http://$host_ip:$(docker port vaultwarden 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Cockpit:        http://$host_ip:9090"
+    echo "Graylog:        http://$host_ip:$(cat $install_location/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
+
+    echo
+    echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
+    echo "Traefik:        http://$host_ip:80/" #traefik#
+    echo "Traefik:        http://$host_ip:443/" #traefik#
+    echo "Traefik:        http://$host_ip:8880/" #traefik#
+    echo "Speedtest:      http://$host_ip:$(docker port speedtest 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Flaresolverr:   http://$host_ip:$(docker port flaresolverr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "WG-Easy:        http://$host_ip:$(cat <install_location>/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
+    echo
+    echo -e $(printf "\e[34m===== MEDIA =====\e[0m")
+    echo "Jellyfin:       http://$host_ip:$(docker port jellyfin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Emby:           http://$host_ip:$(docker port emby 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Plex:           http://$host_ip:$(cat <install_location>/media/docker-compose.yaml | grep webUI | awk -F":" '{ print $2 }' | awk '{ print $1 }')"
+    echo "Jellyseerr:     http://$host_ip:$(docker port jellyseerr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Overseerr:      http://$host_ip:$(docker port overseerr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Ombi:           http://$host_ip:$(docker port ombi 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Airsonic:       http://$host_ip:$(docker port airsonic 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "CalibreLibrary: http://$host_ip:$(docker port calibre 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Calibreweb:     http://$host_ip:$(docker port calibre_web 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Audiobookshelf: http://$host_ip:$(docker port audiobookshelf 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Tubesync:       http://$host_ip:$(docker port tubesync 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Photoprism:     http://$host_ip:$(docker port photoprism 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Nextcloud:      http://$host_ip:$(docker port nextcloud 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Linkding:       http://$host_ip:$(docker port linkding 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Linkwarden:     http://$host_ip:$(docker port linkwarden 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Joplin:         http://$host_ip:$(docker port joplin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "FreshRSS:       http://$host_ip:$(docker port freshrss 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Stirling-PDF:   http://$host_ip:$(docker port stirling_pdf 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Filebrowser:    http://$host_ip:$(docker port filebrowser 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo
+    echo -e $(printf "\e[34m===== STARRS =====\e[0m")
+    echo "qBittorrent:    http://$host_ip:$(cat <install_location>/network/docker-compose.yaml | grep qbittorrentport | grep -Eo '[0-9]{1,4}' | head -1)/"
+    echo "qBittorrentpub: http://$host_ip:$(cat <install_location>/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1)/"
+    echo "Radarr:         http://$host_ip:$(docker port radarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Sonarr:         http://$host_ip:$(docker port sonarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Lidarr:         http://$host_ip:$(docker port lidarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Readarr:        http://$host_ip:$(docker port readarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Prowlarr:       http://$host_ip:$(docker port prowlarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Bazarr:         http://$host_ip:$(docker port bazarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo
+    send_success_message "Use 'fly-hi help' to see how to use the script"
+    echo
+    send_success_message "Your services can also be reached by "service-name".<my_domain>  (e. g. https://heimdall.<my_domain>)" #traefik#
+    echo
+    send_success_message "To add or remove clients from your Private VPN Server run 'fly-hi vpn'" #private_vpn#
+
+    send_success_message "To start up Tailscale run 'sudo tailscale up' " #tailscale#
+    echo
+fi
+if [ $option == "restart" ]; then
+    if [ -z "$compose_file" ]; then
+        $dc_management stop && $dc_management up -d
+        $dc_network stop && $dc_network up -d
+        $dc_media stop && $dc_media up -d
+        $dc_starrs stop && $dc_starrs up -d
+    else
+        case $compose_file in
+            "media")
+                $dc_media stop && $dc_media up -d
+                ;;
+            "starrs")
+                $dc_starrs stop && $dc_starrs rm -f qbittorrent && $dc_starrs rm -f qbittorrentpub && $dc_starrs up -d
+                ;;
+            "network")
+                $dc_network stop && $dc_network up -d
+                ;;
+            "management")
+                $dc_management stop && $dc_management up -d
+                ;;
+            "$compose_file")
+                docker restart $compose_file
+                ;;
+            *)
+                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management."
+                ;;
+        esac
+    fi
+    echo "Fly-Hi is starting. Wait 1 min until all the services are up and running..."
+    exit 0
+fi
+if [ $option == "stop" ]; then
+    if [ -z "$compose_file" ]; then
+        $dc_media stop
+        $dc_starrs stop
+        $dc_network stop
+        $dc_management stop
+    else
+        case $compose_file in
+
+            "media")
+                $dc_media stop
+                ;;
+            "starrs")
+                $dc_starrs stop
+                ;;
+            "network")
+                $dc_network stop
+                ;;
+            "management")
+                $dc_management stop
+                ;;
+            "$compose_file")
+                docker stop $compose_file
+                ;;
+            *)
+                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management."
+                ;;
+        esac
+    fi
+    exit 0
+fi
+if [ $option == "start" ]; then
+    if [ -z "$compose_file" ]; then
+        $dc_management up -d
+        $dc_network up -d
+        $dc_media up -d
+        $dc_starrs up -d
+    else
+        case $compose_file in
+            "media")
+                $dc_media up -d
+                ;;
+            "starrs")
+                $dc_starrs up -d
+                ;;
+            "network")
+                $dc_network up -d
+                ;;
+            "management")
+                $dc_management up -d
+                ;;
+            "$compose_file")
+                docker start $compose_file
+                ;;
+            *)
+                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management."
+                ;;
+        esac
+    fi
+    send_success_message "Fly-Hi is up and running!"
+    exit 0
+fi
+if [ $option == "update" ]; then
+    if [ -z "$compose_file" ]; then
+        $dc_media pull && $dc_media up -d
+        $dc_starrs pull && $dc_starrs up -d
+        $dc_network pull && $dc_network up -d
+        $dc_management pull && $dc_management up -d
+    else
+        case $compose_file in
+            "media")
+                $dc_media pull && $dc_media up -d
+                ;;
+            "starrs")
+                $dc_starrs pull && $dc_starrs up -d
+                ;;
+            "network")
+                $dc_network pull && $dc_network up -d
+                ;;
+            "management")
+                $dc_management pull && $dc_management up -d
+                ;;
+            *)
+                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management."
+                ;;
+        esac
+    fi
+    echo "Fly-Hi is updating. Wait 1 min until all the services are up and running..."
+    exit 0
+fi
+if [ $option == "destroy" ]; then
+    if [ -z "$compose_file" ]; then
+        $dc_media down --remove-orphans
+        $dc_starrs down --remove-orphans
+        $dc_network down --remove-orphans
+        $dc_management down --remove-orphans
+    else
+        case $compose_file in
+            "media")
+                $dc_media down --remove-orphans
+                ;;
+            "starrs")
+                $dc_starrs down --remove-orphans
+                ;;
+            "network")
+                $dc_network down --remove-orphans
+                ;;
+            "management")
+                $dc_management down --remove-orphans
+                ;;
+            "$compose_file")
+                docker stop $compose_file && docker rm $compose_file
+                ;;
+            *)
+                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management or a container name."
+                ;;
+        esac
+    fi
+    exit 0
+fi
+if [ $option == "ip" ]; then
+    echo "Getting your qBittorrent IP..."
+    qbittorrent_ip=$(docker exec qbittorrent sh -c "curl -s ifconfig.me");
+    echo "$qbittorrent_ip"
+    echo "Your country in qBittorrent is $($dc_starrs exec -it qbittorrent sh -c 'curl -s https://am.i.mullvad.net/country')"
+    echo "Your city in qBittorrent is $($dc_starrs exec -it qbittorrent sh -c 'curl -s curl https://am.i.mullvad.net/city')"
+    echo
+    echo "Getting your IP..."
+    your_ip=$(curl -s ifconfig.me)
+    echo "$your_ip"
+    echo "Your local IP country is $(curl -s https://am.i.mullvad.net/country)"
+    echo "Your local IP city is $(curl -s curl https://am.i.mullvad.net/city)"
+    echo
+    if [ $qbittorrent_ip == $your_ip ]; then
+           send_error_message "Your IPs are the same! qBittorrent is NOT working! ⚠️"
+   else
+           send_success_message "Your IPs are different. qBittorrent is working as expected! ✅ "
+    fi
+fi
+
+if [ $option == "vpn" ]; then
+bash <install_location>/*install.sh
+fi
+if [ $option == "noip" ]; then
+sudo /usr/local/bin/noip2 -S
+fi
+
+
+if [ $option == "uninstall" ]; then
+    read -p "This will uninstall your fly-hi script and remove all container data including the ones not installed with this script, proceed? [n,Y]:" uninstall
+    uninstall=${uninstall:-"y"}
+    if [ "$uninstall" == "y" ]; then
+        read -p "Would you like to also uninstall and purge your docker installation? [N,y]:" uninstall_docker
+        uninstall_docker=${uninstall_docker:-"n"}
+        if [ "$uninstall_docker" == "y" ]; then
+        fly-hi destroy
+        docker network rm fly-hi
+        sudo rm -r <install_location>
+        sudo docker system prune -a
+        sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin docker* || true
+        sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin || true
+        sudo umount /var/lib/docker/ || true
+        sudo rm -rf /var/lib/docker /etc/docker || true
+        sudo rm /etc/apparmor.d/docker || true
+        sudo groupdel docker || true
+        sudo rm -rf /var/run/docker.sock || true
+        sudo rm -rf /usr/bin/docker-compose || true
+        sudo rm -rf /var/lib/containerd || true
+        sudo rm /usr/local/lib/docker/cli-plugins/docker-compose || true
+        echo "You are ready for a fresh install of docker!"
+        else
+        fly-hi destroy
+        docker network rm fly-hi
+        sudo rm -r <install_location>
+        sudo docker system prune -a
+        echo "You successefully uninstalled your fly-hi-media!"
+        sudo rm /usr/local/bin/fly-hi
+        fi
+    fi
+fi
+

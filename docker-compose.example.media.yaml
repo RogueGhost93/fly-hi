@@ -1,0 +1,929 @@
+############################################################################################################
+                                       ##### MEDIA SERVICES #####
+############################################################################################################
+version: "3"
+
+services:
+
+# Jellyfin        - Media Streaming Service (open-source, fork of Emby, recommended) (https://jellyfin.org/)
+#jellyfinstart
+#  # Jellyfin is used to serve your media to the client devices
+#  jellyfin:
+#    image: lscr.io/linuxserver/jellyfin
+#    container_name: jellyfin
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - VERSION=docker
+#    volumes:
+#      - ${DATA_ROOT}/Movies:/data/Movies
+#      - ${DATA_ROOT}/TV-Shows:/data/TV-Shows
+#      - ${DATA_ROOT}/Music:/data/Music
+#      - ${INSTALL_LOCATION}/media/jellyfin:/config
+#      #     uncomment this for intel graphic transcoding - also fix the permission problem of /dev/dri
+#      #     https://github.com/linuxserver/docker-jellyfin/issues/26
+#      #     https://hub.docker.com/r/linuxserver/plex
+#      #     https://github.com/linuxserver/docker-plex/issues/207
+#    devices:
+#      - /dev/dri/renderD128:/dev/dri/renderD128
+#      - /dev/dri/card0:/dev/dri/card0
+#    ports:
+#      - 8096:8096
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096" #traefik#
+#      - "traefik.http.routers.jellyfin.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.jellyfin.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.jellyfin.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.jellyfin.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.jellyfin.entrypoints=websecure"                         #httpchallenge# #traefik#
+#
+#
+## Jellyseerr       - Jellyfin Media Requests (https://github.com/Fallenbagel/jellyseerr)
+#  jellyseerr:
+#    container_name: jellyseerr
+#    image: fallenbagel/jellyseerr:latest
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    ports:
+#      - 5055:5055
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/jellyseerr:/app/config
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055" #traefik#
+#      - "traefik.http.routers.jellyseerr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.jellyseerr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.jellyseerr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.jellyseerr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.jellyseerr.entrypoints=websecure"                         #httpchallenge# #traefik#
+#    restart: unless-stopped
+#jellyfinend
+
+
+# Emby            - Media Streaming Service (closed-source) (https://emby.media/)
+#embystart
+#  # emby is used to serve your media to the client devices
+#  emby:
+#    image: lscr.io/linuxserver/emby
+#    container_name: emby
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - VERSION=docker
+#    volumes:
+#      - ${DATA_ROOT}/Movies:/data/Movies
+#      - ${DATA_ROOT}/TV-Shows:/data/TV-Shows
+#      - ${DATA_ROOT}/Music:/data/Music
+#      - ${INSTALL_LOCATION}/media/emby:/config
+#      #     uncomment this for intel graphic transcoding - also fix the permission problem of /dev/dri
+#      #     https://github.com/linuxserver/docker-jellyfin/issues/26
+#      #     https://hub.docker.com/r/linuxserver/plex
+#      #     https://github.com/linuxserver/docker-plex/issues/207
+#    devices:
+#      - /dev/dri/renderD128:/dev/dri/renderD128
+#      - /dev/dri/card0:/dev/dri/card0
+#    ports:
+#      - 8097:8096
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.emby.rule=Host(`emby.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.emby.loadbalancer.server.port=8096" #traefik#
+#      - "traefik.http.routers.emby.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.emby.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.emby.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.emby.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.emby.entrypoints=websecure"                         #httpchallenge# #traefik#
+#embyend
+
+
+
+
+
+
+# Plex            - Media Streaming Service (closed-source) (https://www.plex.tv/)
+#plexstart
+#  plex:
+#    image: lscr.io/linuxserver/plex:latest
+#    container_name: plex
+#    #network_mode: bridge
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - VERSION=docker
+#      - PLEX_CLAIM= #optional
+##      - FIREWALL_VPN_INPUT_PORTS=${FIREWALL_VPN_INPUT_PORTS} #port_forwarding#
+#    ports:
+#      -  32400:32400 #webUI
+#      -  1900:1900
+#      -  3005:3005
+#      -  5353:5353
+#      -  8324:8324
+#      -  32410:32410
+#      -  32412:32412
+#      -  32413:32413
+#      -  32414:32414
+#      -  32469:32469
+#    devices:
+#      - /dev/dri/renderD128:/dev/dri/renderD128
+#      - /dev/dri/card0:/dev/dri/card0
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/plex:/config
+#      - ${DATA_ROOT}/Movies:/data/Movies
+#      - ${DATA_ROOT}/TV-Shows:/data/TV-Shows
+#      - ${DATA_ROOT}/Music:/data/Music
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.plex.rule=Host(`plex.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.plex.loadbalancer.server.port=32400" #traefik#
+#      - "traefik.http.routers.plex.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.plex.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.plex.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.plex.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.plex.entrypoints=websecure"                         #httpchallenge# #traefik#
+#
+#
+## Overseerr       - Plex Media Requests (https://overseerr.dev/)
+#  overseerr:
+#    image: lscr.io/linuxserver/overseerr:latest
+#    container_name: overseerr
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/overseerr/config:/config
+#    ports:
+#      - 5056:5055
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.overseerr.rule=Host(`overseerr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.overseerr.loadbalancer.server.port=5055" #traefik#
+#      - "traefik.http.routers.overseerr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.overseerr.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.overseerr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.overseerr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.overseerr.entrypoints=websecure"                         #httpchallenge# #traefik#
+#plexend
+
+
+
+
+
+# Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)
+#ombistart
+#  ombi:
+#    image: linuxserver/ombi:latest
+#    container_name: ombi
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    ports:
+#     - 3579:3579
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/ombi:/config
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.ombi.rule=Host(`ombi.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.ombi.loadbalancer.server.port=3579" #traefik#
+#      - "traefik.http.routers.ombi.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.ombi.tls=true" #traefik#
+##      - "traefik.http.routers.ombi.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.ombi.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.ombi.entrypoints=websecure"                         #httpchallenge# #traefik#
+#ombiend
+
+
+# Airsonic        - Music Server (https://airsonic.github.io/)
+#airsonicstart
+#  airsonic:
+#    container_name: airsonic
+#    image: airsonicadvanced/airsonic-advanced:latest
+#    restart: unless-stopped
+#    ports:
+#      - 4040:4040
+##      - 4041:4041 #UPnp
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - JAVA_OPTS='-Dserver.forward-headers-strategy=native' #optional - if you use a reverse-proxy
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/airsonic:/var/airsonic
+#      - ${DATA_ROOT}/Music/Playlists-mp3:/var/playlists
+##      - ${DATA_ROOT}/Podcasts:/var/podcasts
+#      - ${DATA_ROOT}/Music:/var/music
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.airsonic.rule=Host(`airsonic.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.airsonic.loadbalancer.server.port=4040" #traefik#
+#      - "traefik.http.routers.airsonic.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.airsonic.tls=true" #traefik#
+##      - "traefik.http.routers.airsonic.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.airsonic.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.airsonic.entrypoints=websecure"                         #httpchallenge# #traefik#
+#airsonicend
+
+
+
+# Calibre-web     - Read your favorite Books (https://github.com/janeczku/calibre-web)
+#calibre_webstart
+#  calibre_web:
+#    image: lscr.io/linuxserver/calibre-web:latest
+#    container_name: calibre_web
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      #- DOCKER_MODS=linuxserver/calibre-web:calibre #optional
+#      - OAUTHLIB_RELAX_TOKEN_SCOPE=1 #optional
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/calibre_web:/config
+#      - ${DATA_ROOT}/Books:/data/Books
+#    ports:
+#      - 8083:8083
+#    networks:
+#      - fly-hi
+#    restart: unless-stopped
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.calibreweb.rule=Host(`calibreweb.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.calibreweb.loadbalancer.server.port=8083" #traefik#
+#      - "traefik.http.routers.calibreweb.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.calibreweb.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.calibreweb.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.calibreweb.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.calibreweb.entrypoints=websecure"                         #httpchallenge# #traefik#
+#calibre_webend
+
+
+# Calibre Library - Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)
+#calibre_librarystart
+#  calibre:
+#    image: lscr.io/linuxserver/calibre:latest
+#    container_name: calibre
+#    security_opt:
+#      - seccomp:unconfined #optional
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - PASSWORD= #optional
+#      - CLI_ARGS= #optional
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/calibre:/config
+#      - ${DATA_ROOT}/Books:/data/Books
+#    ports:
+#      - 8282:8080
+#      - 8181:8181
+#      - 8081:8081
+#    networks:
+#      - fly-hi
+#    restart: unless-stopped
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.calibre.rule=Host(`calibre.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.calibre.loadbalancer.server.port=8080" #traefik#
+#      - "traefik.http.routers.calibre.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.calibre.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.calibre.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.calibre.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.calibre.entrypoints=websecure"                         #httpchallenge# #traefik#
+#calibre_libraryend
+
+
+# Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)
+#audiobookshelfstart
+#  audiobookshelf:
+#    image: advplyr/audiobookshelf
+#    container_name: audiobookshelf
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    ports:
+#      - 13378:80
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/audiobookshelf:/metadata
+#      - ${INSTALL_LOCATION}/media/audiobookshelf:/config
+#      - ${DATA_ROOT}/Books:/data/Books
+#      - ${DATA_ROOT}/Podcasts:/data/Podcasts
+#    networks:
+#      - fly-hi
+#    restart: unless-stopped
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.audiobookshelf.rule=Host(`audiobookshelf.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.audiobookshelf.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.audiobookshelf.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.audiobookshelf.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.audiobookshelf.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.audiobookshelf.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.audiobookshelf.entrypoints=websecure"                         #httpchallenge# #traefik#
+#audiobookshelfend
+
+
+
+
+
+# Photoprism      - Browse Your Life in Pictures (https://www.photoprism.app/)
+#photoprismstart
+#  photoprism:
+#    ## Use photoprism/photoprism:preview for testing preview builds:
+#    image: photoprism/photoprism:latest
+#    container_name: photoprism
+#    depends_on:
+#      - mariadb1
+#    ## Don't enable automatic restarts until PhotoPrism has been properly configured and tested!
+#    ## If the service gets stuck in a restart loop, this points to a memory, filesystem, network, or database issue:
+#    ## https://docs.photoprism.app/getting-started/troubleshooting/#fatal-server-errors
+#    restart: unless-stopped
+#    security_opt:
+#      - seccomp:unconfined
+#      - apparmor:unconfined
+#    ports:
+#      - "2342:2342" # HTTP port (host:container)
+#    environment:
+#      TZ: ${TIMEZONE}
+#      PHOTOPRISM_ADMIN_USER: "${PHOTOPRISM_ADMIN_USER}"                 # superadmin username
+#      PHOTOPRISM_ADMIN_PASSWORD: "${PHOTOPRISM_ADMIN_PASSWORD}"          # initial superadmin password (minimum 8 characters)
+#      PHOTOPRISM_AUTH_MODE: "password"               # authentication mode (public, password)
+#      PHOTOPRISM_SITE_URL: "http://localhost:2342/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
+#      PHOTOPRISM_ORIGINALS_LIMIT: 50000               # file size limit for originals in MB (increase for high-res video)
+#      PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # improves transfer speed and bandwidth utilization (none or gzip)
+#      PHOTOPRISM_LOG_LEVEL: "info"                   # log level: trace, debug, info, warning, error, fatal, or panic
+#      PHOTOPRISM_READONLY: "false"                   # do not modify originals directory (reduced functionality)
+#      PHOTOPRISM_EXPERIMENTAL: "false"               # enables experimental features
+#      PHOTOPRISM_DISABLE_CHOWN: "false"              # disables updating storage permissions via chmod and chown on startup
+#      PHOTOPRISM_DISABLE_WEBDAV: "false"             # disables built-in WebDAV server
+#      PHOTOPRISM_DISABLE_SETTINGS: "false"           # disables settings UI and API
+#      PHOTOPRISM_DISABLE_TENSORFLOW: "false"         # disables all features depending on TensorFlow
+#      PHOTOPRISM_DISABLE_FACES: "false"              # disables face detection and recognition (requires TensorFlow)
+#      PHOTOPRISM_DISABLE_CLASSIFICATION: "false"     # disables image classification (requires TensorFlow)
+#      PHOTOPRISM_DISABLE_RAW: "false"                # disables indexing and conversion of RAW files
+#      PHOTOPRISM_RAW_PRESETS: "false"                # enables applying user presets when converting RAW files (reduces performance)
+#      PHOTOPRISM_JPEG_QUALITY: 100                    # a higher value increases the quality and file size of JPEG images and thumbnails (25-100)
+#      PHOTOPRISM_DETECT_NSFW: "false"                # automatically flags photos as private that MAY be offensive (requires TensorFlow)
+#      PHOTOPRISM_UPLOAD_NSFW: "true"                 # allows uploads that MAY be offensive (no effect without TensorFlow)
+#      # PHOTOPRISM_DATABASE_DRIVER: "sqlite"         # SQLite is an embedded database that doesn't require a server
+#      PHOTOPRISM_DATABASE_DRIVER: "mysql"            # use MariaDB 10.5+ or MySQL 8+ instead of SQLite for improved performance
+#      PHOTOPRISM_DATABASE_SERVER: "mariadb1:3306"     # MariaDB or MySQL database server (hostname:port)
+#      PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB or MySQL database schema name
+#      PHOTOPRISM_DATABASE_USER: "photoprism"         # MariaDB or MySQL database user name
+#      PHOTOPRISM_DATABASE_PASSWORD: "${MARIADB_PASSWORD}"       # MariaDB or MySQL database user password
+#      PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
+#      PHOTOPRISM_SITE_DESCRIPTION: ""                # meta site description
+#      PHOTOPRISM_SITE_AUTHOR: ""                     # meta site author
+#      ## Run/install on first startup (options: update https gpu tensorflow davfs clitools clean):
+#      # PHOTOPRISM_INIT: "https gpu tensorflow"
+#      ## Hardware Video Transcoding:
+#      # PHOTOPRISM_FFMPEG_ENCODER: "software"        # FFmpeg encoder ("software", "intel", "nvidia", "apple", "raspberry")
+#      # PHOTOPRISM_FFMPEG_BITRATE: "32"              # FFmpeg encoding bitrate limit in Mbit/s (default: 50)
+#      ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
+#      PHOTOPRISM_UID: ${USER_ID}
+#      PHOTOPRISM_GID: ${GROUP_ID}
+#      PHOTOPRISM_UMASK: 0000
+#    ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
+#    user: "${USER_ID}:${GROUP_ID}"
+#    ## Share hardware devices with FFmpeg and TensorFlow (optional):
+#    # devices:
+#    #  - "/dev/dri:/dev/dri"                         # Intel QSV
+#    #  - "/dev/nvidia0:/dev/nvidia0"                 # Nvidia CUDA
+#    #  - "/dev/nvidiactl:/dev/nvidiactl"
+#    #  - "/dev/nvidia-modeset:/dev/nvidia-modeset"
+#    #  - "/dev/nvidia-nvswitchctl:/dev/nvidia-nvswitchctl"
+#    #  - "/dev/nvidia-uvm:/dev/nvidia-uvm"
+#    #  - "/dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools"
+#    #  - "/dev/video11:/dev/video11"                 # Video4Linux Video Encode Device (h264_v4l2m2m)
+#    working_dir: "/photoprism" # do not change or remove
+#    ## Storage Folders: "~" is a shortcut for your home directory, "." for the current directory
+#    volumes:
+#      # "/host/folder:/photoprism/folder"                # Example
+#      - "${DATA_ROOT}/Photos:/photoprism/originals"               # Original media files (DO NOT REMOVE)
+#      # - "/example/family:/photoprism/originals/family" # *Additional* media folders can be mounted like this
+#      #- "${DATA_ROOT}/PhotosByDate:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
+#      #This is default but i put the storage folder on my ${DATA_ROOT} because a library of 30k+ photos can easily fill up the boot disk with cache
+#      - "${INSTALL_LOCATION}/media/photoprism/storage:/photoprism/storage"                  # *Writable* storage folder for cache, database, and sidecar files
+#      #- "${DATA_ROOT}/Photoprism/storage:/photoprism/storage"
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.photoprism.rule=Host(`photoprism.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.photoprism.loadbalancer.server.port=2342" #traefik#
+#      - "traefik.http.routers.photoprism.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.photoprism.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.photoprism.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.photoprism.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.photoprism.entrypoints=websecure"                         #httpchallenge# #traefik#
+#  ## Database Server (recommended)
+#  ## see https://docs.photoprism.app/getting-started/faq/#should-i-use-sqlite-mariadb-or-mysql
+#  mariadb1:
+#    ## If MariaDB gets stuck in a restart loop, this points to a memory or filesystem issue:
+#    ## https://docs.photoprism.app/getting-started/troubleshooting/#fatal-server-errors
+#    restart: unless-stopped
+#    image: mariadb:10.10
+#    container_name: mariadb1
+#    security_opt: # see https://github.com/MariaDB/mariadb-docker/issues/434#issuecomment-1136151239
+#      - seccomp:unconfined
+#      - apparmor:unconfined
+#    command: mysqld --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
+#    ## Never store database files on an unreliable device such as a USB flash drive, an SD card, or a shared network folder:
+#    volumes:
+#      - "${INSTALL_LOCATION}/media/photoprism/database:/var/lib/mysql" # DO NOT REMOVE
+#    environment:
+#      TZ: ${TIMEZONE}
+#      MARIADB_AUTO_UPGRADE: "1"
+#      MARIADB_INITDB_SKIP_TZINFO: "1"
+#      MARIADB_DATABASE: "photoprism"
+#      MARIADB_USER: "photoprism"
+#      MARIADB_PASSWORD: "${MARIADB_PASSWORD}"
+#      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+#    ports:
+#      - 3306:3306
+#    networks:
+#      - fly-hi
+#photoprismend
+
+
+
+
+
+# Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)
+# #https://hub.docker.com/r/linuxserver/nextcloud
+#nextcloudstart
+#  nextcloud:
+#    image: lscr.io/linuxserver/nextcloud:latest
+#    container_name: nextcloud
+#    restart: unless-stopped
+#    #command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+#    ports:
+#      - 90:80
+##    depends_on:
+##    links:
+##      - mariadb2
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/nextcloud/config:/config     # USE THIS IF USING LINUXSERVER IMAGE
+#      - ${INSTALL_LOCATION}/media/nextcloud/data:/data         # USE THIS IF USING LINUXSERVER IMAGE
+##      - ${DATA_ROOT}/Photos:/media/Photos                     # example to mount extra data folders to nextcloud
+##      - ${INSTALL_LOCATION}/media/nextcloud:/var/www/html     # USE THIS IF USING REGULAR (non linuxserver) IMAGE
+#    environment:
+#      - TZ=${TIMEZONE}
+##      - PUID=${USER_ID}
+##      - PGID=${GROUP_ID}
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_DATABASE=nextcloud
+#      - POSTGRES_USER=nextcloud
+#      - POSTGRES_PORT=5434
+#      - POSTGRES_HOST=postgres4
+##      - MYSQL_DATABASE=nextcloud
+##      - MYSQL_USER=nextcloud
+##      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+##      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+##      - MARIADB_DATABASE: "nextcloud"
+##      - MARIADB_USER: "nextcloud"
+##      - MARIADB_PASSWORD: "${MARIADB_PASSWORD}"
+##      - MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.nextcloud.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.nextcloud.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.nextcloud.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.nextcloud.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.nextcloud.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.nextcloud.entrypoints=websecure"                         #httpchallenge# #traefik#
+##  mariadb2:
+##    container_name: mariadb2
+##    restart: unless-stopped
+##    image: mariadb:10.10
+##    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+##    volumes:
+##      - "${INSTALL_LOCATION}/media/nextcloud/database:/var/lib/mysql" # DO NOT REMOVE
+##    environment:
+##      TZ: ${TIMEZONE}
+##      PUID: ${USER_ID}
+##      PGID: ${GROUP_ID}
+##      MARIADB_DATABASE: "nextcloud"
+##      MARIADB_USER: "nextcloud"
+##      MARIADB_PASSWORD: "${MARIADB_PASSWORD}"
+##      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+     ## probably missing a variable to map a different port for mariadb
+##    ports:
+##      - 3306:3306
+##    networks:
+##      - fly-hi
+#  postgres4:
+#    image: postgres:15
+#    container_name: postgres4
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/nextcloud/database:/var/lib/postgresql/data
+#    ports:
+#      - "5434:5434"
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+##    command: -p 5434 this is equivalent to environment - PGPORT=5433 and can be used to change the listening port of postgres database
+#    environment:
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - TZ=${TIMEZONE}
+#      - POSTGRES_USER=nextcloud
+#      - POSTGRES_DB=nextcloud
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - PGPORT=5434
+#nextcloudend
+
+# Linkding        - Very fancy bookmarks managers with support for tags (https://github.com/sissbruecker/linkding)
+#linkdingstart
+#  linkding:
+#    container_name: linkding
+#    image: sissbruecker/linkding:latest
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    ports:
+#      - 9595:9090
+##    depends_on:
+##      - postgres2
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/linkding:/etc/linkding/data
+#    env_file:
+#      - .env
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.linkding.rule=Host(`linkding.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.linkding.loadbalancer.server.port=9090" #traefik#
+#      - "traefik.http.routers.linkding.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.linkding.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.linkding.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.linkding.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.linkding.entrypoints=websecure"                         #httpchallenge# #traefik#
+##  postgres2:
+##   image: postgres:13.9
+##   container_name: postgres2
+##   restart: unless-stopped
+##   volumes:
+##     - ${INSTALL_LOCATION}/media/linkding/database:/var/lib/postgresql/data
+###   command: -p 5433 this is equivalent to environment - PGPORT=5433 and can be used to change the listening port of postgres database
+##   ports:
+##     - "5432:5432"
+##   networks:
+##     - fly-hi
+##   environment:
+##     - TZ=${TIMEZONE}
+##     - PUID=${USER_ID}
+##     - PGID=${GROUP_ID}
+##     - POSTGRES_DB="linkding"
+##     - POSTGRES_USER="linkding"
+##     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+##     - PGPORT=5432
+## #Linka requires more testing
+##  linka:
+##    container_name: linka
+##    image: cmsax/linka:latest
+##    ports:
+##      - 5431:80
+##    restart: unless-stopped
+##    networks:
+##      - fly-hi
+##    labels:
+##      - "traefik.enable=true"
+##      - "traefik.http.routers.linka.rule=Host(`linka.${HOSTNAME}`)"
+##      - "traefik.http.services.linka.loadbalancer.server.port=80"
+##      - "traefik.http.routers.linka.tls.certresolver=myresolver"
+##      - "traefik.http.routers.linka.tls=true"
+##       # DNS/HTTP
+##      - "traefik.http.routers.linka.tls.domains[0].main=${HOSTNAME}"               ##dnschallenge#
+##      - "traefik.http.routers.linka.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge#
+##      - "traefik.http.routers.linka.entrypoints=websecure"                         #httpchallenge#
+#linkdingend
+
+
+
+
+
+# Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)
+#linkwardenstart
+#  linkwarden:
+#    environment:
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - TZ=${TIMEZONE}
+#      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres3:5433/postgres3
+#      - NEXTAUTH_SECRET=${POSTGRES_PASSWORD}
+#      - NEXTAUTH_URL=https://linkwarden.${HOSTNAME} #traefik#
+#      - NEXTAUTH_URL_INTERNAL=http://localhost:3000 # https://github.com/linkwarden/linkwarden/issues/269 # #localhost#
+#    networks:
+#      - fly-hi
+#    restart: always
+#    image: ghcr.io/linkwarden/linkwarden:latest
+#    container_name: linkwarden
+#    ports:
+#      - 3000:3000
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/linkwarden:/data/data
+#    depends_on:
+#      - postgres3
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.linkwarden.rule=Host(`linkwarden.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.linkwarden.loadbalancer.server.port=3000" #traefik#
+#      - "traefik.http.routers.linkwarden.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.linkwarden.tls=true" #traefik#
+#      # DNS/HTTP #traefik#
+##      - "traefik.http.routers.linkwarden.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.linkwarden.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.linkwarden.entrypoints=websecure"                         #httpchallenge#  #traefik#
+#  postgres3:
+#    image: postgres
+#    container_name: postgres3
+#    environment:
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - PGPORT=5433
+##    command: -p 5433 this is equivalent to environment - PGPORT=5433 and can be used to change the listening port >
+#    restart: always
+#    ports:
+#      - 5433:5433
+#    networks:
+#      - fly-hi
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/linkwarden/database:/var/lib/postgresql/data
+#linkwardenend
+
+
+# Joplin          - Nice and very popular Notes-taking app (https://joplinapp.org/)"
+#joplinstart
+#  joplin:
+#    image: joplin/server:latest
+#    container_name: joplin
+#    depends_on:
+#      - postgres1
+#    ports:
+#      - "22300:22300"
+#    restart: unless-stopped
+#    volumes:
+#      - /etc/localtime:/etc/localtime:ro # "https://github.com/laurent22/joplin/issues/5973"
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - APP_PORT=22300
+#      - APP_BASE_URL=${APP_BASE_URL} #traefik#
+#      - APP_BASE_URL=http://${LOCALHOST}:22300 #localhost#
+#      - DB_CLIENT=pg
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_DATABASE=joplin
+#      - POSTGRES_USER=joplin
+#      - POSTGRES_PORT=5432
+#      - POSTGRES_HOST=postgres1
+#      - MAX_TIME_DRIFT=0 # "https://github.com/laurent22/joplin/issues/5973"
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.joplin.rule=Host(`joplin.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.joplin.loadbalancer.server.port=22300" #traefik#
+#      - "traefik.http.routers.joplin.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.joplin.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.joplin.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.joplin.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.joplin.entrypoints=websecure"                         #httpchallenge# #traefik#
+#  postgres1:
+#    image: postgres:15
+#    container_name: postgres1
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/joplin/database:/var/lib/postgresql/data
+##    command: -p 5433 this is equivalent to environment - PGPORT=5433 and can be used to change the listening port of postgres database
+#    ports:
+#      - "5432:5432"
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - POSTGRES_USER=joplin
+#      - POSTGRES_DB=joplin
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+##      - PGPORT=5432
+#joplinend
+
+
+# FreshRSS is a nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)
+#freshrssstart
+#  freshrss:
+#    image: freshrss/freshrss:edge
+#    container_name: freshrss
+#    restart: unless-stopped
+#    logging:
+#      options:
+#        max-size: 10m
+#    volumes:
+#      # Recommended volume for FreshRSS persistent data such as configuration and SQLite databases
+#      - ${INSTALL_LOCATION}/media/freshrss:/var/www/FreshRSS/data
+#      # Optional volume for storing third-party extensions
+#      - ${INSTALL_LOCATION}/media/freshrss:/var/www/FreshRSS/extensions
+#      # Optional file providing custom global settings (used before a FreshRSS install)
+##      - ${INSTALL_LOCATION}/media/freshrss/config.custom.php:/var/www/FreshRSS/data/config.custom.php
+#      # Optional file providing custom user settings (used before a new user is created)
+##      - ${INSTALL_LOCATION}/media/freshrss/config-user.custom.php:/var/www/FreshRSS/data/config-user.custom.php
+#    ports:
+#      # If you want to open a port 8080 on the local machine:
+#      - "8025:80"
+#    environment:
+#      - TZ=${TIMEZONE}      # A timezone http://php.net/timezones (default is UTC)
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - CRON_MIN=10
+#      # 'development' for additional logs; default is 'production'
+##      - FRESHRSS_ENV=development
+#      # Optional advanced parameter controlling the internal Apache listening port
+##      -  LISTEN=0.0.0.0:80
+#      # Optional auto-install parameters (the Web interface install is recommended instead):
+#      # ⚠️ Parameters below are only used at the very first run (so far).
+#      # So if changes are made (or in .env file), first delete the service and volumes.
+#      # ℹ️ All the --db-* parameters can be omitted if using built-in SQLite database.
+##      FRESHRSS_INSTALL: |-
+##        --api_enabled
+##        --base_url ${BASE_URL}
+##        --db-base ${DB_BASE}
+##        --db-host ${DB_HOST}
+##        --db-password ${DB_PASSWORD}
+##        --db-type pgsql
+##        --db-user ${DB_USER}
+##        --default_user admin
+##        --language en
+##      FRESHRSS_USER: |-
+##        --api_password ${ADMIN_API_PASSWORD}
+##        --email ${ADMIN_EMAIL}
+##        --language en
+##        --password ${ADMIN_PASSWORD}
+##        --user admin
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.freshrss.rule=Host(`freshrss.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.freshrss.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.freshrss.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.freshrss.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.freshrss.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.freshrss.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.freshrss.entrypoints=websecure"                         #httpchallenge# #traefik#
+#freshrssend
+
+
+# Stirling-PDF Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)
+#stirling_pdfstart
+#  stirling_pdf:
+#    container_name: stirling_pdf
+#    image: frooodle/s-pdf
+#    ports:
+#      - '8011:8080'
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/stirling_pdf:/usr/share/tesseract-ocr/4.00/tessdata #Required for extra OCR languages
+#      - ${INSTALL_LOCATION}/media/stirling_pdf:/configs
+#    environment:
+#       TZ: ${TIMEZONE}
+#       PUID: ${USER_ID}
+#       PGID: ${GROUP_ID}
+##      APP_LOCALE: en_GB
+##      APP_HOME_NAME: Stirling PDF
+##      APP_HOME_DESCRIPTION: Your locally hosted one-stop-shop for all your PDF needs.
+##      APP_NAVBAR_NAME: Stirling PDF
+##      APP_ROOT_PATH: /
+##      ALLOW_GOOGLE_VISIBILITY: true
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.pdf.rule=Host(`pdf.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.pdf.loadbalancer.server.port=8080" #traefik#
+#      - "traefik.http.routers.pdf.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.pdf.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.pdf.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.pdf.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.pdf.entrypoints=websecure"                         #httpchallenge# #traefik#
+#stirling_pdfend
+
+# Filebrowser - Nice WebUI for accessing and managing your files (https://filebrowser.org/)
+#filebrowserstart
+#  filebrowser:
+#    container_name: filebrowser
+#    image: filebrowser/filebrowser:latest
+#    volumes:
+#      - ${DATA_ROOT}:/srv
+#      - ${INSTALL_LOCATION}/media/filebrowser/filebrowser.db:/database/filebrowser.db
+#      - ${INSTALL_LOCATION}/media/filebrowser/settings.json:/config/settings.json
+#    ports:
+#      - 8020:80
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID} # used to use PUID=ubuntu - not sure why, maybe some permissions thing
+#      - PGID=${GROUP_ID} # used to use PGID=ubuntu - not sure why, maybe some permissions thing
+#    networks:
+#      - fly-hi
+#    restart: always
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.filebrowser.rule=Host(`filebrowser.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.filebrowser.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.filebrowser.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.filebrowser.tls=true" #traefik#
+#        # DNS/HTTP #traefik#
+##      - "traefik.http.routers.filebrowser.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.filebrowser.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.filebrowser.entrypoints=websecure"                         #httpchallenge# #traefik#
+#filebrowserend
+
+
+#mealiestart
+#  mealie:
+#    image: ghcr.io/mealie-recipes/mealie:nightly
+#    container_name: mealie
+#    ports:
+#        - "9925:9000"
+##    deploy:
+##      resources:
+##        limits:
+##          memory: 1000M #
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/mealie:/app/data/
+#    environment:
+#    # Set Backend ENV Variables Here
+#      - ALLOW_SIGNUP=true
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - TZ=${TIMEZONE}
+#      - MAX_WORKERS=1
+#      - WEB_CONCURRENCY=1
+#      - BASE_URL=https://mealie.${HOSTNAME} #traefik#
+#      - BASE_URL=http://${LOCALHOST}:9925 #localhost#
+#    networks:
+#      - fly-hi
+#    restart: always
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.mealie.rule=Host(`mealie.${HOSTNAME}`)"
+#      - "traefik.http.services.mealie.loadbalancer.server.port=9000"
+#      - "traefik.http.routers.mealie.tls.certresolver=myresolver"
+#      - "traefik.http.routers.mealie.tls=true"
+#        # DNS/HTTP
+##      - "traefik.http.routers.mealie.tls.domains[0].main=${HOSTNAME}"              #dnschallenge#
+##      - "traefik.http.routers.mealie.tls.domains[0].sans=*.${HOSTNAME}"            #dnschallenge#
+##      - "traefik.http.routers.mealie.entrypoints=websecure"                        #httpchallenge#
+#mealieend
+
+networks:
+  fly-hi:
+    external: true
