@@ -209,7 +209,6 @@ add_service "dozzle" "All docker logs in one place on a nice WEB-UI (https://doz
 
 add_service "graylog" "Log Aggregator with a WEB-UI (https://graylog.org/)"
 if [[ $graylog == "y" ]]; then
-    echo
     send_warning_message "Graylog will use sha256sum of password you input here - make sure you remember it"
     password=$(get_password "graylog")
     sed -i -e "s;<graylog_password>;$(echo -n $password | sha256sum | awk '{ print $1 }');g" "$env_management"
@@ -218,7 +217,7 @@ send_message_in_blue "==========================================================
 send_message_in_blue "=============================================================================="
 #COCKPIT PROJECT
 echo "Would you like to add Cockpit Project? [y/N]: "
-send_warning_message "Note: This will require your sudo password!:"
+send_warning_message "Note: This will require your sudo password!"
 read -p "" cockpit
 cockpit=${cockpit:-"n"}
 if [ "$cockpit" == "y" ]; then
@@ -310,24 +309,25 @@ add_service "wgeasy" "Connect to your home network from anywhere in the world! h
 if [[ $wgeasy == "y" ]]; then
     password=$(get_password "wgeasy")
     sed -i -e "s;<wgeasy_password>;$password;g" "$env_network"
-fi
-echo
-if [[ $traefik == "n" ]]; then
-    sudo apt install curl -y
     echo
-    my_current_public_ip=$(curl ifconfig.me)
-    read -rp "If you dont have a statis IP address please input the domain name that will be regularly updated with your Dynamis DNS Client - Your current public IP address is: " -e -i ${my_current_public_ip} my_public_ip
-    my_domain=${my_public_ip}
-    sudo sed -i -e "s;<wg_hostname>;$my_public_ip;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
-    sudo sed -i -e "s;<my_domain>;$my_domain;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
-else
-    sudo sed -i -e "s;<wg_hostname>;$my_domain;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
+    read -rp "Please, input the port you forwarded from your router to your wg-easy VPN server: " -e -i 51820 portfwd_wgeasy
+    sed -i -e "s;<forwarded_port_wgeasy>;$portfwd_wgeasy;g" "$env_network"
+    sed -i '/#port_forwarding_wgeasy#/s/^#//' "$env_network"
+    if [[ $traefik == "n" ]]; then
+        sudo apt install curl -y
+        echo
+        my_current_public_ip=$(curl ifconfig.me)
+        echo "If you dont have a statis IP address please input the domain name that will be regularly updated with your Dynamis DNS Client!"
+        read -rp "Your current public IP address is: " -e -i ${my_current_public_ip} my_public_ip
+        my_domain=${my_public_ip}
+        sudo sed -i -e "s;<wg_hostname>;$my_public_ip;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
+        sudo sed -i -e "s;<my_domain>;$my_domain;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
+    else
+        sudo sed -i -e "s;<wg_hostname>;$my_domain;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
+    fi
 fi
-read -rp "Please, input the port you forwarded from your router to your wg-easy VPN server: " -e -i 51820 portfwd_wgeasy
-sed -i -e "s;<forwarded_port_wgeasy>;$portfwd_wgeasy;g" "$env_network"
-sed -i '/#port_forwarding_wgeasy#/s/^#//' "$env_network"
 
-fi
+
 send_message_in_blue "=============================================================================="
 send_message_in_blue "=============================================================================="
 #VPN CLIENT
