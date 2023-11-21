@@ -263,7 +263,7 @@ if [[ $traefik == "y" ]]; then
     # Uncomment lines between #traefikstart and #traefikend
     sed -i '/^#traefikstart$/,/^#traefikend$/{/^\(#traefikstart\|#traefikend\)$/!s/^#//}' "$compose_network"
     # delete lines with #localhost#
-    sed -i '/#localhost#/d' "$compose_media" # this is used only for joplin and linkwarden because of some APP_URL conflicts when running behind reverse-proxy
+    sed -i '/#localhost#/d' "$compose_media" "$env_media" # this is used only for joplin and linkwarden because of some APP_URL conflicts when running behind reverse-proxy
     echo "Would you prefer to use DNS (only cloudflare supported at the momemnt - you can manually switch the"
     echo "provider after the installation to any other you can find here: https://go-acme.github.io/lego/dns/) "
     echo "or would you prefer to use HTTP challenge (any provider)?"
@@ -296,7 +296,7 @@ if [[ $traefik == "y" ]]; then
         sed -i '/#httpchallenge#/s/^#//' "$compose_network" "$compose_starrs" "$compose_management" "$compose_media"
     fi
 else
-  sudo sed -i '/#traefik#/d' "$compose_network" "$compose_starrs" "$compose_management" "$compose_media" "/usr/local/bin/fly-hi"
+  sudo sed -i '/#traefik#/d' "$compose_network" "$compose_starrs" "$compose_management" "$compose_media" "$env_media" "/usr/local/bin/fly-hi"
   echo "Skipping Traefik configuration"
   localhostip=$(hostname -I | awk '{ print $1 }')
   sed -i -e "s;<localhostip>;$localhostip;g" "$env_media"
@@ -690,9 +690,3 @@ echo "To configure Fly-Hi, check the documentation at"
 echo "https://yams.media/config"
 echo "==================================================================================="
 exit 0
-
-
-
-
-
-
