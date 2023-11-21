@@ -209,12 +209,13 @@ add_service "dozzle" "All docker logs in one place on a nice WEB-UI (https://doz
 
 add_service "graylog" "Log Aggregator with a WEB-UI (https://graylog.org/)"
 if [[ $graylog == "y" ]]; then
+    echo
     send_warning_message "Graylog will use sha256sum of password you input here - make sure you remember it"
     password=$(get_password "graylog")
     sed -i -e "s;<graylog_password>;$(echo -n $password | sha256sum | awk '{ print $1 }');g" "$env_management"
 fi
-echo
-
+send_message_in_blue "=============================================================================="
+send_message_in_blue "=============================================================================="
 #COCKPIT PROJECT
 echo "Would you like to add Cockpit Project? [y/N]: "
 send_warning_message "Note: This will require your sudo password!:"
@@ -307,8 +308,10 @@ send_message_in_blue "==========================================================
 
 add_service "wgeasy" "Connect to your home network from anywhere in the world! https://github.com/wg-easy/wg-easy"
 if [[ $wgeasy == "y" ]]; then
-password=$(get_password "wgeasy")
-sed -i -e "s;<wgeasy_password>;$password;g" "$env_network"
+    password=$(get_password "wgeasy")
+    sed -i -e "s;<wgeasy_password>;$password;g" "$env_network"
+fi
+echo
 if [[ $traefik == "n" ]]; then
     sudo apt install curl -y
     echo
