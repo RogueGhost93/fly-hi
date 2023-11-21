@@ -278,7 +278,7 @@ if [[ $traefik == "y" ]]; then
         cloudflare_email=${cloudflare_email:-"$letsencrypt_email"}
         read -p "Please, input your cloudflare API token: " cloudflare_api
         read -p "Please, input your your domain name: " my_domain
-        else
+    else
         read -p "Please, input your let's encrypt email address: " letsencrypt_email
         read -p "Please, input your your domain name: " my_domain
     fi
@@ -309,18 +309,14 @@ add_service "wgeasy" "Connect to your home network from anywhere in the world! h
 if [[ $wgeasy == "y" ]]; then
 password=$(get_password "wgeasy")
 sed -i -e "s;<wgeasy_password>;$password;g" "$env_network"
-#primary_dns=$(nmcli dev show | grep 'IP4.DNS' | awk '{ print $2 }')
-#read -rp "You can change the primary DNS wgeasy will use: " -e -i $(nmcli dev show | grep 'IP4.DNS' | awk '{ print $2 }') primary_dns
-sudo apt install curl -y
-echo
-#read -rp "Please, input your your domain name or Statis IP address [You can also leave your current public IP]: " -e -i $(curl ifconfig.me) my_domain
-my_current_public_ip=$(curl ifconfig.me)
-read -p "If you dont have a statis IP address please input the domain name that will be regularly updated with your Dynamis DNS Client - Your current public IP address is:[$my_current_public_ip]: " my_public_ip
 if [[ $traefik == "n" ]]; then
-    my_public_ip=${my_public_ip:-$(curl ifconfig.me)}
+    sudo apt install curl -y
+    echo
+    my_current_public_ip=$(curl ifconfig.me)
+    read -rp "If you dont have a statis IP address please input the domain name that will be regularly updated with your Dynamis DNS Client - Your current public IP address is: " -e -i ${my_current_public_ip} my_public_ip
     my_domain=${my_public_ip}
     sudo sed -i -e "s;<wg_hostname>;$my_public_ip;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
-        sudo sed -i -e "s;<my_domain>;$my_domain;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
+    sudo sed -i -e "s;<my_domain>;$my_domain;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
 else
     sudo sed -i -e "s;<wg_hostname>;$my_domain;g" "$env_network" "$env_management" "$env_media" "$env_starrs" "/usr/local/bin/fly-hi"
 fi
@@ -489,33 +485,33 @@ echo "Would you like to install Samba server? "
 read -p "Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc.s [n/Y]:" samba
 samba=${samba:-"y"}
 if [[ $samba == "y" ]]; then
-sudo apt update
-sudo apt install samba
-send_success_message " This is your samba share config which you can modify at /etc/samba/smb.conf"
-send_success_message "=============================================================================="
-echo [data] | sudo tee -a /etc/samba/smb.conf
-echo     path = $data_root | sudo tee -a /etc/samba/smb.conf
-echo     browsable = yes | sudo tee -a /etc/samba/smb.conf
-echo     read only = no | sudo tee -a /etc/samba/smb.conf
-echo     guest ok = no | sudo tee -a /etc/samba/smb.conf
-echo     force user = $username | sudo tee -a /etc/samba/smb.conf
-echo     force group = $username | sudo tee -a /etc/samba/smb.conf
-echo     create mask = 0776 | sudo tee -a /etc/samba/smb.conf
-echo     directory mask = 0775 | sudo tee -a /etc/samba/smb.conf
-echo     unix extensions = yes | sudo tee -a /etc/samba/smb.conf
-echo     follow symlinks=yes | sudo tee -a /etc/samba/smb.conf
-echo     wide links=yes | sudo tee -a /etc/samba/smb.conf
-echo     allow insecure wide links=yes | sudo tee -a /etc/samba/smb.conf
-echo     server multi channel support = yes | sudo tee -a /etc/samba/smb.conf
-echo     aio read size = 1 | sudo tee -a /etc/samba/smb.conf
-echo     aio write size = 1 | sudo tee -a /etc/samba/smb.conf
-echo     inherit permissions = yes | sudo tee -a /etc/samba/smb.conf
-send_success_message "=============================================================================="
-sudo service smbd restart
-sudo ufw allow samba
-sudo smbpasswd -a $username
+    sudo apt update
+    sudo apt install samba
+    send_success_message " This is your samba share config which you can modify at /etc/samba/smb.conf"
+    send_success_message "=============================================================================="
+    echo [data] | sudo tee -a /etc/samba/smb.conf
+    echo     path = $data_root | sudo tee -a /etc/samba/smb.conf
+    echo     browsable = yes | sudo tee -a /etc/samba/smb.conf
+    echo     read only = no | sudo tee -a /etc/samba/smb.conf
+    echo     guest ok = no | sudo tee -a /etc/samba/smb.conf
+    echo     force user = $username | sudo tee -a /etc/samba/smb.conf
+    echo     force group = $username | sudo tee -a /etc/samba/smb.conf
+    echo     create mask = 0776 | sudo tee -a /etc/samba/smb.conf
+    echo     directory mask = 0775 | sudo tee -a /etc/samba/smb.conf
+    echo     unix extensions = yes | sudo tee -a /etc/samba/smb.conf
+    echo     follow symlinks=yes | sudo tee -a /etc/samba/smb.conf
+    echo     wide links=yes | sudo tee -a /etc/samba/smb.conf
+    echo     allow insecure wide links=yes | sudo tee -a /etc/samba/smb.conf
+    echo     server multi channel support = yes | sudo tee -a /etc/samba/smb.conf
+    echo     aio read size = 1 | sudo tee -a /etc/samba/smb.conf
+    echo     aio write size = 1 | sudo tee -a /etc/samba/smb.conf
+    echo     inherit permissions = yes | sudo tee -a /etc/samba/smb.conf
+    send_success_message "=============================================================================="
+    sudo service smbd restart
+    sudo ufw allow samba
+    sudo smbpasswd -a $username
 else
-  echo "Skipping Samba configuration"
+    echo "Skipping Samba configuration"
 fi
 send_message_in_blue "=============================================================================="
 send_message_in_blue "=============================================================================="
@@ -614,10 +610,10 @@ sleep 1
 # Tweaks that should be done for some apps to work properly
 #allow forwarded ports on router for wgeasy and vpn client
 if [ "$wgeasy" == "y" ]; then
-sudo /usr/sbin/ufw allow $portfwd_wgeasy
+    sudo /usr/sbin/ufw allow $portfwd_wgeasy
 fi
 if [[ $portfwd_y_n == "y" ]]; then
-sudo /usr/sbin/ufw allow $portfwd
+    sudo /usr/sbin/ufw allow $portfwd
 fi
 # this is used so docker containers can easily access each other
 sudo /usr/sbin/ufw allow from ${DOCKER_SUBNET:-172.22.0.0/24}
@@ -634,16 +630,16 @@ send_success_message "Adding tweaks to crontabs..."
 sleep 1
 # Add photoprism indexing crontab as user
 if [ "$photoprism" == "y" ]; then
-echo "27 11 * * * docker exec -t photoprism photoprism index --cleanup > /home/$USER/photoprism.log 2>&1 && date >> $install_location/cron-logs/photoprism-scan.log 2>&1" | sudo tee -a /var/spool/cron/crontabs/$USER
+    echo "27 11 * * * docker exec -t photoprism photoprism index --cleanup > /home/$USER/photoprism.log 2>&1 && date >> $install_location/cron-logs/photoprism-scan.log 2>&1" | sudo tee -a /var/spool/cron/crontabs/$USER
 fi
 
 # Add nextcloud scan all files to crontab and correct config for traefik to work properly
 if [[ $nextcloud == "y" ]]; then
-# For nextcloud image
-#sudo echo "50 11 * * * sudo docker exec --user www-data nextcloud php occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1" | sudo tee -a /var/spool/cron/crontabs/root
+    # For nextcloud image
+    #sudo echo "50 11 * * * sudo docker exec --user www-data nextcloud php occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1" | sudo tee -a /var/spool/cron/crontabs/root
 
-# For linuxserver image
-sudo echo "50 11 * * * sudo docker exec nextcloud sudo -u abc php /config/www/nextcloud/occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1"  | sudo tee -a /var/spool/cron/crontabs/root
+    # For linuxserver image
+    sudo echo "50 11 * * * sudo docker exec nextcloud sudo -u abc php /config/www/nextcloud/occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1"  | sudo tee -a /var/spool/cron/crontabs/root
     # If traefik is enabled accessing nextcloud over https wont be easy unless an override rule is added to the config
     #  * When generating URLs, Nextcloud attempts to detect whether the server is
     #  * accessed via ``https`` or ``http``. However, if Nextcloud is behind a proxy
@@ -652,10 +648,10 @@ sudo echo "50 11 * * * sudo docker exec nextcloud sudo -u abc php /config/www/ne
     #  * Valid values are ``http`` and ``https``.
     #  */
     if [[ $traefik == "y" ]]; then
-    # Nextcloud image
-    #sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config.php"
-    # Nextcloud linuxserver image
-    sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config/www/nextcloud/config/config.php"
+        # Nextcloud image
+        #sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config.php"
+        # Nextcloud linuxserver image
+        sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config/www/nextcloud/config/config.php"
     fi
 fi
 send_success_message "Done!✅"
