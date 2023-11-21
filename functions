@@ -54,6 +54,7 @@ add_service() {
         eval "${service_name}=y"
     else
         send_warning_message "Skipping ${service_name^} configuration!"
+        eval "${service_name}=n"
     fi
 
 
