@@ -82,6 +82,7 @@ if [ $option == "links" ]; then
     echo "Calibreweb:     http://$host_ip:$(docker port calibre_web 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
     echo "Audiobookshelf: http://$host_ip:$(docker port audiobookshelf 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
     echo "Tubesync:       http://$host_ip:$(docker port tubesync 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+    echo "Immich:         http://$host_ip:$(docker port immich_server 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
     echo "Photoprism:     http://$host_ip:$(docker port photoprism 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
     echo "Nextcloud:      http://$host_ip:$(docker port nextcloud 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
     echo "Linkding:       http://$host_ip:$(docker port linkding 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
