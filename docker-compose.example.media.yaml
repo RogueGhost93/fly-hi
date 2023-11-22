@@ -503,7 +503,7 @@ services:
 #      - 2283:3001
 #    networks:
 #      - fly-hi
-#      depends_on:
+#    depends_on:
 #      - redis
 #      - database
 #      - typesense
