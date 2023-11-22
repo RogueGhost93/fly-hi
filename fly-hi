@@ -59,7 +59,7 @@ if [ $option == "links" ]; then
     echo "PgAdmin:        http://$host_ip:$(docker port pgadmin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
     echo "Vaultwarden:    http://$host_ip:$(docker port vaultwarden 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
     echo "Cockpit:        http://$host_ip:9090"
-    echo "Graylog:        http://$host_ip:$(cat $install_location/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
+    echo "Graylog:        http://$host_ip:$(cat <install_location>/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
 
     echo
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
