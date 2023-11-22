@@ -396,8 +396,8 @@ services:
 #      #resources:
 #      #limits:
 #      #memory: 1g
-#    networks:
-#      - fly-hi
+#    #networks:
+#      #- fly-hi
 #
 #  opensearch:
 #    container_name: opensearch
