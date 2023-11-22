@@ -336,17 +336,20 @@ services:
 #    container_name: dozzle
 #    restart: unless-stopped
 #    networks:
-#        - fly-hi
+#      - fly-hi
 #    ports:
-#        - "7879:8080"
+#      - "7879:8080"
 #    environment:
-#        DOZZLE_LEVEL: info
-#        DOZZLE_TAILSIZE: 300
-#        DOZZLE_FILTER: "status=running"
-#        # DOZZLE_FILTER: "label=log_me" # limits logs displayed to containers with this label
-#        # DOCKER_HOST: tcp://socket-proxy:2375 # enable when using socket proxy
+#      PUID: ${USER_ID}
+#      PGID: ${GROUP_ID}
+#      TZ: ${TIMEZONE}
+#      DOZZLE_LEVEL: info
+#      DOZZLE_TAILSIZE: 300
+#      DOZZLE_FILTER: "status=running"
+#      # DOZZLE_FILTER: "label=log_me" # limits logs displayed to containers with this label
+#      # DOCKER_HOST: tcp://socket-proxy:2375 # enable when using socket proxy
 #    volumes:
-#        - /var/run/docker.sock:/var/run/docker.sock:ro # disable when using socket proxy
+#      - /var/run/docker.sock:/var/run/docker.sock:ro # disable when using socket proxy
 #    labels: #traefik#
 #      - "traefik.enable=true" #traefik#
 #      - "traefik.http.routers.dozzle.rule=Host(`dozzle.${HOSTNAME}`)" #traefik#
@@ -360,20 +363,24 @@ services:
 
 
 #graylogstart
+##### ALTERNATIVE VOLUMES IN GRAYLOG JUST WONT WORK!!
+##### IT WILL ALWAYS HAVE PERMISSIONS ERRORS
+##### please report if this issue is ever fixed or you figure out a way to map your own volumes
+##### See here for more details: https://community.graylog.org/t/docker-compose-config-for-running-as-a-specific-user-with-persisted-data/22378/2
 #  mongodb:
+#    container_name: mongodb
 #    image: "mongo:5.0"
-##    user: "1000:1000"  # Specify user and group ID
 #    volumes:
+#      - /etc/localtime:/etc/localtime:ro
 #      - "mongodb_data:/data/db"
+## alternative volumes
+#      #- "${INSTALL_LOCATION}/management/graylog/mongodb_data:/data/db"
 #    restart: "on-failure"
 #    networks:
-#        - fly-hi
-#
+#      - fly-hi
 #  opensearch:
+#    container_name: opensearch
 #    image: "opensearchproject/opensearch:2.4.0"
-##    user: "1000:1000"  # Specify user and group ID
-#    networks:
-#        - fly-hi
 #    environment:
 #      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
 #      - "bootstrap.memory_lock=true"
@@ -389,20 +396,49 @@ services:
 #        soft: 65536
 #        hard: 65536
 #    volumes:
+#      - /etc/localtime:/etc/localtime:ro
 #      - "os_data:/usr/share/opensearch/data"
+## alternative volumes
+#      #- "${INSTALL_LOCATION}/management/graylog/os_data:/usr/share/opensearch/data"
 #    restart: "on-failure"
-##try version 5.0 if this doesnt work, 5.0 was default in opensearch mode
+#    networks:
+#      - fly-hi
+#
+#  opensearch-dashboards:
+#    image: opensearchproject/opensearch-dashboards:latest # Make sure the version of opensearch-dashboards matches the version of opensearch installed on other nodes
+#    container_name: opensearch-dashboards
+#    ports:
+#      - 5601:5601 # Map host port 5601 to container port 5601
+#    expose:
+#      - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
+#    volumes:
+#      - /etc/localtime:/etc/localtime:ro
+#    environment:
+#      OPENSEARCH_HOSTS: '["https://opensearch:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
+#    restart: "on-failure"
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.osdashboard.rule=Host(`osdashboard.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.osdashboard.loadbalancer.server.port=5601" #traefik#
+#      - "traefik.http.routers.osdashboard.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.osdashboard.tls=true" #traefik#
+##      - "traefik.http.routers.osdashboard.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.osdashboard.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.osdashboard.entrypoints=websecure"                        #httpchallenge# #traefik#
+#
+#    #try version 5.0 if this doesnt work, 5.0 was default in opensearch mode
 #  graylog:
 #    hostname: "server"
 #    image: "${GRAYLOG_IMAGE:-graylog/graylog:5.2}"
+#    container_name: graylog
 #    depends_on:
 #      opensearch:
 #        condition: "service_started"
 #      mongodb:
 #        condition: "service_started"
 #    entrypoint: "/usr/bin/tini -- wait-for-it opensearch:9200 --  /docker-entrypoint.sh"
-#    networks:
-#        - fly-hi
 #    environment:
 #      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/config/node-id"
 ##pwgen -N 1 -s 96 'use this command to generate password and put the value in this variable'
@@ -415,27 +451,33 @@ services:
 #      GRAYLOG_HTTP_EXTERNAL_URI: "http://localhost:9000/"
 #      GRAYLOG_ELASTICSEARCH_HOSTS: "http://opensearch:9200"
 #      GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
-##    user: "1000:1000"  # Specify user and group ID
 #    ports:
-#    - "5044:5044/tcp"   # Beats
-#    - "5140:5140/udp"   # Syslog
-#    - "5140:5140/tcp"   # Syslog
-#    - "5555:5555/tcp"   # RAW TCP
-#    - "5555:5555/udp"   # RAW TCP
-#    - "9001:9000/tcp"   # Server API #WEB-UI
-#    - "12201:12201/tcp" # GELF TCP
-#    - "12201:12201/udp" # GELF UDP
-#    #- "10000:10000/tcp" # Custom TCP port
-#    #- "10000:10000/udp" # Custom UDP port
-#    - "13301:13301/tcp" # Forwarder data
-#    - "13302:13302/tcp" # Forwarder config
+#      - "5044:5044/tcp"   # Beats
+#      - "5140:5140/udp"   # Syslog
+#      - "5140:5140/tcp"   # Syslog
+#      - "5555:5555/tcp"   # RAW TCP
+#      - "5555:5555/udp"   # RAW TCP
+#      - "9000:9000/tcp"   # Server API
+#      - "12201:12201/tcp" # GELF TCP
+#      - "12201:12201/udp" # GELF UDP
+#      #- "10000:10000/tcp" # Custom TCP port
+#      #- "10000:10000/udp" # Custom UDP port
+#      - "13301:13301/tcp" # Forwarder data
+#      - "13302:13302/tcp" # Forwarder config
 #    volumes:
+#      - /etc/localtime:/etc/localtime:ro
 ##https://github.com/Graylog2/docker-compose/issues/34
 ##this used to be       - "graylog_data:/usr/share/graylog/data/data"
 #      - "graylog_data:/usr/share/graylog/data"
 #      - "graylog_journal:/usr/share/graylog/data/journal"
 #      - "graylog_cfg:/usr/share/graylog/data/config"
+## alternative volumes
+#      #- "${INSTALL_LOCATION}/management/graylog/graylog_data:/usr/share/graylog/data"
+#      #- "${INSTALL_LOCATION}/management/graylog/graylog_journal:/usr/share/graylog/data/journal"
+#      #- "${INSTALL_LOCATION}/management/graylog/graylog_cfg:/usr/share/graylog/data/config"
 #    restart: "on-failure"
+#    networks:
+#      - fly-hi
 #    labels: #traefik#
 #      - "traefik.enable=true" #traefik#
 #      - "traefik.http.routers.graylog.rule=Host(`graylog.${HOSTNAME}`)" #traefik#
@@ -445,7 +487,6 @@ services:
 ##      - "traefik.http.routers.graylog.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
 ##      - "traefik.http.routers.graylog.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
 ##      - "traefik.http.routers.graylog.entrypoints=websecure"                        #httpchallenge# #traefik#
-#
 #volumes:
 #  mongodb_data:
 #  os_data:
