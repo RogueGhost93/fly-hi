@@ -195,7 +195,7 @@ They are the ones doing the real work, I just created a docker-compose files and
 
 Just let them know Fly-Hi sent you there 😎
 
-* To-Do [0/4]
+* To-Do [2/4]
 :PROPERTIES:
 :ID:       eba4712e-fa8a-42c8-bc32-b593141c99a4
 :END:
@@ -205,7 +205,7 @@ Just let them know Fly-Hi sent you there 😎
 - [ ] Integrate a way for easily adding your own custom docker-compose services.
 - [ ] Support for Caddy (in testing).
 - [x] Support for Graylog.
-- [ ] Support for Immich (In testing).
+- [x] Support for Immich (In testing).
 
 
 
