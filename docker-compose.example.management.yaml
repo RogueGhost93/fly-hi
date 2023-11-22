@@ -362,7 +362,10 @@ services:
 #dozzleend
 
 
+
+
 #graylogstart
+# # Graylog https://github.com/Graylog2/docker-compose      https://graylog.org/
 ##### ALTERNATIVE VOLUMES IN GRAYLOG JUST WONT WORK!!
 ##### IT WILL ALWAYS HAVE PERMISSIONS ERRORS
 ##### please report if this issue is ever fixed or you figure out a way to map your own volumes
@@ -378,6 +381,24 @@ services:
 #    restart: "on-failure"
 #    networks:
 #      - fly-hi
+#  #elasticsearch:
+#    #image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+#    #environment:
+#      #- http.host=0.0.0.0
+#      #- transport.host=localhost
+#      #- network.host=0.0.0.0
+#      #- "ES_JAVA_OPTS=-Dlog4j2.formatMsgNoLookups=true -Xms512m -Xmx512m"
+#    #ulimits:
+#      #memlock:
+#        #soft: -1
+#        #hard: -1
+#      #deploy:
+#      #resources:
+#      #limits:
+#      #memory: 1g
+#    networks:
+#      - fly-hi
+#
 #  opensearch:
 #    container_name: opensearch
 #    image: "opensearchproject/opensearch:2.4.0"
@@ -404,29 +425,31 @@ services:
 #    networks:
 #      - fly-hi
 #
-#  opensearch-dashboards:
-#    image: opensearchproject/opensearch-dashboards:latest # Make sure the version of opensearch-dashboards matches the version of opensearch installed on other nodes
-#    container_name: opensearch-dashboards
-#    ports:
-#      - 5601:5601 # Map host port 5601 to container port 5601
-#    expose:
-#      - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
-#    volumes:
-#      - /etc/localtime:/etc/localtime:ro
-#    environment:
-#      OPENSEARCH_HOSTS: '["https://opensearch:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
-#    restart: "on-failure"
-#    networks:
-#      - fly-hi
-#    labels: #traefik#
-#      - "traefik.enable=true" #traefik#
-#      - "traefik.http.routers.osdashboard.rule=Host(`osdashboard.${HOSTNAME}`)" #traefik#
-#      - "traefik.http.services.osdashboard.loadbalancer.server.port=5601" #traefik#
-#      - "traefik.http.routers.osdashboard.tls.certresolver=myresolver" #traefik#
-#      - "traefik.http.routers.osdashboard.tls=true" #traefik#
-##      - "traefik.http.routers.osdashboard.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
-##      - "traefik.http.routers.osdashboard.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
-##      - "traefik.http.routers.osdashboard.entrypoints=websecure"                        #httpchallenge# #traefik#
+##
+##   Cant find an easy way to change default password for opensearch, until there is an easy way this will be commented out
+##  opensearch-dashboards:
+##    image: opensearchproject/opensearch-dashboards:latest # Make sure the version of opensearch-dashboards matches the version of opensearch installed on other nodes
+##    container_name: opensearch-dashboards
+##    ports:
+##      - 5601:5601 # Map host port 5601 to container port 5601
+##    expose:
+##      - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
+##    volumes:
+##      - /etc/localtime:/etc/localtime:ro
+##    environment:
+##      OPENSEARCH_HOSTS: '["http://opensearch:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
+##    restart: "on-failure"
+##    networks:
+##      - fly-hi
+##    labels: #traefik#
+##      - "traefik.enable=true" #traefik#
+##      - "traefik.http.routers.osdashboard.rule=Host(`osdashboard.${HOSTNAME}`)" #traefik#
+##      - "traefik.http.services.osdashboard.loadbalancer.server.port=5601" #traefik#
+##      - "traefik.http.routers.osdashboard.tls.certresolver=myresolver" #traefik#
+##      - "traefik.http.routers.osdashboard.tls=true" #traefik#
+###      - "traefik.http.routers.osdashboard.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+###      - "traefik.http.routers.osdashboard.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+###      - "traefik.http.routers.osdashboard.entrypoints=websecure"                        #httpchallenge# #traefik#
 #
 #    #try version 5.0 if this doesnt work, 5.0 was default in opensearch mode
 #  graylog:
