@@ -453,9 +453,10 @@ add_service "freshrss" "Nice RSS agregator (https://github.com/FreshRSS/FreshRSS
 add_service "stirling_pdf" "Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)"
 add_service "filebrowser" "Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
 add_service "mealie" "A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
+add_service "immich" "Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
 
 #PHOTOPRISM
-read -p "Would you like to install PhotoPrism for managing, indexing and organizing your photos? [Y/n]: " photoprism
+read -p "Would you like to install Photoprism? Self-hosted backup solution for photos and videos [n/Y]: " photoprism
 photoprism=${photoprism:-"y"}
 if [ "$photoprism" == "y" ]; then
 
@@ -526,7 +527,6 @@ echo
 send_message_in_blue "=============================================================================="
 echo
 send_success_message "Time to choose your Starrs and Download Services!"
-send_success_message "Starrs are making Netflix go bankrupt!"
 echo
 send_message_in_blue "=============================================================================="
 
