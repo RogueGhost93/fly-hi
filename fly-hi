@@ -1,11 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-dc_media="docker compose -f <install_location>/media/docker-compose.yaml"
-dc_starrs="docker compose -f <install_location>/starrs/docker-compose.yaml"
-dc_network="docker compose -f <install_location>/network/docker-compose.yaml"
-dc_management="docker compose -f <install_location>/management/docker-compose.yaml"
 install_location=<install_location>
+dc_media="docker compose -f ${install_location}/media/docker-compose.yaml"
+dc_starrs="docker compose -f ${install_location}/starrs/docker-compose.yaml"
+dc_network="docker compose -f ${install_location}/network/docker-compose.yaml"
+dc_management="docker compose -f ${install_location}/management/docker-compose.yaml"
 option=${1:-"help"}
 compose_file=${2:-""}
 container=${3:-""}
@@ -220,7 +220,7 @@ if [ $option == "ip" ]; then
 fi
 
 if [ $option == "vpn" ]; then
-bash <install_location>/*install.sh
+bash ${install_location}/*install.sh
 fi
 if [ $option == "noip" ]; then
 sudo /usr/local/bin/noip2 -S
@@ -239,7 +239,7 @@ if [ $option == "uninstall" ]; then
         fly-hi destroy network || true
         fly-hi destroy management || true
         docker network rm fly-hi || true
-        sudo rm -r <install_location> || true
+        sudo rm -r ${install_location} || true
         sudo docker system prune -a
         sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin docker* || true
         sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin || true
@@ -259,7 +259,7 @@ if [ $option == "uninstall" ]; then
         fly-hi destroy network || true
         fly-hi destroy management || true
         docker network rm fly-hi || true
-        sudo rm -r <install_location> || true
+        sudo rm -r ${install_location} || true
         sudo docker system prune -a
         echo "You successefully uninstalled your fly-hi-media!"
         sudo rm /usr/local/bin/fly-hi
