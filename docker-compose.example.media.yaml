@@ -481,7 +481,120 @@ services:
 #      - fly-hi
 #photoprismend
 
-
+# Immich is an alternative to photoprism https://immich.app/
+#immichstart
+#  immich-server:
+#    container_name: immich_server
+#    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+#    command: [ "start.sh", "immich" ]
+#    volumes:
+#      - ${DATA_ROOT}/Immich:/usr/src/app/upload
+#      - /etc/localtime:/etc/localtime:ro
+#      - ${DATA_ROOT}/Photos:/mnt/media:ro
+#    environment:
+#      - DB_HOSTNAME=immich_postgres
+#      - DB_USERNAME=immich
+#      - DB_DATABASE_NAME=immich
+#      - REDIS_HOSTNAME=immich_redis
+#      - TYPESENSE_API_KEY=${POSTGRES_PASSWORD}
+#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#      - DB_PORT=5435
+#    ports:
+#      - 2283:3001
+#    networks:
+#      - fly-hi
+#      depends_on:
+#      - redis
+#      - database
+#      - typesense
+#    restart: always
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.immich.rule=Host(`immich.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.immich.loadbalancer.server.port=3001" #traefik#
+#      - "traefik.http.routers.immich.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.immich.tls=true" #traefik#
+##      - "traefik.http.routers.immich.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.immich.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.immich.entrypoints=websecure"                         #httpchallenge# #traefik#
+#
+#
+#  immich-microservices:
+#    container_name: immich_microservices
+#    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+#    # extends:
+#    #   file: hwaccel.yml
+#    #   service: hwaccel
+#    command: [ "start.sh", "microservices" ]
+#    volumes:
+#      - ${DATA_ROOT}/Immich:/usr/src/app/upload
+#      - /etc/localtime:/etc/localtime:ro
+#      - ${DATA_ROOT}/Photos:/mnt/media:ro
+#    environment:
+#      - DB_HOSTNAME=immich_postgres
+#      - DB_USERNAME=immich
+#      - DB_DATABASE_NAME=immich
+#      - REDIS_HOSTNAME=immich_redis
+#      - TYPESENSE_API_KEY=${POSTGRES_PASSWORD}
+#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#      - DB_PORT=5435
+#    networks:
+#      - fly-hi
+#    depends_on:
+#      - redis
+#      - database
+#      - typesense
+#    restart: always
+#
+#  immich-machine-learning:
+#    container_name: immich_machine_learning
+#    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/immich/model-cache:/cache
+#    environment:
+#      - DB_HOSTNAME=immich_postgres
+#      - DB_USERNAME=immich
+#      - DB_DATABASE_NAME=immich
+#      - REDIS_HOSTNAME=immich_redis
+#      - TYPESENSE_API_KEY=${POSTGRES_PASSWORD}
+#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#    networks:
+#      - fly-hi
+#    restart: always
+#
+#  typesense:
+#    container_name: immich_typesense
+#    image: typesense/typesense:0.24.1@sha256:9bcff2b829f12074426ca044b56160ca9d777a0c488303469143dd9f8259d4dd
+#    environment:
+#      - TYPESENSE_API_KEY=${POSTGRES_PASSWORD}
+#      - TYPESENSE_DATA_DIR=/data
+#      # remove this to get debug messages
+#      - GLOG_minloglevel=1
+#    networks:
+#      - fly-hi
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/immich/tsdata:/data
+#    restart: always
+#
+#  redis:
+#    container_name: immich_redis
+#    image: redis:6.2-alpine@sha256:80cc8518800438c684a53ed829c621c94afd1087aaeb59b0d4343ed3e7bcf6c5
+#    restart: always
+#
+#  database:
+#    container_name: immich_postgres
+#    image: postgres:14-alpine@sha256:50d9be76e9a90da4c781554955e0ffc79d9d5c4226838e64b36aacc97cbc35ad
+#    environment:
+#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#      POSTGRES_USER: immich
+#      POSTGRES_DB: immich
+#      PGPORT: 5435
+#    networks:
+#      - fly-hi
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/immich/pgdata:/var/lib/postgresql/data
+#    restart: always
+#immichend
 
 
 
@@ -912,16 +1025,16 @@ services:
 #    networks:
 #      - fly-hi
 #    restart: always
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.mealie.rule=Host(`mealie.${HOSTNAME}`)"
-#      - "traefik.http.services.mealie.loadbalancer.server.port=9000"
-#      - "traefik.http.routers.mealie.tls.certresolver=myresolver"
-#      - "traefik.http.routers.mealie.tls=true"
-#        # DNS/HTTP
-##      - "traefik.http.routers.mealie.tls.domains[0].main=${HOSTNAME}"              #dnschallenge#
-##      - "traefik.http.routers.mealie.tls.domains[0].sans=*.${HOSTNAME}"            #dnschallenge#
-##      - "traefik.http.routers.mealie.entrypoints=websecure"                        #httpchallenge#
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.mealie.rule=Host(`mealie.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.mealie.loadbalancer.server.port=9000" #traefik#
+#      - "traefik.http.routers.mealie.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.mealie.tls=true" #traefik#
+#        # DNS/HTTP #traefik#
+##      - "traefik.http.routers.mealie.tls.domains[0].main=${HOSTNAME}"              #dnschallenge# #traefik#
+##      - "traefik.http.routers.mealie.tls.domains[0].sans=*.${HOSTNAME}"            #dnschallenge# #traefik#
+##      - "traefik.http.routers.mealie.entrypoints=websecure"                        #httpchallenge# #traefik#
 #mealieend
 
 networks:
