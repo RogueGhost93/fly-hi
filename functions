@@ -44,7 +44,7 @@ add_service() {
     unset comment
     local service_name="$1"
     local comment="$2"
-
+    send_message_in_blue "=============================================================================="
     read -p "Would you like to install ${service_name^}? ${comment:+ ($comment)} [n/Y]:" y_n
     y_n=${y_n:-"y"}
 
@@ -57,9 +57,6 @@ add_service() {
         eval "${service_name}=n"
     fi
 
-
-    send_message_in_blue "=============================================================================="
-    send_message_in_blue "=============================================================================="
 }
 
 
