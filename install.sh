@@ -475,32 +475,39 @@ samba=${samba:-"y"}
 if [[ $samba == "y" ]]; then
     sudo apt update
     sudo apt install samba
-    send_success_message " This is your samba share config which you can modify at /etc/samba/smb.conf"
-    send_success_message "=============================================================================="
-    echo [data] | sudo tee -a /etc/samba/smb.conf
-    echo     path = $data_root | sudo tee -a /etc/samba/smb.conf
-    echo     browsable = yes | sudo tee -a /etc/samba/smb.conf
-    echo     read only = no | sudo tee -a /etc/samba/smb.conf
-    echo     guest ok = no | sudo tee -a /etc/samba/smb.conf
-    echo     force user = $username | sudo tee -a /etc/samba/smb.conf
-    echo     force group = $username | sudo tee -a /etc/samba/smb.conf
-    echo     create mask = 0776 | sudo tee -a /etc/samba/smb.conf
-    echo     directory mask = 0775 | sudo tee -a /etc/samba/smb.conf
-    echo     unix extensions = yes | sudo tee -a /etc/samba/smb.conf
-    echo     follow symlinks=yes | sudo tee -a /etc/samba/smb.conf
-    echo     wide links=yes | sudo tee -a /etc/samba/smb.conf
-    echo     allow insecure wide links=yes | sudo tee -a /etc/samba/smb.conf
-    echo     server multi channel support = yes | sudo tee -a /etc/samba/smb.conf
-    echo     aio read size = 1 | sudo tee -a /etc/samba/smb.conf
-    echo     aio write size = 1 | sudo tee -a /etc/samba/smb.conf
-    echo     inherit permissions = yes | sudo tee -a /etc/samba/smb.conf
-    send_success_message "=============================================================================="
+        send_success_message "Adding Samba configuration..."
+    # Check if the configuration already exists in smb.conf
+    if ! grep -q "\[data\]" /etc/samba/smb.conf; then
+        send_success_message "This is your Samba share config which you can modify at /etc/samba/smb.conf"
+        send_success_message "=============================================================================="
+        echo "[data]" | sudo tee -a /etc/samba/smb.conf
+        echo "    path = $data_root" | sudo tee -a /etc/samba/smb.conf
+        echo "    browsable = yes" | sudo tee -a /etc/samba/smb.conf
+        echo "    read only = no" | sudo tee -a /etc/samba/smb.conf
+        echo "    guest ok = no" | sudo tee -a /etc/samba/smb.conf
+        echo "    force user = $username" | sudo tee -a /etc/samba/smb.conf
+        echo "    force group = $username" | sudo tee -a /etc/samba/smb.conf
+        echo "    create mask = 0776" | sudo tee -a /etc/samba/smb.conf
+        echo "    directory mask = 0775" | sudo tee -a /etc/samba/smb.conf
+        echo "    unix extensions = yes" | sudo tee -a /etc/samba/smb.conf
+        echo "    follow symlinks=yes" | sudo tee -a /etc/samba/smb.conf
+        echo "    wide links=yes" | sudo tee -a /etc/samba/smb.conf
+        echo "    allow insecure wide links=yes" | sudo tee -a /etc/samba/smb.conf
+        echo "    server multi channel support = yes" | sudo tee -a /etc/samba/smb.conf
+        echo "    aio read size = 1" | sudo tee -a /etc/samba/smb.conf
+        echo "    aio write size = 1" | sudo tee -a /etc/samba/smb.conf
+        echo "    inherit permissions = yes" | sudo tee -a /etc/samba/smb.conf
+        send_success_message "=============================================================================="
+    else
+        send_success_message "Configuration already exists in /etc/samba/smb.conf file. Skipping..."
+    fi
     sudo service smbd restart
     sudo ufw allow samba
     sudo smbpasswd -a $username
 else
     echo "Skipping Samba configuration"
 fi
+
 send_message_in_blue "=============================================================================="
 send_message_in_blue "=============================================================================="
 clear
