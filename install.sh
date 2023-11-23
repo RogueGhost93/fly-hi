@@ -457,14 +457,13 @@ add_service "immich" "Self-hosted backup solution for photos and videos on mobil
 add_service "Photoprism" "Self-hosted backup solution for photos and videos"
 
 if [ "$photoprism" == "y" ]; then
-
-        send_warning_message "Note that photoprism could create a huge amount of cached thumbnails which can fill up your OS drive if there is not enough space"
-            read -rp "What will be your admin username?:" -e -i admin admin_username
-            password=$(get_password "photoprism")
-            echo
-            # Set photoprism passwords
-            sed -i -e "s;<admin_username>;$admin_username;g" "$env_media"
-            sed -i -e "s;<admin_password>;$password;g" "$env_media"
+    send_warning_message "Note that photoprism could create a huge amount of cached thumbnails which can fill up your OS drive if there is not enough space"
+    read -rp "What will be your admin username?:" -e -i admin admin_username
+    password=$(get_password "photoprism")
+    echo
+    # Set photoprism passwords
+    sed -i -e "s;<admin_username>;$admin_username;g" "$env_media"
+    sed -i -e "s;<admin_password>;$password;g" "$env_media"
 fi
 send_message_in_blue "=============================================================================="
 send_message_in_blue "=============================================================================="
