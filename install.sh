@@ -632,18 +632,21 @@ send_success_message "Done!✅"
 send_success_message "Adding tweaks to crontabs..."
 sleep 1
 # Add photoprism indexing crontab as user
-if [ "$photoprism" == "y" ]; then
-    echo "27 11 * * * docker exec -t photoprism photoprism index --cleanup > /home/$USER/photoprism.log 2>&1 && date >> $install_location/cron-logs/photoprism-scan.log 2>&1" | sudo tee -a /var/spool/cron/crontabs/$USER
-fi
+if [ "$nextcloud" == "y" ]; then
+    # Define the cron job command for Nextcloud
+     nextcloud_cron_command="50 11 * * * sudo docker exec nextcloud sudo -u abc php /config/www/nextcloud/occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1"
+    # Check if the cron job already exists
+     existing_nextcloud_cron_job=$(sudo crontab -l -u root 2>/dev/null | grep "files:scan --all")
 
-# Add nextcloud scan all files to crontab and correct config for traefik to work properly
-if [[ $nextcloud == "y" ]]; then
-    # For nextcloud image
-    #sudo echo "50 11 * * * sudo docker exec --user www-data nextcloud php occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1" | sudo tee -a /var/spool/cron/crontabs/root
-
-    # For linuxserver image
-    sudo echo "50 11 * * * sudo docker exec nextcloud sudo -u abc php /config/www/nextcloud/occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1"  | sudo tee -a /var/spool/cron/crontabs/root
-    # If traefik is enabled accessing nextcloud over https wont be easy unless an override rule is added to the config
+    if [ -z "$existing_nextcloud_cron_job" ]; then
+        send_success_message "Adding cronjob to user root"
+        # If the cron job doesn't exist, add it
+        (sudo crontab -u root -l 2>/dev/null; echo "$nextcloud_cron_command") | sudo crontab -u root -
+    else
+        # If the cron job already exists, notify or handle accordingly
+        send_success_message "Nextcloud cron job already exists in user root crontab."
+    fi
+        # If traefik is enabled accessing nextcloud over https wont be easy unless an override rule is added to the config
     #  * When generating URLs, Nextcloud attempts to detect whether the server is
     #  * accessed via ``https`` or ``http``. However, if Nextcloud is behind a proxy
     #  * and the proxy handles the ``https`` calls, Nextcloud would not know that
@@ -655,6 +658,23 @@ if [[ $nextcloud == "y" ]]; then
         #sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config.php"
         # Nextcloud linuxserver image
         sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config/www/nextcloud/config/config.php"
+    fi
+fi
+if [[ $photoprism == "y" ]]; then
+    # Define the cron job command for Photoprism
+    photoprism_cron_command="30 11 * * * docker exec -t photoprism photoprism index --cleanup > /home/$USER/photoprism.log 2>&1 && date >> test/cron-logs/photoprism-scan.log 2>&1"
+
+    # Check if the cron job already exists
+    existing_photoprism_cron_job=$(sudo crontab -l -u $USER 2>/dev/null | grep "docker exec -t photoprism photoprism index --cleanup")
+
+
+    if [ -z "$existing_photoprism_cron_job" ]; then
+        # If the cron job doesn't exist, add it using crontab
+        send_success_message "Adding cronjob to user $USER"
+        (sudo crontab -u $USER -l 2>/dev/null; echo "$photoprism_cron_command") | sudo crontab -u $USER -
+    else
+        # If the cron job already exists, notify or handle accordingly
+        send_success_message "Photoprism cron job already exists in user $USER crontab."
     fi
 fi
 send_success_message "Done!✅"
