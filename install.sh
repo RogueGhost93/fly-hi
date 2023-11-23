@@ -454,32 +454,15 @@ add_service "stirling_pdf" "Your locally hosted one-stop-shop for all your PDF n
 add_service "filebrowser" "Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
 add_service "mealie" "A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
 add_service "immich" "Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
+add_service "Photoprism" "Self-hosted backup solution for photos and videos"
 
-#PHOTOPRISM
-read -p "Would you like to install Photoprism? Self-hosted backup solution for photos and videos [n/Y]: " photoprism
-photoprism=${photoprism:-"y"}
 if [ "$photoprism" == "y" ]; then
-
-        send_warning_message "In this script Photoprism assumes youre Photos are in located in $data_root/Photos"
-        send_warning_message "Note that photoprism could create a huge amount of cached thumbnails which can fill up your OS drive if there"
-        send_warning_message "is not enough space, 64GB is minimum recommended disk for photoprism to work properly. Would you like to install it anyway? "
-        read -p "If you are not sure, answer no. [Y/n]: " make_sure
-        make_sure=${make_sure:-"y"}
-
-        if [ "$make_sure" == "y" ]; then
-            # Uncomment lines between #photoprismstart and #photoprismend
-            sed -i '/^#photoprismstart$/,/^#photoprismend$/{/^\(#photoprismstart\|#photoprismend\)$/!s/^#//}' "$compose_media"
-            read -rp "What will be your admin username?:" -e -i admin admin_username
-            echo
-            password=$(get_password "photoprism")
-            echo
-            # Set photoprism passwords
-            sed -i -e "s;<admin_username>;$admin_username;g" "$env_media"
-            sed -i -e "s;<admin_password>;$password;g" "$env_media"
-        fi
-else
-    echo "Skipping photoprism configuration"
-
+    send_warning_message "Note that photoprism could create a huge amount of cached thumbnails which can fill up your OS drive if there is not enough space"
+    password=$(get_password "photoprism")
+    echo
+    # Set photoprism passwords
+    sed -i -e "s;<admin_username>;$admin_username;g" "$env_media"
+    sed -i -e "s;<admin_password>;$password;g" "$env_media"
 fi
 send_message_in_blue "=============================================================================="
 send_message_in_blue "=============================================================================="
