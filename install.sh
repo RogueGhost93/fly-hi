@@ -316,7 +316,7 @@ if [[ $wgeasy == "y" ]]; then
     if [[ $traefik == "n" ]]; then
         sudo apt install curl -y
         echo
-        my_current_public_ip=$(curl ifconfig.me)
+        my_current_public_ip=$(curl -s ifconfig.me)
         echo "If you dont have a statis IP address please input the domain name that will be regularly updated with your Dynamis DNS Client!"
         read -rp "Your current public IP address is: " -e -i ${my_current_public_ip} my_public_ip
         my_domain=${my_public_ip}
