@@ -240,7 +240,7 @@ if [ $option == "uninstall" ]; then
         fly-hi destroy network || true
         fly-hi destroy management || true
         docker network rm fly-hi || true
-        sudo docker system prune -a
+        sudo docker system prune -a || true
         if [ $option == "delete_persistant" ]; then
             sudo rm -r ${install_location} || true
             send_success_message "You successefully delete your persistant container data!"
@@ -259,9 +259,8 @@ if [ $option == "uninstall" ]; then
             send_success_message "You are ready for a fresh install of docker!"
         else
             send_success_message "You successefully uninstalled your fly-hi-media and docker!"
-
-            sudo rm /usr/local/bin/fly-hi
         fi
+            sudo rm /usr/local/bin/fly-hi
     fi
 fi
 
