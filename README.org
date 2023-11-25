@@ -19,7 +19,7 @@ I've repurposed it to suit my needs and wanted to share it with you!
 Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes, subtitles, and serves all your media. The script offers options to install the following software:
 
 
-*Management:*
+*Management Apps:*
 - Portainer      - Keep your docker containers in check! (https://www.portainer.io/)"
 - Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
 - Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
@@ -36,7 +36,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 
 
 
-*Network:*
+*Network Apps:*
 - Flaresolverr           - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)"
 - Traefik                - Reverse Proxy (https://traefik.io/traefik/)"
 - Gluetun                - VPN Client (https://github.com/qdm12/gluetun)"
@@ -51,7 +51,7 @@ The bash versions of VPN servers are really for little more advanced users so pl
 
 
 
-*Media:*
+*Media Apps:*
 - Jellyfin        - Media Streaming Service (open-source, fork of Emby, recommended) (https://jellyfin.org/)"
 - Emby            - Media Streaming Service (closed-source) (https://emby.media/)"
 - Plex            - Media Streaming Service (closed-source) (https://www.plex.tv/)"
@@ -75,7 +75,7 @@ The bash versions of VPN servers are really for little more advanced users so pl
 - Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
 
 
-*Starrs and Download:*
+*Starrs and Download Apps:*
 - Radarr      - Manage your Movies (https://radarr.video/)"
 - Sonarr      - Manage your TV Shows (https://sonarr.tv/)"
 - Readarr     - Manage your Books (https://readarr.com/)"
