@@ -231,38 +231,36 @@ if [ $option == "uninstall" ]; then
     read -p "This will uninstall your fly-hi script and remove all container data including the ones not installed with this script, proceed? [n,Y]:" uninstall
     uninstall=${uninstall:-"y"}
     if [ "$uninstall" == "y" ]; then
+        read -p "Would you like to also delete container persistant data from your original install location? [N,y]:" delete_persistant
+        uninstall=${delete_persistant:-"n"}
         read -p "Would you like to also uninstall and purge your docker installation? [N,y]:" uninstall_docker
         uninstall_docker=${uninstall_docker:-"n"}
+        fly-hi destroy media || true
+        fly-hi destroy starrs || true
+        fly-hi destroy network || true
+        fly-hi destroy management || true
+        docker network rm fly-hi || true
+        sudo docker system prune -a
+        if [ $option == "delete_persistant" ]; then
+            sudo rm -r ${install_location} || true
+            send_success_message "You successefully delete your persistant container data!"
+        fi
         if [ "$uninstall_docker" == "y" ]; then
-        fly-hi destroy media || true
-        fly-hi destroy starrs || true
-        fly-hi destroy network || true
-        fly-hi destroy management || true
-        docker network rm fly-hi || true
-        sudo rm -r ${install_location} || true
-        sudo docker system prune -a
-        sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin docker* || true
-        sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin || true
-        sudo umount /var/lib/docker/ || true
-        sudo rm -rf /var/lib/docker /etc/docker || true
-        sudo rm /etc/apparmor.d/docker || true
-        sudo groupdel docker || true
-        sudo rm -rf /var/run/docker.sock || true
-        sudo rm -rf /usr/bin/docker-compose || true
-        sudo rm -rf /var/lib/containerd || true
-        sudo rm /usr/local/lib/docker/cli-plugins/docker-compose || true
-        echo "You are ready for a fresh install of docker!"
-        sudo rm /usr/local/bin/fly-hi
+            sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin docker* || true
+            sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin || true
+            sudo umount /var/lib/docker/ || true
+            sudo rm -rf /var/lib/docker /etc/docker || true
+            sudo rm /etc/apparmor.d/docker || true
+            sudo groupdel docker || true
+            sudo rm -rf /var/run/docker.sock || true
+            sudo rm -rf /usr/bin/docker-compose || true
+            sudo rm -rf /var/lib/containerd || true
+            sudo rm /usr/local/lib/docker/cli-plugins/docker-compose || true
+            send_success_message "You are ready for a fresh install of docker!"
         else
-        fly-hi destroy media || true
-        fly-hi destroy starrs || true
-        fly-hi destroy network || true
-        fly-hi destroy management || true
-        docker network rm fly-hi || true
-        sudo rm -r ${install_location} || true
-        sudo docker system prune -a
-        echo "You successefully uninstalled your fly-hi-media!"
-        sudo rm /usr/local/bin/fly-hi
+            send_success_message "You successefully uninstalled your fly-hi-media and docker!"
+
+            sudo rm /usr/local/bin/fly-hi
         fi
     fi
 fi
