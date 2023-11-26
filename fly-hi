@@ -254,6 +254,7 @@ if [ $option == "uninstall" ]; then
             sudo groupdel docker || true
             sudo rm -rf /var/run/docker.sock || true
             sudo rm -rf /usr/bin/docker-compose || true
+            sudo rm -rf /usr/local/bin/docker-compose || true
             sudo rm -rf /var/lib/containerd || true
             sudo rm /usr/local/lib/docker/cli-plugins/docker-compose || true
             send_success_message "You are ready for a fresh install of docker!"
