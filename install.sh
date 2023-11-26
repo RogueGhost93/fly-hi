@@ -693,12 +693,13 @@ echo "==========================================================================
 send_warning_message "You might need to wait for a couple of minutes while everything gets up and running"
 echo "All the services location and some DEFAULT PASSWORDS to save you time are also saved in ~/fly-hi_media.txt"
 running_services_location > ~/fly-hi-links.txt
-echo "Speedtest tracker: username: admin@example.com password: password" >> ~/fly-hi-links.txt
-echo "Qbittorrrent:      username: admin             password: The password can be obtained from docker logs"  >> ~/fly-hi-links.txt
-echo "FileBrowser:       username: admin             password: admin"  >> ~/fly-hi-links.txt
-echo "Calibre web:       username: admin             password: admin123"  >> ~/fly-hi-links.txt
-echo "Linkding           username: admin             password: adminadmin"  >> ~/fly-hi-links.txt
-echo "Airsonic:          username: admin             password: admin"  >> ~/fly-hi-links.txt
+echo "Speedtest tracker: username: admin@example.com   password: password" >> ~/fly-hi-links.txt
+echo "Qbittorrrent:      username: admin               password: The password can be obtained from docker logs"  >> ~/fly-hi-links.txt
+echo "FileBrowser:       username: admin               password: admin"  >> ~/fly-hi-links.txt
+echo "Calibre web:       username: admin               password: admin123"  >> ~/fly-hi-links.txt
+echo "Linkding           username: admin               password: adminadmin"  >> ~/fly-hi-links.txt
+echo "Airsonic:          username: admin               password: admin"  >> ~/fly-hi-links.txt
+echo "Mealie:            username: changeme@email.com  password: MyPassword"  >> ~/fly-hi-links.txt
 echo "==================================================================================="
 echo "To configure Fly-Hi, check the documentation at"
 echo "https://yams.media/config"
