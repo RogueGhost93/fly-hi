@@ -5,6 +5,7 @@ send_warning_message() {
     echo -e $(printf "\e[33m$1\e[0m")
 }
 
+
 send_success_message() {
     echo -e $(printf "\e[32m$1\e[0m")
 }
@@ -54,9 +55,13 @@ add_service() {
     else
         send_warning_message "Skipping ${service_name^} configuration!"
         eval "${service_name}=n"
+        #sed -i "/^#${service_name}start/,/^#${service_name}end$/d; /^#${service_name}start/,/^#${service_name}end$/s/^#//" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
+        sed -n "/^#${service_name}start/,/^#${service_name}end$/{p;w ${install_location}/custom/custom_services.yaml" -e "/^#${service_name}start/,/^#${service_name}end$/d}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs" && sed -i "/^#${service_name}start/,/^#${service_name}end$/d" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
+
     fi
 
 }
+
 
 get_password() {
     local service="$1"
