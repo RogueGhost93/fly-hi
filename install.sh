@@ -536,6 +536,7 @@ add_service "tubesync" "Manage your favorite Youtube Channels (https://github.co
 # Cleaning up...
 # ============================================================================================
 
+send_success_message "Setting up docker network to ${DOCKER_SUBNET:-172.22.0.0/24}"
 # setting up docker network
 docker network create --subnet=${DOCKER_SUBNET:-172.22.0.0/24} fly-hi || true
 
