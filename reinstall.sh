@@ -6,7 +6,7 @@ source functions
 
 echo "Running the server..."
 echo "This is going to take a while...grab a coffee"
-send_warning_message "If this part of installation stops due to port conflicts on your system"
+send_warning_message "If containers fail to start up due to port conflicts on your system"
 send_warning_message "or some other reason, correct the yaml and env files and run reinstall.sh script"
 source env.reinstall
 docker network create --subnet=${DOCKER_SUBNET:-172.22.0.0/24} fly-hi || true
