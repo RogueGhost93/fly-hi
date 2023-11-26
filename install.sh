@@ -532,71 +532,12 @@ add_service "qbittorrentpub" "This is just a second instance of qbittorrent that
 add_service "tubesync" "Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
 
 
-
-
-
-send_success_message 🎉🎉🎉🎉🎉"Everything installed correctly! 🎉🎉🎉🎉🎉"
-
-echo "compose_management=$compose_management" > env.reinstall
-echo "compose_network=$compose_network" >> env.reinstall
-echo "compose_media=$compose_media" >> env.reinstall
-echo "compose_starrs=$compose_starrs" >> env.reinstall
-echo "install_location=$install_location" >> env.reinstall
-echo "data_root=$data_root" >> env.reinstall
-echo "my_domain=$my_domain" >> env.reinstall
-echo "photoprism=$photoprism" >> env.reinstall
-echo "nextcloud=$nextcloud" >> env.reinstall
-echo "tailscale=$tailscale" >> env.reinstall
-echo "traefik=$traefik" >> env.reinstall
-echo "install_vpn_server=$install_vpn_server" >> env.reinstall
-echo "puid=$puid" >> env.reinstall
-echo "pgid=$pgid" >> env.reinstall
-echo "Running the server..."
-echo "This is going to take a while...grab a coffee"
-send_warning_message "If containers fail to start up due to port conflicts on your system"
-send_warning_message "or some other reason, correct the yaml and env files and run reinstall.sh script"
-sleep 6
-docker network create --subnet=${DOCKER_SUBNET:-172.22.0.0/24} fly-hi || true
-docker-compose -f "$compose_network" up -d
-docker-compose -f "$compose_management" up -d
-docker-compose -f "$compose_media" up -d
-docker-compose -f "$compose_starrs" up -d
-
-
-
-
-
-send_success_message "If we need your sudo password to install the fly-hi CLI and correct permissions you will be prompted for it..."
-send_warning_message "If you have a large library this might take a long time, but it WILL finish so hang in there!! "
-[[ -f "$data_root" ]] || sudo mkdir -p "$data_root" || send_error_message "There was an error with your install location!"
-if sudo chown -R "$puid":"$pgid" "$data_root"; then
-    send_success_message "Media directory ownership and permissions set successfully ✅"
-else
-    send_error_message "Failed to set ownership and permissions for the media directory. Check permissions ❌"
-fi
-
-#media # Not sure if this is actually needed, would love some thoughts on this
-# sudo chown -R "$puid":"$pgid" "$install_location/media/jellyfin" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/emby" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/plex" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/overseerr" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/ombi" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/jellyseerr" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/airsonic" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/audiobookshelf" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/calibre_web" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/calibre" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/tubesync" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/linkding" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/linkwarden" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/joplin" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/freshrss" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/stirling_pdf" || true
-# sudo chown -R "$puid":"$pgid" "$install_location/media/filebrowser" || true
-
 # ============================================================================================
 # Cleaning up...
 # ============================================================================================
+
+# setting up docker network
+docker network create --subnet=${DOCKER_SUBNET:-172.22.0.0/24} fly-hi || true
 
 send_success_message "Fixing firewall rules..."
 sleep 1
@@ -670,8 +611,63 @@ fi
 send_success_message "Done!✅"
 
 
-sleep 3
-#printf "\033c"
+send_success_message 🎉🎉🎉🎉🎉"Everything installed correctly! 🎉🎉🎉🎉🎉"
+
+
+send_success_message "If we need your sudo password to install the fly-hi CLI and correct permissions you will be prompted for it..."
+send_warning_message "If you have a large library this might take a long time, but it WILL finish so hang in there!! "
+[[ -f "$data_root" ]] || sudo mkdir -p "$data_root" || send_error_message "There was an error with your install location!"
+if sudo chown -R "$puid":"$pgid" "$data_root"; then
+    send_success_message "Media directory ownership and permissions set successfully ✅"
+else
+    send_error_message "Failed to set ownership and permissions for the media directory. Check permissions ❌"
+fi
+
+
+
+running_services_location > ~/fly-hi-links.txt
+echo "Speedtest tracker: username: admin@example.com   password: password" >> ~/fly-hi-links.txt
+echo "Qbittorrrent:      username: admin               password: The password can be obtained from docker logs"  >> ~/fly-hi-links.txt
+echo "FileBrowser:       username: admin               password: admin"  >> ~/fly-hi-links.txt
+echo "Calibre web:       username: admin               password: admin123"  >> ~/fly-hi-links.txt
+echo "Linkding           username: admin               password: adminadmin"  >> ~/fly-hi-links.txt
+echo "Airsonic:          username: admin               password: admin"  >> ~/fly-hi-links.txt
+echo "Mealie:            username: changeme@email.com  password: MyPassword"  >> ~/fly-hi-links.txt
+
+
+echo "Running the server..."
+echo "This is going to take a while...grab a coffee"
+send_warning_message "If containers fail to start up due to port conflicts on your system"
+send_warning_message "or some other reason, correct the yaml and env files and run 'fly-hi start'"
+sleep 5
+docker-compose -f "$compose_network" up -d
+docker-compose -f "$compose_management" up -d
+docker-compose -f "$compose_media" up -d
+docker-compose -f "$compose_starrs" up -d
+#media # Not sure if this is actually needed, would love some thoughts on this
+# sudo chown -R "$puid":"$pgid" "$install_location/media/jellyfin" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/emby" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/plex" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/overseerr" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/ombi" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/jellyseerr" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/airsonic" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/audiobookshelf" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/calibre_web" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/calibre" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/tubesync" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/linkding" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/linkwarden" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/joplin" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/freshrss" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/stirling_pdf" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/filebrowser" || true
+
+
+
+
+
+printf "\033c"
 
 echo "==================================================================================="
 echo " _____  _      __ __         __ __  ____      ___ ___    ___  ___    ____   ____ "
@@ -685,22 +681,13 @@ echo "==========================================================================
 send_success_message "All done!✅  Enjoy Fly-Hi!"
 echo "You can check the installation on $install_location"
 echo "==================================================================================="
-echo "Everything should be running now! To check everything running, go to:"
+echo "Everything should be running now! To check everything running run 'fly-hi links'"
 echo
 running_services_location
 echo "==================================================================================="
-send_warning_message "You might need to wait for a couple of minutes while everything gets up and running"
 echo "All the services location and some DEFAULT PASSWORDS to save you time are also saved in ~/fly-hi_media.txt"
-running_services_location > ~/fly-hi-links.txt
-echo "Speedtest tracker: username: admin@example.com   password: password" >> ~/fly-hi-links.txt
-echo "Qbittorrrent:      username: admin               password: The password can be obtained from docker logs"  >> ~/fly-hi-links.txt
-echo "FileBrowser:       username: admin               password: admin"  >> ~/fly-hi-links.txt
-echo "Calibre web:       username: admin               password: admin123"  >> ~/fly-hi-links.txt
-echo "Linkding           username: admin               password: adminadmin"  >> ~/fly-hi-links.txt
-echo "Airsonic:          username: admin               password: admin"  >> ~/fly-hi-links.txt
-echo "Mealie:            username: changeme@email.com  password: MyPassword"  >> ~/fly-hi-links.txt
 echo "==================================================================================="
-echo "To configure Fly-Hi, check the documentation at"
-echo "https://yams.media/config"
+echo "To configure some of the service you can check the guides at"
+echo "https://yams.media/config and https://trash-guides.info/"
 echo "==================================================================================="
 exit 0
