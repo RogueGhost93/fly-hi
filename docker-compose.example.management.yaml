@@ -504,7 +504,7 @@ services:
 #    labels: #traefik#
 #      - "traefik.enable=true" #traefik#
 #      - "traefik.http.routers.graylog.rule=Host(`graylog.${HOSTNAME}`)" #traefik#
-#      - "traefik.http.services.graylog.loadbalancer.server.port=8080" #traefik#
+#      - "traefik.http.services.graylog.loadbalancer.server.port=9000" #traefik#
 #      - "traefik.http.routers.graylog.tls.certresolver=myresolver" #traefik#
 #      - "traefik.http.routers.graylog.tls=true" #traefik#
 ##      - "traefik.http.routers.graylog.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
