@@ -454,7 +454,7 @@ add_service "stirling_pdf" "Your locally hosted one-stop-shop for all your PDF n
 add_service "filebrowser" "Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
 add_service "mealie" "A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
 add_service "immich" "Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
-add_service "Photoprism" "Self-hosted backup solution for photos and videos"
+add_service "photoprism" "Self-hosted backup solution for photos and videos"
 
 if [ "$photoprism" == "y" ]; then
     send_warning_message "Note that photoprism could create a huge amount of cached thumbnails which can fill up your OS drive if there is not enough space"
