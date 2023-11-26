@@ -55,8 +55,8 @@ add_service() {
     else
         send_warning_message "Skipping ${service_name^} configuration!"
         eval "${service_name}=n"
-        #sed -i "/^#${service_name}start/,/^#${service_name}end$/d; /^#${service_name}start/,/^#${service_name}end$/s/^#//" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
-        sed -n "/^#${service_name}start/,/^#${service_name}end$/{p;w ${install_location}/custom/custom_services.yaml" -e "/^#${service_name}start/,/^#${service_name}end$/d}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs" && sed -i "/^#${service_name}start/,/^#${service_name}end$/d" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
+        sed -n "/^#${service_name}start/,/^#${service_name}end$/{p;}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs" >> "${install_location}/custom/custom_services.yaml" && sed -i "/^#${service_name}start/,/^#${service_name}end$/d" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
+
 
     fi
 
