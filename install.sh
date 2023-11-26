@@ -89,12 +89,14 @@ sudo chown -R $USER:$USER $install_location # or whichever directory will be use
 [[ -f "$install_location/starrs" ]] || mkdir -p "$install_location/starrs" || send_error_message "There was an error with your install location! Make sure the directory exists and the user \"$USER\" has permissions on it"
 [[ -f "$install_location/network" ]] || mkdir -p "$install_location/network" || send_error_message "There was an error with your install location! Make sure the directory exists and the user \"$USER\" has permissions on it"
 [[ -f "$install_location/management" ]] || mkdir -p "$install_location/management" || send_error_message "There was an error with your install location! Make sure the directory exists and the user \"$USER\" has permissions on it"
+[[ -f "$install_location/custom" ]] || mkdir -p "$install_location/custom" || send_error_message "There was an error with your install location! Make sure the directory exists and the user \"$USER\" has permissions on it"
 install_location=$(realpath "$install_location")
 
 compose_media="$install_location/media/docker-compose.yaml"
 compose_starrs="$install_location/starrs/docker-compose.yaml"
 compose_network="$install_location/network/docker-compose.yaml"
 compose_management="$install_location/management/docker-compose.yaml"
+compose_custom="$install_location/custom/custom_services.yaml"
 env_media="$install_location/media/.env"
 env_starrs="$install_location/starrs/.env"
 env_network="$install_location/network/.env"
@@ -126,6 +128,7 @@ cp docker-compose.example.media.yaml "$compose_media" || send_error_message "You
 cp docker-compose.example.starrs.yaml "$compose_starrs" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
 cp docker-compose.example.network.yaml "$compose_network" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
 cp docker-compose.example.management.yaml "$compose_management" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
+cp custom_services.yaml "$compose_custom" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
 cp env.example.media "$env_media" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
 cp env.example.starrs "$env_starrs" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
 cp env.example.network "$env_network" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
