@@ -200,7 +200,7 @@ add_service "watchtower" "Keep your docker containers up to date! (https://githu
 add_service "glances" "System Information (https://nicolargo.github.io/glances/)"
 add_service "uptimekuma" "Real time monitoring of your services (https://github.com/louislam/uptime-kuma)"
 add_service "scrutiny" "HDD/SSD monitoring tool with a nice dashboard (https://github.com/AnalogJ/scrutiny)"
-add_service "nfty" "Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
+add_service "ntfy" "Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
 add_service "vaultwarden" "Password Manager (https://hub.docker.com/r/vaultwarden/server)"
 add_service "phpmyadmin" "WEBui for managing MySQL databases, tables, columns, relations, indexes, users, permissions, etc (https://hub.docker.com/r/phpmyadmin/phpmyadmin/)"
 add_service "pgadmin" "WEBui for managing Postgres databases, tables, columns, relations, indexes, users, permissions, etc (https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html)"
