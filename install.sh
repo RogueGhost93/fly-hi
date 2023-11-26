@@ -619,7 +619,7 @@ sudo /usr/sbin/ufw allow 443
 send_success_message "Done!✅"
 
 
-send_success_message "Adding tweaks to crontabs..."
+send_success_message "Adding cronjobs..."
 sleep 1
 # Add photoprism indexing crontab as user
 if [ "$nextcloud" == "y" ]; then
