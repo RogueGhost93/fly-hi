@@ -246,8 +246,8 @@ if [ $option == "uninstall" ]; then
             send_success_message "You successefully delete your persistant container data!"
         fi
         if [ "$uninstall_docker" == "y" ]; then
-            sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin docker* || true
-            sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin || true
+            sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-buildx-plugin docker-compose-plugin docker* || true
+            sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-ce-cli docker-buildx-plugin docker-compose-plugin || true
             sudo umount /var/lib/docker/ || true
             sudo rm -rf /var/lib/docker /etc/docker || true
             sudo rm /etc/apparmor.d/docker || true
