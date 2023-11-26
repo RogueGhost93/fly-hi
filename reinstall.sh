@@ -28,24 +28,24 @@ else
     send_error_message "Failed to set ownership and permissions for the media directory. Check permissions ❌"
 fi
 
-#media
-sudo chown -R "$puid":"$pgid" "$install_location/media/jellyfin" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/emby" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/plex" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/overseerr" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/ombi" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/jellyseerr" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/airsonic" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/audiobookshelf" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/calibre_web" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/calibre" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/tubesync" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/linkding" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/linkwarden" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/joplin" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/freshrss" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/stirling_pdf" || true
-sudo chown -R "$puid":"$pgid" "$install_location/media/filebrowser" || true
+#media # Not sure if this is actually needed, would love some thoughts on this
+# sudo chown -R "$puid":"$pgid" "$install_location/media/jellyfin" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/emby" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/plex" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/overseerr" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/ombi" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/jellyseerr" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/airsonic" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/audiobookshelf" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/calibre_web" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/calibre" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/tubesync" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/linkding" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/linkwarden" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/joplin" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/freshrss" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/stirling_pdf" || true
+# sudo chown -R "$puid":"$pgid" "$install_location/media/filebrowser" || true
 
 
 # ============================================================================================
@@ -73,7 +73,7 @@ sudo /usr/sbin/ufw allow 443
 send_success_message "Done!✅"
 
 
-send_success_message "Adding tweaks to crontabs..."
+send_success_message "Adding cronjobs..."
 sleep 1
 # Add photoprism indexing crontab as user
 if [ "$nextcloud" == "y" ]; then
