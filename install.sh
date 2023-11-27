@@ -581,19 +581,6 @@ if [ "$nextcloud" == "y" ]; then
         # If the cron job already exists, notify or handle accordingly
         send_success_message "Nextcloud cron job already exists in user root crontab."
     fi
-        # If traefik is enabled accessing nextcloud over https wont be easy unless an override rule is added to the config
-    #  * When generating URLs, Nextcloud attempts to detect whether the server is
-    #  * accessed via ``https`` or ``http``. However, if Nextcloud is behind a proxy
-    #  * and the proxy handles the ``https`` calls, Nextcloud would not know that
-    #  * ``ssl`` is in use, which would result in incorrect URLs being generated.
-    #  * Valid values are ``http`` and ``https``.
-    #  */
-    if [[ $traefik == "y" ]]; then
-        # Nextcloud image
-        #sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config.php"
-        # Nextcloud linuxserver image
-        sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config/www/nextcloud/config/config.php"
-    fi
 fi
 if [[ $photoprism == "y" ]]; then
     # Define the cron job command for Photoprism
@@ -637,8 +624,27 @@ echo "Calibre web:       username: admin               password: admin123"  >> ~
 echo "Linkding           username: admin               password: adminadmin"  >> ~/fly-hi-links.txt
 echo "Airsonic:          username: admin               password: admin"  >> ~/fly-hi-links.txt
 echo "Mealie:            username: changeme@email.com  password: MyPassword"  >> ~/fly-hi-links.txt
-
-
+if [[ $traefik == "y" ]]; then
+        # If traefik is enabled accessing nextcloud over https wont be easy unless an override rule is added to the config
+    #  * When generating URLs, Nextcloud attempts to detect whether the server is
+    #  * accessed via ``https`` or ``http``. However, if Nextcloud is behind a proxy
+    #  * and the proxy handles the ``https`` calls, Nextcloud would not know that
+    #  * ``ssl`` is in use, which would result in incorrect URLs being generated.
+    #  * Valid values are ``http`` and ``https``.
+    #  */
+    # Nextcloud image
+    #sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config.php"
+    # Nextcloud linuxserver image
+    # this command works only after the nextcloud container is already up and running.
+    #sudo sed -i -e "s|'overwriteprotocol' => '',|'overwriteprotocol' => 'https',|g" "$install_location/media/nextcloud/config/www/nextcloud/config/config.php"
+    echo "" >> ~/fly-hi-links.txt
+    echo " # Nextcloud " >> ~/fly-hi-links.txt
+    echo "For nextcloud behind a reverse-proxy the overwrite protocol needs to be edited in nextcloud config. " >> ~/fly-hi-links.txt
+    echo "Something like this:" >> ~/fly-hi-links.txt
+    echo "'overwrite.cli.url' => 'http://nextcloud.${my_domain}', " >> ~/fly-hi-links.txt
+    echo "'overwriteprotocol' => 'https'," >> ~/fly-hi-links.txt
+    echo "'overwritehost' => 'nextcloud.${my_domain}'," >> ~/fly-hi-links.txt
+fi
 echo "Running the server..."
 echo "This is going to take a while...grab a coffee"
 send_warning_message "If containers fail to start up due to port conflicts on your system"
@@ -689,7 +695,7 @@ echo "Everything should be running now! To check everything running run 'fly-hi 
 echo
 running_services_location
 echo "==================================================================================="
-echo "All the services location and some DEFAULT PASSWORDS to save you time are also saved in ~/fly-hi_media.txt"
+echo "All the services location, some DEFAULT PASSWORDS and some useful notes to save you time  properly setting up your server are also saved in ~/fly-hi_media.txt"
 echo "==================================================================================="
 echo "To configure some of the service you can check the guides at"
 echo "https://yams.media/config and https://trash-guides.info/"
