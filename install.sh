@@ -199,6 +199,7 @@ echo
 add_service "whoami" "Gives you basic information about your Host - Used for testing and troubleshooting"
 add_service "portainer" "Keep your docker containers in check! (https://www.portainer.io/)"
 add_service "heimdall" "Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
+add_service "homeassistant" "Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
 add_service "watchtower" "Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
 add_service "glances" "System Information (https://nicolargo.github.io/glances/)"
 add_service "uptimekuma" "Real time monitoring of your services (https://github.com/louislam/uptime-kuma)"
