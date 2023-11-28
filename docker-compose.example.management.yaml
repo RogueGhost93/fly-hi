@@ -519,6 +519,34 @@ services:
 #graylogend
 
 
+#homeassistantstart
+#  homeassistant:
+#    container_name: homeassistant
+#    image: "ghcr.io/home-assistant/home-assistant:stable"
+#    volumes:
+#      - "${INSTALL_LOCATION}/management/homeassistant:/config
+#      - /etc/localtime:/etc/localtime:ro
+#      - /run/dbus:/run/dbus:ro
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    ports:
+#      - 8123:8123
+#    networks:
+#      - fly-hi
+#    restart: unless-stopped
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123" #traefik#
+#      - "traefik.http.routers.homeassistant.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.homeassistant.tls=true" #traefik#
+##      - "traefik.http.routers.homeassistant.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.homeassistant.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.homeassistant.entrypoints=websecure"                        #httpchallenge# #traefik#
+#homeassistantend
+
 networks:
   fly-hi:
     external: true
