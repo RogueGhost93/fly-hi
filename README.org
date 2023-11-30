@@ -24,6 +24,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)
 - Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)
 - Home-Assistant - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)
+- Netdata        - Distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics (https://www.netdata.cloud/)
 - Glances        - System Information (https://nicolargo.github.io/glances/)
 - Uptime-Kuma    - Real time monitoring of your services (https://github.com/louislam/uptime-kuma)
 - Scrutiny       - HDD/SSD monitoring tool with a nice dashboard (https://github.com/AnalogJ/scrutiny)
@@ -41,14 +42,10 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Flaresolverr           - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)
 - Traefik                - Reverse Proxy (https://traefik.io/traefik/)
 - Gluetun                - VPN Client (https://github.com/qdm12/gluetun)
-- Wireguard (wg-easy)    - Connect to your home network from anywhere in the world! (https://github.com/wg-easy/wg-easy)
+- WG-Easy                - Connect to your home network from anywhere in the world! (https://github.com/wg-easy/wg-easy)
 - Tailscale              - Easier, closed source alternative to private OpenVPN/Wireguard server for access from anywhere in the world! (https://tailscale.com/)
 - DDclient (Dynamic DNS) - Keep your Domain updated at all times (Unnecessary if you are NOT exposing any of your service to public!) (https://github.com/ddclient/ddclient)
 - Speedtest-tracker      - Monitor your internet speed on a scheduled basis (https://github.com/alexjustesen/speedtest-tracker)
-
-The bash versions of VPN servers are really for little more advanced users so please skip if youre not sure how to use this!
-- Wireguard (bash)       - Connect to your home network from anywhere in the world! (https://github.com/angristan/wireguard-install)
-- OpenVPN (bash)         - Connect to your home network from anywhere in the world! (https://github.com/angristan/openvpn-install)
 
 
 
