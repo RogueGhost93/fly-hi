@@ -21,11 +21,10 @@ services:
 #      - /run/udev:/run/udev:ro
 #      - ${INSTALL_LOCATION}/management/scrutiny/config:/opt/scrutiny/config
 #      - ${INSTALL_LOCATION}/management/scrutiny/influxdb:/opt/scrutiny/influxdb
-##    devices:
-##      - "/dev/sda"
+#    devices:
+#      - "/dev/sda"
+##      - "/dev/sdb"
 ##      - "/dev/sdc"
-#      #- "/dev/sdd"
-#      #- "/dev/sdd1"
 #    restart: unless-stopped
 #    networks:
 #      - fly-hi
@@ -90,7 +89,8 @@ services:
 #      - WATCHTOWER_NOTIFICATION_URL=ntfy://ntfy.${HOSTNAME}/Management?title=WatchtowerUpdates
 #      - WATCHTOWER_DEBUG=true
 #      - WATCHTOWER_CLEANUP=true
-#      - WATCHTOWER_SCHEDULE=0 0 4 * * 5
+#      #                   s m h dom m dow
+#      - WATCHTOWER_SCHEDULE=0 0 4 * * *
 #watchtowerend
 
 
@@ -546,6 +546,47 @@ services:
 ##      - "traefik.http.routers.homeassistant.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
 ##      - "traefik.http.routers.homeassistant.entrypoints=websecure"                        #httpchallenge# #traefik#
 #homeassistantend
+
+# Netdata is a distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics. https://www.netdata.cloud/
+#netdatastart
+#  netdata:
+#    image: netdata/netdata
+#    container_name: netdata
+#    pid: host
+##    network_mode: host
+#    restart: unless-stopped
+#    ports:
+#      - 19999:19999
+#    cap_add:
+#      - SYS_PTRACE
+#      - SYS_ADMIN
+#    security_opt:
+#      - apparmor:unconfined
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/netdata/netdataconfig:/etc/netdata
+#      - ${INSTALL_LOCATION}/management/netdata/netdatalib:/var/lib/netdata
+#      - ${INSTALL_LOCATION}/management/netdata/netdatacache:/var/cache/netdata
+#      - /etc/passwd:/host/etc/passwd:ro
+#      - /etc/group:/host/etc/group:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - /proc:/host/proc:ro
+#      - /sys:/host/sys:ro
+#      - /etc/os-release:/host/etc/os-release:ro
+#      - /var/log:/host/var/log:ro
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.netdata.rule=Host(`netdata.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.netdata.loadbalancer.server.port=19999" #traefik#
+#      - "traefik.http.routers.netdata.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.netdata.tls=true" #traefik#
+##      - "traefik.http.routers.netdata.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.netdata.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.netdata.entrypoints=websecure"                        #httpchallenge# #traefik#
+#netdataend
+
 
 networks:
   fly-hi:
