@@ -200,6 +200,7 @@ add_service "whoami" "Gives you basic information about your Host - Used for tes
 add_service "portainer" "Keep your docker containers in check! (https://www.portainer.io/)"
 add_service "heimdall" "Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
 add_service "homeassistant" "Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
+add_service "netdata" "Distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics (https://www.netdata.cloud/)"
 add_service "watchtower" "Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
 add_service "glances" "System Information (https://nicolargo.github.io/glances/)"
 add_service "uptimekuma" "Real time monitoring of your services (https://github.com/louislam/uptime-kuma)"
@@ -241,11 +242,6 @@ send_success_message "Network services are here to make your server safer, acces
 echo
 send_message_in_blue "=============================================================================="
 echo
-add_service "flaresolverr" "Proxy server to bypass Cloudflare protection in Prowlarr https://github.com/FlareSolverr/FlareSolverr"
-add_service "ddclient" "Keep your Domain updated at all times (Unnecessary if you are NOT exposing any of your service to public!) https://github.com/ddclient/ddclient"
-add_service "speedtest" "Monitor your internet speed on a scheduled basis https://github.com/alexjustesen/speedtest-tracker"
-
-
 echo "Would you like to install Traefik? "
 echo "Traefik can serve as a reverse-proxy and make your running service easily reachable through hostnames instead of IPs and Port numbers!"
 echo
@@ -308,7 +304,9 @@ fi
 send_message_in_blue "=============================================================================="
 send_message_in_blue "=============================================================================="
 
-
+add_service "flaresolverr" "Proxy server to bypass Cloudflare protection in Prowlarr https://github.com/FlareSolverr/FlareSolverr"
+add_service "ddclient" "Keep your Domain updated at all times (Unnecessary if you are NOT exposing any of your service to public!) https://github.com/ddclient/ddclient"
+add_service "speedtest" "Monitor your internet speed on a scheduled basis https://github.com/alexjustesen/speedtest-tracker"
 add_service "wgeasy" "Connect to your home network from anywhere in the world! https://github.com/wg-easy/wg-easy"
 if [[ $wgeasy == "y" ]]; then
     password=$(get_password "wgeasy")
@@ -381,35 +379,7 @@ else
   # Comment lines with #no_gluetun#
   sed -i '/#no_gluetun#/s/^/#/' "$compose_starrs"
   echo "Skipping Gluetun configuration"
-fi
-send_message_in_blue "=============================================================================="
-send_message_in_blue "=============================================================================="
-
-#VPN SERVER
-send_warning_message " =============  FOR ADVANCED USERS ONLY !!! ============="
-echo "Would you like to install an alternative to wg-easy (bash version) personal VPN server to help you access your media from the outside of your home? [y/N]: "
-send_warning_message "Note: This will require your sudo password! "
-send_warning_message "Note: If you already chose docker version of wireguard 'WG-Easy' which is recommended you can skip this step unless you want to run OpenVPN also!"
-read -p "" install_vpn_server
-install_vpn_server=${install_vpn_server:-"n"}
-if [ "$install_vpn_server" == "y" ]; then
-    echo
-    echo
-    echo
-    read -rp "Would you prefer to use Wireguard or OpenVPN: " -e -i wireguard vpn_choice
-        if [ "$vpn_choice" == "wireguard" ]; then
-            cp wireguard-install.sh "$wireguard" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
-            chmod +x $install_location/wireguard-install.sh
-            sudo bash $install_location/wireguard-install.sh
-        else
-            cp openvpn-install.sh "$openvpn" || send_error_message "Your user ($USER) needs to have permissions on the installation folder!"
-            chmod +x $install_location/openvpn-install.sh
-            sudo bash $install_location/openvpn-install.sh
-        fi
-    send_warning_message "Remember to forward the chosen port (UDP) on your router to this device and you are good to go"
-    send_warning_message "If you have a dynamic IP you can use Dynamic DNS update clinet such as No-IP"
-else
-    sudo sed -i '/#private_vpn#/d' /usr/local/bin/fly-hi
+  portfwd_y_n=no
 fi
 send_message_in_blue "=============================================================================="
 send_message_in_blue "=============================================================================="
