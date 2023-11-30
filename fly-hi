@@ -24,7 +24,6 @@ help() {
    echo "ip          checks if the VPN is working as expected"
    echo "ports       shows all ports currently used and opened by docker containers"
    echo "links       shows links to access your services"
-   echo "vpn         Manage your VPN server" #private_vpn#
 }
 
 send_success_message() {
@@ -283,6 +282,8 @@ if [ $option == "links" ]; then
     print_link "portainer"
     print_link "dozzle"
     print_link "heimdall"
+    print_link "homeassistant"
+    print_link "netdata"
     print_link "glances"
     print_link "uptime-kuma"
     print_link "scrutiny"
@@ -292,6 +293,7 @@ if [ $option == "links" ]; then
     print_link "vaultwarden"
     send_message_in_blue "Cockpit        : http://$host_ip:9090"
     send_message_in_blue "Graylog        : http://$host_ip:$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
+
     echo
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
     send_message_in_blue "Traefik        : http://$host_ip:80/" #traefik#
