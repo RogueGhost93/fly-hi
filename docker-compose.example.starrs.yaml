@@ -5,8 +5,8 @@ version: "3"
 
 services:
 
-# Sonarr      - Manage downloads of your TV Shows (https://sonarr.tv/)
 #sonarrstart
+## Sonarr      - Manage downloads of your TV Shows (https://sonarr.tv/)
 #  sonarr:
 #    image: lscr.io/linuxserver/sonarr:develop
 #    #image: randomninjaatk/sonarr-extended:latest
@@ -50,8 +50,8 @@ services:
 #sonarrend
 
 
-# Radarr      - Manage downloads of your Movies (https://radarr.video/)
 #radarrstart
+## Radarr      - Manage downloads of your Movies (https://radarr.video/)
 #  radarr:
 #    image: lscr.io/linuxserver/radarr:develop
 #    #image: randomninjaatk/radarr-extended:latest
@@ -95,8 +95,8 @@ services:
 #radarrend
 
 
-# Bazarr      - Manage Subtitles for you Media Collection (https://www.bazarr.media/)
 #bazarrstart
+## Bazarr      - Manage Subtitles for you Media Collection (https://www.bazarr.media/)
 #  bazarr:
 #    image: lscr.io/linuxserver/bazarr
 #    container_name: bazarr
@@ -126,8 +126,8 @@ services:
 #bazarrend
 
 
-# Prowlarr    - Indexer aggregator for Sonarr and Radarr (https://github.com/Prowlarr/Prowlarr)
 #prowlarrstart
+## Prowlarr    - Indexer aggregator for Sonarr and Radarr (https://github.com/Prowlarr/Prowlarr)
 #  prowlarr:
 #    image: lscr.io/linuxserver/prowlarr
 #    container_name: prowlarr
@@ -156,8 +156,8 @@ services:
 
 
 
-# Lidarr      - Manage downloads of your Music (https://lidarr.audio/)
 #lidarrstart
+## Lidarr      - Manage downloads of your Music (https://lidarr.audio/)
 #  lidarr:
 #    image: lscr.io/linuxserver/lidarr
 #    container_name: lidarr
@@ -187,8 +187,8 @@ services:
 
 
 
-# Readarr     - Manage downloads of your Books (https://readarr.com/)
 #readarrstart
+## Readarr     - Manage downloads of your Books (https://readarr.com/)
 #  readarr:
 #    image: lscr.io/linuxserver/readarr:develop
 #    container_name: readarr
@@ -218,8 +218,8 @@ services:
 
 
 
-# qBittorrent - Does the actual download...(https://www.qbittorrent.org/)
 #qbittorrentstart
+## qBittorrent - Does the actual download...(https://www.qbittorrent.org/)
 #  qbittorrent:
 #    image: lscr.io/linuxserver/qbittorrent
 #    container_name: qbittorrent
@@ -245,8 +245,8 @@ services:
 
 
 
-# qBittorrent - Does the actual download...(https://www.qbittorrent.org/) - second instance
 #qbittorrentpubstart
+## qBittorrent - Does the actual download...(https://www.qbittorrent.org/) - second instance
 #  qbittorrentpub:
 #    image: lscr.io/linuxserver/qbittorrent
 #    container_name: qbittorrentpub
@@ -268,8 +268,8 @@ services:
 #    network_mode: "container:gluetun" #no_gluetun#
 #qbittorrentpubend
 
-# Tubesync        - Manage downloads of your favorite Youtube Channels (https://github.com/meeb/tubesync)
 #tubesyncstart
+## Tubesync        - Manage downloads of your favorite Youtube Channels (https://github.com/meeb/tubesync)
 #  tubesync:
 #    image: ghcr.io/meeb/tubesync:latest
 #    container_name: tubesync

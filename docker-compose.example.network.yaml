@@ -5,8 +5,8 @@ version: "3"
 
 services:
 
-# Speedtest-tracker - Monitor your internet speed on da scheduled basis (https://github.com/alexjustesen/speedtest-tracker)
 #speedteststart
+## Speedtest-tracker - Monitor your internet speed on da scheduled basis (https://github.com/alexjustesen/speedtest-tracker)
 #  speedtest:
 #    container_name: speedtest
 #    image: ghcr.io/alexjustesen/speedtest-tracker:latest
@@ -66,8 +66,8 @@ services:
 #speedtestend
 
 
-# Flaresolverr  - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)
 #flaresolverrstart
+## Flaresolverr  - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)
 #  flaresolverr:
 #    # DockerHub mirror flaresolverr/flaresolverr:latest
 #    image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -97,15 +97,15 @@ services:
 
 
 
-# Gluetun  - VPN Client (https://github.com/qdm12/gluetun)
-#  TO LIST SERVER_CITIES OR SERVER_COUNTRIES USE THE FOLLOWING COMMAND
-#  docker run --rm -v ${INSTALL_LOCATION}/network/gluetun:/gluetun qmcgaw/gluetun format-servers -mullvad
-#  docker run --rm -v /yourpath:/gluetun qmcgaw/gluetun format-servers -yourprovider
-#  yourpath is the path to your bind mounted directory
-#  yourprovider is your VPN provider in lowercase without quotes, for example protonvpn or private-internet-access
-# be careful with the formating, some countries and cities need capital
-# letters or two words. Run 'docker logs gluetun' to see if it connected properly
 #gluetunstart
+## Gluetun  - VPN Client (https://github.com/qdm12/gluetun)
+##  TO LIST SERVER_CITIES OR SERVER_COUNTRIES USE THE FOLLOWING COMMAND
+##  docker run --rm -v ${INSTALL_LOCATION}/network/gluetun:/gluetun qmcgaw/gluetun format-servers -mullvad
+##  docker run --rm -v /yourpath:/gluetun qmcgaw/gluetun format-servers -yourprovider
+##  yourpath is the path to your bind mounted directory
+##  yourprovider is your VPN provider in lowercase without quotes, for example protonvpn or private-internet-access
+## be careful with the formating, some countries and cities need capital
+## letters or two words. Run 'docker logs gluetun' to see if it connected properly
 #  gluetun:
 #    image: qmcgaw/gluetun
 #    container_name: gluetun
@@ -185,6 +185,7 @@ services:
 
 
 #traefikstart
+## Traefik is a Reverse Proxy
 #  traefik:
 #    image: traefik:v2.9
 #    container_name: traefik
@@ -231,8 +232,6 @@ services:
 #      - --certificatesresolvers.myresolver.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53
 #      # uncomment for testing letsencrypt
 ##      - --certificatesresolvers.myresolver.acme.caserver=${LETS_ENCRYPT_CA_SERVER:-https://acme-v02.api.letsencrypt.org/directory}
-
-
 #    ports:
 #      - "80:80"
 #      - "443:443"
@@ -263,8 +262,8 @@ services:
 
 
 
-# ddclient - Dynamic DNS Updater (https://hub.docker.com/r/linuxserver/ddclient)
 #ddclientstart
+## ddclient - Dynamic DNS Updater (https://hub.docker.com/r/linuxserver/ddclient)
 #  ddclient:
 #    image: lscr.io/linuxserver/ddclient:latest
 #    container_name: ddclient
@@ -280,8 +279,8 @@ services:
 #ddclientend
 
 
-# Wireguard (wg-easy) - Connect to your home network from anywhere in the world! (https://github.com/wg-easy/wg-easy)
 #wgeasystart
+## Wireguard (wg-easy) - Connect to your home network from anywhere in the world! (https://github.com/wg-easy/wg-easy)
 #  wg-easy:
 #    image: weejewel/wg-easy
 #    container_name: wg-easy

@@ -5,8 +5,8 @@ version: "3"
 
 services:
 
-# Jellyfin        - Media Streaming Service (open-source, fork of Emby, recommended) (https://jellyfin.org/)
 #jellyfinstart
+## Jellyfin        - Media Streaming Service (open-source, fork of Emby, recommended) (https://jellyfin.org/)
 #  # Jellyfin is used to serve your media to the client devices
 #  jellyfin:
 #    image: lscr.io/linuxserver/jellyfin
@@ -73,8 +73,8 @@ services:
 #jellyfinend
 
 
-# Emby            - Media Streaming Service (closed-source) (https://emby.media/)
 #embystart
+## Emby            - Media Streaming Service (closed-source) (https://emby.media/)
 #  # emby is used to serve your media to the client devices
 #  emby:
 #    image: lscr.io/linuxserver/emby
@@ -118,8 +118,8 @@ services:
 
 
 
-# Plex            - Media Streaming Service (closed-source) (https://www.plex.tv/)
 #plexstart
+## Plex            - Media Streaming Service (closed-source) (https://www.plex.tv/)
 #  plex:
 #    image: lscr.io/linuxserver/plex:latest
 #    container_name: plex
@@ -196,8 +196,8 @@ services:
 
 
 
-# Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)
 #ombistart
+## Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)
 #  ombi:
 #    image: linuxserver/ombi:latest
 #    container_name: ombi
@@ -224,8 +224,8 @@ services:
 #ombiend
 
 
-# Airsonic        - Music Server (https://airsonic.github.io/)
 #airsonicstart
+## Airsonic        - Music Server (https://airsonic.github.io/)
 #  airsonic:
 #    container_name: airsonic
 #    image: airsonicadvanced/airsonic-advanced:latest
@@ -258,8 +258,8 @@ services:
 
 
 
-# Calibre-web     - Read your favorite Books (https://github.com/janeczku/calibre-web)
 #calibre_webstart
+## Calibre-web     - Read your favorite Books (https://github.com/janeczku/calibre-web)
 #  calibre_web:
 #    image: lscr.io/linuxserver/calibre-web:latest
 #    container_name: calibre_web
@@ -290,8 +290,8 @@ services:
 #calibre_webend
 
 
-# Calibre Library - Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)
 #calibre_librarystart
+## Calibre Library - Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)
 #  calibre:
 #    image: lscr.io/linuxserver/calibre:latest
 #    container_name: calibre
@@ -326,8 +326,8 @@ services:
 #calibre_libraryend
 
 
-# Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)
 #audiobookshelfstart
+## Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)
 #  audiobookshelf:
 #    image: advplyr/audiobookshelf
 #    container_name: audiobookshelf
@@ -361,8 +361,8 @@ services:
 
 
 
-# Photoprism      - Browse Your Life in Pictures (https://www.photoprism.app/)
 #photoprismstart
+## Photoprism      - Browse Your Life in Pictures (https://www.photoprism.app/)
 #  photoprism:
 #    ## Use photoprism/photoprism:preview for testing preview builds:
 #    image: photoprism/photoprism:latest
@@ -475,14 +475,16 @@ services:
 #      MARIADB_USER: "photoprism"
 #      MARIADB_PASSWORD: "${MARIADB_PASSWORD}"
 #      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+### Pass this in order to change default mariadb listening port MYSQL_TCP_PORT: 3307 - also make sure you map them correctly like 3307:3307
+##      MYSQL_TCP_PORT: 3307
 #    ports:
 #      - 3306:3306
 #    networks:
 #      - fly-hi
 #photoprismend
 
-# Immich is an alternative to photoprism https://immich.app/
 #immichstart
+## Immich is an alternative to photoprism https://immich.app/
 #  immich-server:
 #    container_name: immich_server
 #    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
@@ -600,9 +602,9 @@ services:
 
 
 
-# Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)
-# #https://hub.docker.com/r/linuxserver/nextcloud
 #nextcloudstart
+## Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)
+## #https://hub.docker.com/r/linuxserver/nextcloud
 #  nextcloud:
 #    image: lscr.io/linuxserver/nextcloud:latest
 #    container_name: nextcloud
@@ -688,8 +690,8 @@ services:
 #      - PGPORT=5434
 #nextcloudend
 
-# Linkding        - Very fancy bookmarks managers with support for tags (https://github.com/sissbruecker/linkding)
 #linkdingstart
+## Linkding        - Very fancy bookmarks managers with support for tags (https://github.com/sissbruecker/linkding)
 #  linkding:
 #    container_name: linkding
 #    image: sissbruecker/linkding:latest
@@ -762,8 +764,8 @@ services:
 
 
 
-# Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)
 #linkwardenstart
+## Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)
 #  linkwarden:
 #    environment:
 #      - PUID=${USER_ID}
@@ -811,8 +813,8 @@ services:
 #linkwardenend
 
 
-# Joplin          - Nice and very popular Notes-taking app (https://joplinapp.org/)"
 #joplinstart
+## Joplin          - Nice and very popular Notes-taking app (https://joplinapp.org/)"
 #  joplin:
 #    image: joplin/server:latest
 #    container_name: joplin
@@ -871,8 +873,8 @@ services:
 #joplinend
 
 
-# FreshRSS is a nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)
 #freshrssstart
+## FreshRSS is a nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)
 #  freshrss:
 #    image: freshrss/freshrss:edge
 #    container_name: freshrss
@@ -936,8 +938,8 @@ services:
 #freshrssend
 
 
-# Stirling-PDF Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)
 #stirling_pdfstart
+## Stirling-PDF Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)
 #  stirling_pdf:
 #    container_name: stirling_pdf
 #    image: frooodle/s-pdf
@@ -971,8 +973,8 @@ services:
 ##      - "traefik.http.routers.pdf.entrypoints=websecure"                         #httpchallenge# #traefik#
 #stirling_pdfend
 
-# Filebrowser - Nice WebUI for accessing and managing your files (https://filebrowser.org/)
 #filebrowserstart
+## Filebrowser - Nice WebUI for accessing and managing your files (https://filebrowser.org/)
 #  filebrowser:
 #    container_name: filebrowser
 #    image: filebrowser/filebrowser:latest
@@ -1003,6 +1005,7 @@ services:
 
 
 #mealiestart
+## Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)
 #  mealie:
 #    image: ghcr.io/mealie-recipes/mealie:nightly
 #    container_name: mealie

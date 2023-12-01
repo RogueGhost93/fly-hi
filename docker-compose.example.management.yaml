@@ -5,8 +5,8 @@ version: "3"
 
 services:
 
-# Scrutiny    - HDD/SSD monitoring tool with a nice dashboard (https://github.com/AnalogJ/scrutiny)
 #scrutinystart
+## Scrutiny    - HDD/SSD monitoring tool with a nice dashboard (https://github.com/AnalogJ/scrutiny)
 #  scrutiny:
 #    container_name: scrutiny
 #    image: ghcr.io/analogj/scrutiny:master-omnibus
@@ -40,8 +40,8 @@ services:
 #scrutinyend
 
 
-# Portainer   - Keep your docker containers in check! (https://www.portainer.io/)
 #portainerstart
+## Portainer   - Keep your docker containers in check! (https://www.portainer.io/)
 #  portainer:
 #    image: portainer/portainer-ce
 #    container_name: portainer
@@ -70,8 +70,8 @@ services:
 
 
 
-# Watchtower  - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)
 #watchtowerstart
+## Watchtower  - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)
 #  watchtower:
 #    image: containrrr/watchtower
 #    container_name: watchtower
@@ -83,8 +83,8 @@ services:
 #    environment:
 #      - TZ=${TIMEZONE}
 #      - WATCHTOWER_LIFECYCLE_HOOKS=True
-#      # For telegram notifications to work you need to add your BOT_TOKEN and CHAT_ID variables to .env files and then uncomment the following line.
-#      #- WATCHTOWER_NOTIFICATION_URL=telegram://${BOT_TOKEN}@telegram/?channels=${CHAT_ID}
+#      # For telegram notifications to work you need to add your TELEGRAM_BOT_TOKEN and CHAT_ID variables to .env files and then uncomment the following line.
+#      #- WATCHTOWER_NOTIFICATION_URL=telegram://${TELEGRAM_BOT_TOKEN}@telegram/?channels=${CHAT_ID}
 #      - WATCHTOWER_NOTIFICATIONS=shoutrrr
 #      - WATCHTOWER_NOTIFICATION_URL=ntfy://ntfy.${HOSTNAME}/Management?title=WatchtowerUpdates
 #      - WATCHTOWER_DEBUG=true
@@ -94,8 +94,8 @@ services:
 #watchtowerend
 
 
-# Heimdall    - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)
 #heimdallstart
+## Heimdall    - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)
 #  heimdall:
 #    image: lscr.io/linuxserver/heimdall:latest
 #    container_name: heimdall
@@ -124,11 +124,10 @@ services:
 #heimdallend
 
 
-# Glances     - System Information (https://nicolargo.github.io/glances/)
-  #https://github.com/joweisberg/docker-glances
-  #https://github.com/nicolargo/glances/
-
 #glancesstart
+## Glances     - System Information (https://nicolargo.github.io/glances/)
+#  #https://github.com/joweisberg/docker-glances
+#  #https://github.com/nicolargo/glances/
 #  glances:
 #    container_name: glances
 #    image: nicolargo/glances:latest-alpine
@@ -160,8 +159,8 @@ services:
 
 
 
-# Uptime-Kuma - Real time monitoring of your services (https://github.com/louislam/uptime-kuma)
 #uptimekumastart
+## Uptime-Kuma - Real time monitoring of your services (https://github.com/louislam/uptime-kuma)
 #  uptime-kuma:
 #    image: louislam/uptime-kuma:1
 #    container_name: uptime-kuma
@@ -215,8 +214,8 @@ services:
 
 
 
-# Ntfy        - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)
 #ntfystart
+## Ntfy        - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)
 #  ntfy:
 #    image: binwiederhier/ntfy
 #    container_name: ntfy
@@ -252,8 +251,8 @@ services:
 
 
 
-# Vaultwarden - Password Manager (https://hub.docker.com/r/vaultwarden/server)
 #vaultwardenstart
+## Vaultwarden - Password Manager (https://hub.docker.com/r/vaultwarden/server)
 #  vaultwarden:
 #    container_name: vaultwarden
 #    image: vaultwarden/server:latest
@@ -280,8 +279,8 @@ services:
 #vaultwardenend
 
 
-# PhpMyAdmin is a WEBui for managing MySQL databases, tables, columns, relations, indexes, users, permissions, etc (https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 #phpmyadminstart
+## PhpMyAdmin is a WEBui for managing MySQL databases, tables, columns, relations, indexes, users, permissions, etc (https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 #  phpmyadmin:
 #    image: phpmyadmin
 #    container_name: phpmyadmin
@@ -305,8 +304,8 @@ services:
 #phpmyadminend
 
 
-# PgAdmin is a WEBui for managing Postgres databases, tables, columns, relations, indexes, users, permissions, etc (https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html)
 #pgadminstart
+## PgAdmin is a WEBui for managing Postgres databases, tables, columns, relations, indexes, users, permissions, etc (https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html)
 #  pgadmin:
 #    container_name: pgadmin
 #    image: dpage/pgadmin4
@@ -331,6 +330,7 @@ services:
 #pgadminend
 
 #dozzlestart
+## Dozzle         - All docker logs in one place on a nice WEB-UI (https://dozzle.dev/)
 #  dozzle:
 #    image: amir20/dozzle:latest
 #    container_name: dozzle
@@ -362,7 +362,74 @@ services:
 #dozzleend
 
 
+#homeassistantstart
+## Home-Assistant - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)
+#  homeassistant:
+#    container_name: homeassistant
+#    image: "ghcr.io/home-assistant/home-assistant:stable"
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/homeassistant:/config
+#      - /etc/localtime:/etc/localtime:ro
+#      - /run/dbus:/run/dbus:ro
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    ports:
+#      - 8123:8123
+#    networks:
+#      - fly-hi
+#    restart: unless-stopped
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123" #traefik#
+#      - "traefik.http.routers.homeassistant.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.homeassistant.tls=true" #traefik#
+##      - "traefik.http.routers.homeassistant.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.homeassistant.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.homeassistant.entrypoints=websecure"                        #httpchallenge# #traefik#
+#homeassistantend
 
+#netdatastart
+## Netdata is a distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics. https://www.netdata.cloud/
+#  netdata:
+#    image: netdata/netdata
+#    container_name: netdata
+#    pid: host
+##    network_mode: host
+#    restart: unless-stopped
+#    ports:
+#      - 19999:19999
+#    cap_add:
+#      - SYS_PTRACE
+#      - SYS_ADMIN
+#    security_opt:
+#      - apparmor:unconfined
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/netdata/netdataconfig:/etc/netdata
+#      - ${INSTALL_LOCATION}/management/netdata/netdatalib:/var/lib/netdata
+#      - ${INSTALL_LOCATION}/management/netdata/netdatacache:/var/cache/netdata
+#      - /etc/passwd:/host/etc/passwd:ro
+#      - /etc/group:/host/etc/group:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - /proc:/host/proc:ro
+#      - /sys:/host/sys:ro
+#      - /etc/os-release:/host/etc/os-release:ro
+#      - /var/log:/host/var/log:ro
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.netdata.rule=Host(`netdata.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.netdata.loadbalancer.server.port=19999" #traefik#
+#      - "traefik.http.routers.netdata.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.netdata.tls=true" #traefik#
+##      - "traefik.http.routers.netdata.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.netdata.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.netdata.entrypoints=websecure"                        #httpchallenge# #traefik#
+#netdataend
 
 #graylogstart
 # # Graylog https://github.com/Graylog2/docker-compose      https://graylog.org/
@@ -519,73 +586,7 @@ services:
 #graylogend
 
 
-#homeassistantstart
-#  homeassistant:
-#    container_name: homeassistant
-#    image: "ghcr.io/home-assistant/home-assistant:stable"
-#    volumes:
-#      - "${INSTALL_LOCATION}/management/homeassistant:/config
-#      - /etc/localtime:/etc/localtime:ro
-#      - /run/dbus:/run/dbus:ro
-#    environment:
-#      - TZ=${TIMEZONE}
-#      - PUID=${USER_ID}
-#      - PGID=${GROUP_ID}
-#    ports:
-#      - 8123:8123
-#    networks:
-#      - fly-hi
-#    restart: unless-stopped
-#    labels: #traefik#
-#      - "traefik.enable=true" #traefik#
-#      - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.${HOSTNAME}`)" #traefik#
-#      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123" #traefik#
-#      - "traefik.http.routers.homeassistant.tls.certresolver=myresolver" #traefik#
-#      - "traefik.http.routers.homeassistant.tls=true" #traefik#
-##      - "traefik.http.routers.homeassistant.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
-##      - "traefik.http.routers.homeassistant.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
-##      - "traefik.http.routers.homeassistant.entrypoints=websecure"                        #httpchallenge# #traefik#
-#homeassistantend
 
-# Netdata is a distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics. https://www.netdata.cloud/
-#netdatastart
-#  netdata:
-#    image: netdata/netdata
-#    container_name: netdata
-#    pid: host
-##    network_mode: host
-#    restart: unless-stopped
-#    ports:
-#      - 19999:19999
-#    cap_add:
-#      - SYS_PTRACE
-#      - SYS_ADMIN
-#    security_opt:
-#      - apparmor:unconfined
-#    volumes:
-#      - ${INSTALL_LOCATION}/management/netdata/netdataconfig:/etc/netdata
-#      - ${INSTALL_LOCATION}/management/netdata/netdatalib:/var/lib/netdata
-#      - ${INSTALL_LOCATION}/management/netdata/netdatacache:/var/cache/netdata
-#      - /etc/passwd:/host/etc/passwd:ro
-#      - /etc/group:/host/etc/group:ro
-#      - /etc/localtime:/etc/localtime:ro
-#      - /proc:/host/proc:ro
-#      - /sys:/host/sys:ro
-#      - /etc/os-release:/host/etc/os-release:ro
-#      - /var/log:/host/var/log:ro
-#      - /var/run/docker.sock:/var/run/docker.sock:ro
-#    networks:
-#      - fly-hi
-#    labels: #traefik#
-#      - "traefik.enable=true" #traefik#
-#      - "traefik.http.routers.netdata.rule=Host(`netdata.${HOSTNAME}`)" #traefik#
-#      - "traefik.http.services.netdata.loadbalancer.server.port=19999" #traefik#
-#      - "traefik.http.routers.netdata.tls.certresolver=myresolver" #traefik#
-#      - "traefik.http.routers.netdata.tls=true" #traefik#
-##      - "traefik.http.routers.netdata.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
-##      - "traefik.http.routers.netdata.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
-##      - "traefik.http.routers.netdata.entrypoints=websecure"                        #httpchallenge# #traefik#
-#netdataend
 
 
 networks:

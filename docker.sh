@@ -19,7 +19,7 @@ echo \
 
 sudo apt update
 
-sudo apt install -y docker-ce docker-ce-cli containerd.io
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 getent group docker &>/dev/null || groupadd docker &>/dev/null
 sudo usermod -aG docker $USER || true
 
