@@ -10,6 +10,7 @@ option=${1:-"help"}
 compose_file=${2:-""}
 container=${3:-""}
 not_running=$(printf "\e[34m\e[0m\e[33mNot Running\e[0m\n")
+my_domain=<my_domain>
 help() {
    echo "Fly-Hi Media"
    echo
@@ -46,6 +47,14 @@ if [ $option == "help" ]; then
 fi
 if [ $option == "ports" ]; then
         docker ps --format '{{.Names}}\t{{.Ports}}'
+fi
+
+
+if [ $option == "vpn" ]; then
+bash ${install_location}/*install.sh
+fi
+if [ $option == "noip" ]; then
+sudo /usr/local/bin/noip2 -S
 fi
 
 if [ $option == "restart" ]; then
@@ -224,13 +233,6 @@ if [ $option == "ip" ]; then
     fi
 fi
 
-if [ $option == "vpn" ]; then
-bash ${install_location}/*install.sh
-fi
-if [ $option == "noip" ]; then
-sudo /usr/local/bin/noip2 -S
-fi
-
 
 if [ $option == "uninstall" ]; then
     read -p "This will uninstall your fly-hi script and remove all container data including the ones not installed with this script, proceed? [n,Y]:" uninstall
@@ -273,15 +275,17 @@ fi
 
 if [ $option == "links" ]; then
     host_ip=$(hostname -I | awk '{ print $1 }')
-    print_link() {
-        service_name=$1
-        port=$(docker port $service_name 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://' || true)
-        if [ -n "$port" ]; then
-            printf "\e[34m%-15s\e[0m: \e[34mhttp://%s:%s\e[0m\n" "${service_name^}" "$host_ip" "$port"
-        else
-            printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
-        fi
- }
+ print_link() {
+    service_name=$1
+    port=$(docker port $service_name 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://' || true)
+
+    if [ -n "$port" ]; then
+        printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[35m%s\e[0m\n" "${service_name^}" "https" "$host_ip" "$port" "https://$1.$my_domain"
+    else
+        printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
+    fi
+}
+
     echo
     echo -e $(printf "\e[34m===== MANAGEMENT =====\e[0m")
     print_link "whoami"
@@ -373,10 +377,6 @@ if [ $option == "links" ]; then
     echo
     send_success_message "Use 'fly-hi help' to see how to use the script"
     echo
-    send_success_message "Your services can also be reached by "service-name".<my_domain>  (e. g. https://heimdall.<my_domain>)" #traefik#
-    echo
-    send_success_message "To add or remove clients from your Private VPN Server run 'fly-hi vpn'" #private_vpn#
-
     send_success_message "To start up Tailscale run 'sudo tailscale up' " #tailscale#
     echo
 
