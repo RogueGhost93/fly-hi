@@ -21,8 +21,8 @@ services:
 #      - /run/udev:/run/udev:ro
 #      - ${INSTALL_LOCATION}/management/scrutiny/config:/opt/scrutiny/config
 #      - ${INSTALL_LOCATION}/management/scrutiny/influxdb:/opt/scrutiny/influxdb
-#    devices:
-#      - "/dev/sda"
+##    devices:
+##      - "/dev/sda"
 ##      - "/dev/sdb"
 ##      - "/dev/sdc"
 #    restart: unless-stopped
@@ -92,6 +92,40 @@ services:
 #      #                   s m h dom m dow
 #      - WATCHTOWER_SCHEDULE=0 0 4 * * *
 #watchtowerend
+
+
+#homarrstart
+## Homarr         - A sleek, modern dashboard that puts all of your apps and services at your fingertips (https://homarr.dev/)
+#  homarr:
+#    container_name: homarr
+#    image: ghcr.io/ajnart/homarr:latest
+#    restart: unless-stopped
+#    environment:
+#      - PASSWORD=adminadmin
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - DISABLE_ANALYTICS=true
+#      - DEFAULT_COLOR_SCHEME=dark
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/homarr/configs:/app/data/configs
+#      - ${INSTALL_LOCATION}/management/homarr/data:/data
+#      - ${INSTALL_LOCATION}/management/homarr/icons:/app/public/icons
+##      - ${INSTALL_LOCATION}/management/homarr/icons:/app/public/icons # optional for custom icons
+#    ports:
+#      - '7575:7575'
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.homarr.rule=Host(`homarr.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.homarr.loadbalancer.server.port=7575" #traefik#
+#      - "traefik.http.routers.homarr.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.homarr.tls=true" #traefik#
+##      - "traefik.http.routers.homarr.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.homarr.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.homarr.entrypoints=websecure"                        #httpchallenge# #traefik#
+#homarrend
 
 
 #heimdallstart

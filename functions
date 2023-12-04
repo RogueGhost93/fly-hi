@@ -56,7 +56,7 @@ add_service() {
         send_warning_message "Skipping ${service_name^} configuration!"
         eval "${service_name}=n"
         sed -n "/^#${service_name}start/,/^#${service_name}end$/{p;}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs" >> "${install_location}/custom/docker-compose.yaml" && sed -i "/^#${service_name}start/,/^#${service_name}end$/d" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
-
+        echo "" >> ${install_location}/custom/docker-compose.yaml
 
     fi
 
@@ -95,78 +95,114 @@ get_password() {
 
 running_services_location() {
     host_ip=$(hostname -I | awk '{ print $1 }')
+    not_running=$(printf "\e[34m\e[0m\e[33mNot Running\e[0m\n")
+    print_link() {
+        service_name=$1
+        port=$(docker port $service_name 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://' || true)
+        if [ -n "$port" ]; then
+            printf "\e[34m%-15s\e[0m: \e[34mhttp://%s:%s\e[0m\n" "${service_name^}" "$host_ip" "$port"
+        else
+            printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
+        fi
+ }
     echo
-    echo "========= MANAGEMENT ========="
-    echo "WhoAmI:         http://$host_ip:$(docker port whoami 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Portainer:      http://$host_ip:$(docker port portainer 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Dozzle:         http://$host_ip:$(docker port dozzle 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Heimdall:       http://$host_ip:$(docker port heimdall 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Homeassistant:  http://$host_ip:$(docker port homeassistant 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Netdata:        http://$host_ip:$(docker port netdata 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Glances:        http://$host_ip:$(docker port glances 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Uptime-Kuma:    http://$host_ip:$(docker port uptime-kuma 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Scrutiny:       http://$host_ip:$(docker port scrutiny 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Ntfy:           http://$host_ip:$(docker port ntfy 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "PhpMyAdmin:     http://$host_ip:$(docker port phpmyadmin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "PgAdmin:        http://$host_ip:$(docker port pgadmin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Vaultwarden:    http://$host_ip:$(docker port vaultwarden 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Cockpit:        http://$host_ip:9090"
-    echo "Graylog:        http://$host_ip:$(cat $install_location/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
+    echo -e $(printf "\e[34m===== MANAGEMENT =====\e[0m")
+    print_link "whoami"
+    print_link "portainer"
+    print_link "dozzle"
+    print_link "heimdall"
+    print_link "homarr"
+    print_link "homeassistant"
+    print_link "netdata"
+    print_link "glances"
+    print_link "uptime-kuma"
+    print_link "scrutiny"
+    print_link "ntfy"
+    print_link "phpmyadmin"
+    print_link "pgadmin"
+    print_link "vaultwarden"
+    send_message_in_blue "Cockpit        : http://$host_ip:9090"
+    graylog=$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }') || true
+    if [ -z "$graylog" ]; then
+    send_message_in_blue "Graylog        : $not_running"
+    else
+    send_message_in_blue "Graylog        : http://$host_ip:$graylog"
+    fi
     echo
-    echo "========= NETWORK ========="
-    echo "Traefik:        http://$host_ip:80/"
-    echo "Traefik:        http://$host_ip:443/"
-    echo "Traefik:        http://$host_ip:8880/"
-    echo "Speedtest:      http://$host_ip:$(docker port speedtest 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Flaresolverr:   http://$host_ip:$(docker port flaresolverr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "WG-Easy:        http://$host_ip:$(cat $install_location/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
 
+    echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
+    send_message_in_blue "Traefik        : http://$host_ip:80/" #traefik#
+    send_message_in_blue "Traefik        : http://$host_ip:443/" #traefik#
+    send_message_in_blue "Traefik        : http://$host_ip:8880/" #traefik#
+    print_link "speedtest"
+    print_link "flaresolverr"
+    wgeasy=$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }') || true
+    if [ -z "$wgeasy" ]; then
+    send_message_in_blue "WG-Easy        : $not_running"
+    else
+    send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy"
+    fi
     echo
-    echo "========= MEDIA ========="
-    echo "Jellyfin:       http://$host_ip:$(docker port jellyfin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Emby:           http://$host_ip:$(docker port emby 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Plex:           http://$host_ip:$(cat $install_location/media/docker-compose.yaml | grep webUI | awk -F":" '{ print $2 }' | awk '{ print $1 }')"
-    echo "Jellyseerr:     http://$host_ip:$(docker port jellyseerr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Overseerr:      http://$host_ip:$(docker port overseerr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Ombi:           http://$host_ip:$(docker port ombi 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Airsonic:       http://$host_ip:$(docker port airsonic 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "CalibreLibrary: http://$host_ip:$(docker port calibre 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Calibreweb:     http://$host_ip:$(docker port calibre_web 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Audiobookshelf: http://$host_ip:$(docker port audiobookshelf 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Nextcloud:      http://$host_ip:$(docker port nextcloud 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Linkding:       http://$host_ip:$(docker port linkding 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Joplin-Server:  http://$host_ip:$(docker port joplin 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "FreshRSS:       http://$host_ip:$(docker port freshrss 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Stirling-PDF:   http://$host_ip:$(docker port stirling_pdf 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Filebrowser:    http://$host_ip:$(docker port filebrowser 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Immich:         http://$host_ip:$(docker port immich_server 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Photoprism:     http://$host_ip:$(docker port photoprism 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+
+    echo -e $(printf "\e[34m===== MEDIA =====\e[0m")
+    print_link "jellyfin"
+    print_link "emby"
+    plex=$(cat ${install_location}/media/docker-compose.yaml | grep webUI | awk -F":" '{ print $2 }' | awk '{ print $1 }') || true
+    if [ -z "$plex" ]; then
+    send_message_in_blue "Plex           : $not_running"
+    else
+    send_message_in_blue "Plex           : http://$host_ip:$plex"
+    fi
+    print_link "jellyseerr"
+    print_link "overseerr"
+    print_link "ombi"
+    print_link "airsonic"
+    print_link "calibre"
+    print_link "calibre_web"
+    print_link "audiobookshelf"
+    print_link "tubesync"
+    print_link "nextcloud"
+    print_link "linkding"
+    print_link "linkwarden"
+    print_link "joplin"
+    print_link "freshrss"
+    print_link "stirling_pdf"
+    print_link "filebrowser"
+    print_link "mealie"
+    print_link "privatebin"
+    print_link "immich_server"
+    print_link "photoprism"
     echo
-    echo "========== STARRS =========="
-    echo "qBittorrent:    http://$host_ip:$(cat $install_location/network/docker-compose.yaml | grep qbittorrentport | grep -Eo '[0-9]{1,4}' | head -1)/"
-    echo "qBittorrentpub: http://$host_ip:$(cat $install_location/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1)/"
-    echo "Radarr:         http://$host_ip:$(docker port radarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Sonarr:         http://$host_ip:$(docker port sonarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Lidarr:         http://$host_ip:$(docker port lidarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Readarr:        http://$host_ip:$(docker port readarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Prowlarr:       http://$host_ip:$(docker port prowlarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Bazarr:         http://$host_ip:$(docker port bazarr 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
-    echo "Tubesync:       http://$host_ip:$(docker port tubesync 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://')/"
+
+    echo -e $(printf "\e[34m===== STARRS =====\e[0m")
+    qbittorrent=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentport | grep -Eo '[0-9]{1,4}' | head -1) || true
+    if [ -z "$qbittorrent" ]; then
+    send_message_in_blue "Qbittorrent    : $not_running"
+    else
+    send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent"
+    fi
+    qbittorrentpub=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1) || true
+    if [ -z "$qbittorrentpub" ]; then
+    send_message_in_blue "Qbittorrentpub : $not_running"
+    else
+    send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub"
+    fi
+    print_link "radarr"
+    print_link "sonarr"
+    print_link "lidarr"
+    print_link "readarr"
+    print_link "prowlarr"
+    print_link "bazarr"
     echo
-    echo "Use 'fly-hi help' to see how to use the script"
+    send_success_message "Use 'fly-hi help' to see how to use the script"
     echo
-if [[ $traefik == "y" ]]; then
-    echo "Your services can also be reached by "service-name".$my_domain  (e. g. https://heimdall.$my_domain)"
-fi
-echo
-if [ "$install_vpn_server" == "y" ]; then
-    echo "To add or remove clients from your Private VPN Server run fly-hi vpn"
-fi
-echo
-if [ "$tailscale" == "y" ]; then
-    echo "To start up Tailscale run 'sudo tailscale up' "
-fi
-echo
+    send_success_message "Your services can also be reached by "service-name".<my_domain>  (e. g. https://heimdall.<my_domain>)" #traefik#
+    echo
+    send_success_message "To add or remove clients from your Private VPN Server run 'fly-hi vpn'" #private_vpn#
+
+    send_success_message "To start up Tailscale run 'sudo tailscale up' " #tailscale#
+    echo
+
 }
 
 running_services_management() {
@@ -176,6 +212,7 @@ echo "- WhoAmI         - Gives you basic information about your Host - Used for 
 echo "- Portainer      - Keep your docker containers in check! (https://www.portainer.io/)"
 echo "- Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
 echo "- Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
+echo "- Homarr         - A sleek, modern dashboard that puts all of your apps and services at your fingertips (https://homarr.dev/)"
 echo "- Homeassistant  - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
 echo "- Netdata        - Distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics (https://www.netdata.cloud/)"
 echo "- Glances        - System Information (https://nicolargo.github.io/glances/)"
@@ -225,6 +262,7 @@ echo "- Stirling-PDF    - Your locally hosted one-stop-shop for all your PDF nee
 echo "- Filebrowser     - Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
 echo "- Samba Server    - Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc."
 echo "- Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
+echo "- PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)"
 echo "- Immich          - Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
 echo "- Photoprism      - Self-hosted backup solution for photos and videos (https://www.photoprism.app/)"
 echo "=============================================================================="

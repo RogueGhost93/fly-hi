@@ -23,6 +23,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Portainer      - Keep your docker containers in check! (https://www.portainer.io/)
 - Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)
 - Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)
+- Homarr         - A sleek, modern dashboard that puts all of your apps and services at your fingertips (https://homarr.dev/)
 - Home-Assistant - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)
 - Netdata        - Distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics (https://www.netdata.cloud/)
 - Glances        - System Information (https://nicolargo.github.io/glances/)
@@ -60,7 +61,6 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Calibre Library - Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)
 - Calibre web     - Read your favorite Books (https://github.com/janeczku/calibre-web)
 - Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)
-- Photoprism      - Browse Your Life in Pictures (https://www.photoprism.app/)
 - Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)
 - Tubesync        - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)
 - Linkding        - Very fancy bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)
@@ -71,7 +71,9 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Filebrowser     - Nice WebUI for accessing and managing your files (https://filebrowser.org/)
 - Samba Server    - Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc.
 - Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)
-
+- Immich          - Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)
+- Photoprism      - Self-hosted backup solution for photos and videos (https://www.photoprism.app/)
+- PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)
 
 *Starrs and Download Apps:*
 - Radarr      - Manage your Movies (https://radarr.video/)

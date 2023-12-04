@@ -9,6 +9,7 @@ dc_management="docker compose -f ${install_location}/management/docker-compose.y
 option=${1:-"help"}
 compose_file=${2:-""}
 container=${3:-""}
+not_running=$(printf "\e[34m\e[0m\e[33mNot Running\e[0m\n")
 help() {
    echo "Fly-Hi Media"
    echo
@@ -78,6 +79,7 @@ if [ $option == "restart" ]; then
     echo "Fly-Hi is starting. Wait 1 min until all the services are up and running..."
     exit 0
 fi
+
 if [ $option == "stop" ]; then
     if [ -z "$compose_file" ]; then
         $dc_media stop
@@ -109,6 +111,7 @@ if [ $option == "stop" ]; then
     fi
     exit 0
 fi
+
 if [ $option == "start" ]; then
     if [ -z "$compose_file" ]; then
         $dc_management up -d
@@ -121,7 +124,7 @@ if [ $option == "start" ]; then
                 $dc_media up -d
                 ;;
             "starrs")
-                $dc_starrs up -d
+                $dc_starrs stop qbittorrent qbittorrentpub && $dc_starrs rm -f qbittorrent && $dc_starrs rm -f qbittorrentpub && $dc_starrs up -d
                 ;;
             "network")
                 $dc_network up -d
@@ -140,6 +143,7 @@ if [ $option == "start" ]; then
     send_success_message "Fly-Hi is up and running!"
     exit 0
 fi
+
 if [ $option == "update" ]; then
     if [ -z "$compose_file" ]; then
         $dc_media pull && $dc_media up -d
@@ -168,6 +172,7 @@ if [ $option == "update" ]; then
     echo "Fly-Hi is updating. Wait 1 min until all the services are up and running..."
     exit 0
 fi
+
 if [ $option == "destroy" ]; then
     if [ -z "$compose_file" ]; then
         $dc_media down --remove-orphans
@@ -198,6 +203,7 @@ if [ $option == "destroy" ]; then
     fi
     exit 0
 fi
+
 if [ $option == "ip" ]; then
     echo "Getting your qBittorrent IP..."
     qbittorrent_ip=$(docker exec qbittorrent sh -c "curl -s ifconfig.me");
@@ -273,7 +279,7 @@ if [ $option == "links" ]; then
         if [ -n "$port" ]; then
             printf "\e[34m%-15s\e[0m: \e[34mhttp://%s:%s\e[0m\n" "${service_name^}" "$host_ip" "$port"
         else
-            printf "\e[34m%-15s\e[0m: \e[33mNot Running or Not Installed\e[0m\n" "${service_name^}"
+            printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
         fi
  }
     echo
@@ -282,6 +288,7 @@ if [ $option == "links" ]; then
     print_link "portainer"
     print_link "dozzle"
     print_link "heimdall"
+    print_link "homarr"
     print_link "homeassistant"
     print_link "netdata"
     print_link "glances"
@@ -292,21 +299,37 @@ if [ $option == "links" ]; then
     print_link "pgadmin"
     print_link "vaultwarden"
     send_message_in_blue "Cockpit        : http://$host_ip:9090"
-    send_message_in_blue "Graylog        : http://$host_ip:$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
-
+    graylog=$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }') || true
+    if [ -z "$graylog" ]; then
+    send_message_in_blue "Graylog        : $not_running"
+    else
+    send_message_in_blue "Graylog        : http://$host_ip:$graylog"
+    fi
     echo
+
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
     send_message_in_blue "Traefik        : http://$host_ip:80/" #traefik#
     send_message_in_blue "Traefik        : http://$host_ip:443/" #traefik#
     send_message_in_blue "Traefik        : http://$host_ip:8880/" #traefik#
     print_link "speedtest"
     print_link "flaresolverr"
-    send_message_in_blue "WG-Easy        : http://$host_ip:$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }')"
+    wgeasy=$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }') || true
+    if [ -z "$wgeasy" ]; then
+    send_message_in_blue "WG-Easy        : $not_running"
+    else
+    send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy"
+    fi
     echo
+
     echo -e $(printf "\e[34m===== MEDIA =====\e[0m")
     print_link "jellyfin"
     print_link "emby"
-    send_message_in_blue "Plex           : http://$host_ip:$(cat ${install_location}/media/docker-compose.yaml | grep webUI | awk -F":" '{ print $2 }' | awk '{ print $1 }')"
+    plex=$(cat ${install_location}/media/docker-compose.yaml | grep webUI | awk -F":" '{ print $2 }' | awk '{ print $1 }') || true
+    if [ -z "$plex" ]; then
+    send_message_in_blue "Plex           : $not_running"
+    else
+    send_message_in_blue "Plex           : http://$host_ip:$plex"
+    fi
     print_link "jellyseerr"
     print_link "overseerr"
     print_link "ombi"
@@ -315,8 +338,6 @@ if [ $option == "links" ]; then
     print_link "calibre_web"
     print_link "audiobookshelf"
     print_link "tubesync"
-    print_link "immich_server"
-    print_link "photoprism"
     print_link "nextcloud"
     print_link "linkding"
     print_link "linkwarden"
@@ -324,10 +345,25 @@ if [ $option == "links" ]; then
     print_link "freshrss"
     print_link "stirling_pdf"
     print_link "filebrowser"
+    print_link "mealie"
+    print_link "privatebin"
+    print_link "immich_server"
+    print_link "photoprism"
     echo
+
     echo -e $(printf "\e[34m===== STARRS =====\e[0m")
-    send_message_in_blue "qBittorrent    : http://$host_ip:$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentport | grep -Eo '[0-9]{1,4}' | head -1)/"
-    send_message_in_blue "qBittorrentpub : http://$host_ip:$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1)/"
+    qbittorrent=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentport | grep -Eo '[0-9]{1,4}' | head -1) || true
+    if [ -z "$qbittorrent" ]; then
+    send_message_in_blue "Qbittorrent    : $not_running"
+    else
+    send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent"
+    fi
+    qbittorrentpub=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1) || true
+    if [ -z "$qbittorrentpub" ]; then
+    send_message_in_blue "Qbittorrentpub : $not_running"
+    else
+    send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub"
+    fi
     print_link "radarr"
     print_link "sonarr"
     print_link "lidarr"
@@ -343,4 +379,5 @@ if [ $option == "links" ]; then
 
     send_success_message "To start up Tailscale run 'sudo tailscale up' " #tailscale#
     echo
+
 fi
