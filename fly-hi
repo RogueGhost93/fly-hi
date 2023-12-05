@@ -273,14 +273,15 @@ if [ $option == "uninstall" ]; then
 fi
 
 
-if [ $option == "links" ]; then
+
+links() {
     host_ip=$(hostname -I | awk '{ print $1 }')
  print_link() {
     service_name=$1
     port=$(docker port $service_name 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://' || true)
 
     if [ -n "$port" ]; then
-        printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[35m%s\e[0m\n" "${service_name^}" "https" "$host_ip" "$port" "https://$1.$my_domain"
+        printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[33m%s\e[0m\n" "${service_name^}" "https" "$host_ip" "$port"  "https://$1.$my_domain"
     else
         printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
     fi
@@ -303,25 +304,23 @@ if [ $option == "links" ]; then
     print_link "pgadmin"
     print_link "vaultwarden"
     send_message_in_blue "Cockpit        : http://$host_ip:9090"
-    graylog=$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }') || true
+    graylog=$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
     if [ -z "$graylog" ]; then
     send_message_in_blue "Graylog        : $not_running"
     else
-    send_message_in_blue "Graylog        : http://$host_ip:$graylog"
+    send_message_in_blue "Graylog        : http://$host_ip:$graylog $(printf "\e[33m https://wgeasy.$my_domain \e[0m")"
     fi
     echo
 
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
-    send_message_in_blue "Traefik        : http://$host_ip:80/" #traefik#
-    send_message_in_blue "Traefik        : http://$host_ip:443/" #traefik#
-    send_message_in_blue "Traefik        : http://$host_ip:8880/" #traefik#
+    send_message_in_blue "Traefik        : http://$host_ip:8880 $(printf "\e[33m https://traefik.$my_domain \e[0m")" #traefik#
     print_link "speedtest"
     print_link "flaresolverr"
-    wgeasy=$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $2 }' | awk -F"/" '{ print $1 }') || true
+    wgeasy=$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
     if [ -z "$wgeasy" ]; then
     send_message_in_blue "WG-Easy        : $not_running"
     else
-    send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy"
+    send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy $(printf "\e[33mhttps://wgeasy.$my_domain \e[0m")"
     fi
     echo
 
@@ -332,7 +331,7 @@ if [ $option == "links" ]; then
     if [ -z "$plex" ]; then
     send_message_in_blue "Plex           : $not_running"
     else
-    send_message_in_blue "Plex           : http://$host_ip:$plex"
+    send_message_in_blue "Plex           : http://$host_ip:$plex $(printf "\e[33mhttps://plex.$my_domain \e[0m")"
     fi
     print_link "jellyseerr"
     print_link "overseerr"
@@ -360,13 +359,13 @@ if [ $option == "links" ]; then
     if [ -z "$qbittorrent" ]; then
     send_message_in_blue "Qbittorrent    : $not_running"
     else
-    send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent"
+    send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent $(printf "\e[33mhttps://qbittorrent.$my_domain \e[0m")"
     fi
     qbittorrentpub=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1) || true
     if [ -z "$qbittorrentpub" ]; then
     send_message_in_blue "Qbittorrentpub : $not_running"
     else
-    send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub"
+    send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub $(printf "\e[33mhttps://qbittorrentpub.$my_domain \e[0m")"
     fi
     print_link "radarr"
     print_link "sonarr"
@@ -379,5 +378,11 @@ if [ $option == "links" ]; then
     echo
     send_success_message "To start up Tailscale run 'sudo tailscale up' " #tailscale#
     echo
-
+}
+if [ $option == "links" ]; then
+links
 fi
+if [ $option == "linksup" ]; then
+links | grep -v "Not Running"
+fi
+

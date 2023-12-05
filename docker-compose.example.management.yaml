@@ -364,7 +364,7 @@ services:
 #pgadminend
 
 #dozzlestart
-## Dozzle         - All docker logs in one place on a nice WEB-UI (https://dozzle.dev/)
+## Dozzle         - All docker logs in one place on a nice WEB interface (https://dozzle.dev/)
 #  dozzle:
 #    image: amir20/dozzle:latest
 #    container_name: dozzle
@@ -581,7 +581,7 @@ services:
 #      - "5140:5140/tcp"   # Syslog
 #      - "5555:5555/tcp"   # RAW TCP
 #      - "5555:5555/udp"   # RAW TCP
-#      - "9001:9000/tcp"   # Server API #WEB-UI
+#      - 9001:9000   # Server API #WEB-UI
 #      - "12201:12201/tcp" # GELF TCP
 #      - "12201:12201/udp" # GELF UDP
 #      #- "10000:10000/tcp" # Custom TCP port
