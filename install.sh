@@ -261,10 +261,9 @@ echo "docker security flaws: docker automatically opens all ports required by co
 echo "Check https://github.com/chaifeng/ufw-docker and https://github.com/shinebayar-g/ufw-docker-automated"
 echo "These ports stay open until you close them on the router itself or manipulate IP tables on the host machine"
 echo
-send_warning_message "However you choose, if traefik fails to obtain certs in either way, it will default to self-signed certificates which still make it a very useful app!"
 echo
 echo "If you choose to install traefik, know that this is a pretty basic setup just to make things work, no extra tweaks"
-echo "which could make it more secure etc., really... use this at your own risk!"
+echo "which could make it more secure etc., use this at your own risk!"
 echo
 echo
 read -p "Would you like to proceed with installation of Traefik? [y/N]:" traefik
@@ -434,7 +433,7 @@ add_service "linkding" "Very fancy bookmarks managers with support for tags (htt
 add_service "linkwarden" "Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)"
 add_service "joplin" "Nice and very popular Notes-taking app - This is only a Server (https://joplinapp.org/)"
 add_service "freshrss" "Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)"
-add_service "stirling_pdf" "Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)"
+add_service "stirlingpdf" "Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)"
 add_service "filebrowser" "Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
 add_service "mealie" "A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
 add_service "privatebin" "A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)"

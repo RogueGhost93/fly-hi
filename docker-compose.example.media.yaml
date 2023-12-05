@@ -938,10 +938,10 @@ services:
 #freshrssend
 
 
-#stirling_pdfstart
+#stirlingpdfstart
 ## Stirling-PDF Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)
-#  stirling_pdf:
-#    container_name: stirling_pdf
+#  stirlingpdf:
+#    container_name: stirlingpdf
 #    image: frooodle/s-pdf
 #    ports:
 #      - '8011:8080'
@@ -963,15 +963,15 @@ services:
 #      - fly-hi
 #    labels: #traefik#
 #      - "traefik.enable=true" #traefik#
-#      - "traefik.http.routers.pdf.rule=Host(`pdf.${HOSTNAME}`)" #traefik#
-#      - "traefik.http.services.pdf.loadbalancer.server.port=8080" #traefik#
-#      - "traefik.http.routers.pdf.tls.certresolver=myresolver" #traefik#
-#      - "traefik.http.routers.pdf.tls=true" #traefik#
+#      - "traefik.http.routers.stirlingpdf.rule=Host(`stirlingpdf.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.stirlingpdf.loadbalancer.server.port=8080" #traefik#
+#      - "traefik.http.routers.stirlingpdf.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.stirlingpdf.tls=true" #traefik#
 #       # DNS/HTTP #traefik#
-##      - "traefik.http.routers.pdf.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
-##      - "traefik.http.routers.pdf.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
-##      - "traefik.http.routers.pdf.entrypoints=websecure"                         #httpchallenge# #traefik#
-#stirling_pdfend
+##      - "traefik.http.routers.stirlingpdf.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.stirlingpdf.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.stirlingpdf.entrypoints=websecure"                         #httpchallenge# #traefik#
+#stirlingpdfend
 
 #filebrowserstart
 ## Filebrowser - Nice WebUI for accessing and managing your files (https://filebrowser.org/)

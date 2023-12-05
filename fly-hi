@@ -346,7 +346,7 @@ links() {
     print_link "linkwarden"
     print_link "joplin"
     print_link "freshrss"
-    print_link "stirling_pdf"
+    print_link "stirlingpdf"
     print_link "filebrowser"
     print_link "mealie"
     print_link "privatebin"
