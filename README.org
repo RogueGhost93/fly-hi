@@ -195,19 +195,15 @@ They are the ones doing the real work, I just created a docker-compose files and
 
 Just let them know Fly-Hi sent you there 😎
 
-* To-Do [2/6]
+* To-Do [1/4]
 :PROPERTIES:
 :ID:       eba4712e-fa8a-42c8-bc32-b593141c99a4
 :END:
 
 - [ ] Documentation Improvements.
 - [ ] Security Improvements.
-- [ ] Integrate a way for easily adding your own custom docker-compose services.
+- [x] Integrate a way for easily adding your own custom docker-compose services.
 - [ ] Support for Caddy (in testing).
-- [x] Support for Graylog.
-- [x] Support for Immich (In testing).
-- [ ] Support for Home Assistant.
-
 
 
 ** And finally:
