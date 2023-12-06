@@ -277,7 +277,7 @@ services:
 #    ports:
 #      - 4848:4848
 #    volumes:
-#      - ${INSTALL_LOCATION}/media/tubesync:/config
+#      - ${INSTALL_LOCATION}/starrs/tubesync:/config
 #      #- ${DATA_ROOT}:/data/downloads
 #      - ${DATA_ROOT}/Youtube-Channels:/data/downloads
 #    environment:
@@ -298,7 +298,39 @@ services:
 ##      - "traefik.http.routers.tubesync.entrypoints=websecure"                         #httpchallenge# #traefik#
 #tubesyncend
 
-
+#ytdl-substart
+##Ytdl-sub    - Automate downloading and metadata generation with YoutubeDL (https://github.com/jmbannon/ytdl-sub)"
+#  ytdl-sub:
+#    image: ghcr.io/jmbannon/ytdl-sub-gui:latest
+#    container_name: ytdl-sub
+#    environment:
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#      - ${INSTALL_LOCATION}/starrs/ytdl-sub/config>:/config
+#      - ${DATA_ROOT}/TV-Shows:/tv_shows  # optional
+#      - ${DATA_ROOT}/Movies:/movies  # optional
+#      - ${DATA_ROOT}/Music_videos:/music_videos  # optional
+#      - ${DATA_ROOT}/Music:/music  # optional
+#    devices:
+#      - /dev/dri:/dev/dri  # CPU passthrough
+#    ports:
+#      - 8447:8443
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.ytdl-sub.rule=Host(`ytdl-sub.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.ytdl-sub.loadbalancer.server.port=8443" #traefik#
+#      - "traefik.http.routers.ytdl-sub.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.ytdl-sub.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.ytdl-sub.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.ytdl-sub.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.ytdl-sub.entrypoints=websecure"                         #httpchallenge# #traefik#
+#ytdl-subend
 
 networks:
   fly-hi:

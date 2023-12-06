@@ -29,7 +29,7 @@ services:
 #      - DB_CONNECTION=pgsql
 #      - DB_DATABASE=speedy
 #      - DB_USERNAME=speedy
-#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#      - DB_PASSWORD=DATABASE_PASSWORD
 #      - DB_PORT=5435
 #      - DB_HOST=postgres5
 #    restart: unless-stopped
@@ -61,7 +61,7 @@ services:
 #      - PGID=${GROUP_ID}
 #      - POSTGRES_USER=speedy
 #      - POSTGRES_DB=speedy
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_PASSWORD=DATABASE_PASSWORD
 #      - PGPORT=5435
 #speedtestend
 

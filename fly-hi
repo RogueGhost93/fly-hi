@@ -26,13 +26,14 @@ help() {
    echo "ip          checks if the VPN is working as expected"
    echo "ports       shows all ports currently used and opened by docker containers"
    echo "links       shows links to access your services"
+   echo "links-all   shows all links, including non running services"
 }
 
-send_success_message() {
+send_message_in_green() {
     echo -e $(printf "\e[32m$1\e[0m")
 }
 
-send_error_message() {
+send_message_in_red() {
     echo -e $(printf "\e[31m$1\e[0m")
     exit 255
 }
@@ -81,7 +82,7 @@ if [ $option == "restart" ]; then
                 docker restart $compose_file
                 ;;
             *)
-                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management."
+                send_message_in_red "Invalid compose file specified. Please choose one of: media, starrs, network, management."
                 ;;
         esac
     fi
@@ -114,7 +115,7 @@ if [ $option == "stop" ]; then
                 docker stop $compose_file
                 ;;
             *)
-                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management."
+                send_message_in_red "Invalid compose file specified. Please choose one of: media, starrs, network, management."
                 ;;
         esac
     fi
@@ -145,11 +146,11 @@ if [ $option == "start" ]; then
                 docker start $compose_file
                 ;;
             *)
-                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management."
+                send_message_in_red "Invalid compose file specified. Please choose one of: media, starrs, network, management."
                 ;;
         esac
     fi
-    send_success_message "Fly-Hi is up and running!"
+    send_message_in_green "Fly-Hi is up and running!"
     exit 0
 fi
 
@@ -174,7 +175,7 @@ if [ $option == "update" ]; then
                 $dc_management pull && $dc_management up -d
                 ;;
             *)
-                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management."
+                send_message_in_red "Invalid compose file specified. Please choose one of: media, starrs, network, management."
                 ;;
         esac
     fi
@@ -206,7 +207,7 @@ if [ $option == "destroy" ]; then
                 docker stop $compose_file && docker rm $compose_file
                 ;;
             *)
-                send_error_message "Invalid compose file specified. Please choose one of: media, starrs, network, management or a container name."
+                send_message_in_red "Invalid compose file specified. Please choose one of: media, starrs, network, management or a container name."
                 ;;
         esac
     fi
@@ -227,9 +228,9 @@ if [ $option == "ip" ]; then
     echo "Your local IP city is $(curl -s curl https://am.i.mullvad.net/city)"
     echo
     if [ $qbittorrent_ip == $your_ip ]; then
-           send_error_message "Your IPs are the same! qBittorrent is NOT working! ⚠️"
+           send_message_in_red "Your IPs are the same! qBittorrent is NOT working! ⚠️"
    else
-           send_success_message "Your IPs are different. qBittorrent is working as expected! ✅ "
+           send_message_in_green "Your IPs are different. qBittorrent is working as expected! ✅ "
     fi
 fi
 
@@ -250,7 +251,7 @@ if [ $option == "uninstall" ]; then
         sudo docker system prune -a || true
         if [ $option == "delete_persistant" ]; then
             sudo rm -r ${install_location} || true
-            send_success_message "You successefully delete your persistant container data!"
+            send_message_in_green "You successefully delete your persistant container data!"
         fi
         if [ "$uninstall_docker" == "y" ]; then
             sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-buildx-plugin docker-compose-plugin docker* || true
@@ -264,9 +265,9 @@ if [ $option == "uninstall" ]; then
             sudo rm -rf /usr/local/bin/docker-compose || true
             sudo rm -rf /var/lib/containerd || true
             sudo rm /usr/local/lib/docker/cli-plugins/docker-compose || true
-            send_success_message "You are ready for a fresh install of docker!"
+            send_message_in_green "You are ready for a fresh install of docker!"
         else
-            send_success_message "You successefully uninstalled your fly-hi-media and docker!"
+            send_message_in_green "You successefully uninstalled your fly-hi-media and docker!"
         fi
             sudo rm /usr/local/bin/fly-hi
     fi
@@ -289,39 +290,39 @@ links() {
 
     echo
     echo -e $(printf "\e[34m===== MANAGEMENT =====\e[0m")
-    print_link "whoami"
-    print_link "portainer"
-    print_link "dozzle"
-    print_link "heimdall"
     print_link "homarr"
-    print_link "homeassistant"
+    print_link "heimdall"
+    send_message_in_blue "Cockpit        : http://$host_ip:9090"
+    print_link "portainer"
     print_link "netdata"
-    print_link "glances"
     print_link "uptime-kuma"
+    print_link "glances"
     print_link "scrutiny"
-    print_link "ntfy"
     print_link "phpmyadmin"
     print_link "pgadmin"
-    print_link "vaultwarden"
-    send_message_in_blue "Cockpit        : http://$host_ip:9090"
+    print_link "whoami"
+    print_link "dozzle"
     graylog=$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
     if [ -z "$graylog" ]; then
     send_message_in_blue "Graylog        : $not_running"
     else
     send_message_in_blue "Graylog        : http://$host_ip:$graylog $(printf "\e[33m https://wgeasy.$my_domain \e[0m")"
     fi
+    print_link "ntfy"
+    print_link "vaultwarden"
+    print_link "homeassistant"
     echo
 
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
     send_message_in_blue "Traefik        : http://$host_ip:8880 $(printf "\e[33m https://traefik.$my_domain \e[0m")" #traefik#
-    print_link "speedtest"
-    print_link "flaresolverr"
     wgeasy=$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
     if [ -z "$wgeasy" ]; then
     send_message_in_blue "WG-Easy        : $not_running"
     else
     send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy $(printf "\e[33mhttps://wgeasy.$my_domain \e[0m")"
     fi
+    print_link "speedtest"
+    print_link "flaresolverr"
     echo
 
     echo -e $(printf "\e[34m===== MEDIA =====\e[0m")
@@ -337,21 +338,20 @@ links() {
     print_link "overseerr"
     print_link "ombi"
     print_link "airsonic"
+    print_link "immich_server"
+    print_link "photoprism"
     print_link "calibre"
     print_link "calibre_web"
     print_link "audiobookshelf"
-    print_link "tubesync"
-    print_link "nextcloud"
     print_link "linkding"
     print_link "linkwarden"
+    print_link "stirlingpdf"
+    print_link "nextcloud"
+    print_link "filebrowser"
     print_link "joplin"
     print_link "freshrss"
-    print_link "stirlingpdf"
-    print_link "filebrowser"
     print_link "mealie"
     print_link "privatebin"
-    print_link "immich_server"
-    print_link "photoprism"
     echo
 
     echo -e $(printf "\e[34m===== STARRS =====\e[0m")
@@ -373,16 +373,17 @@ links() {
     print_link "readarr"
     print_link "prowlarr"
     print_link "bazarr"
+    print_link "tubesync"
     echo
-    send_success_message "Use 'fly-hi help' to see how to use the script"
+    send_message_in_green "Use 'fly-hi help' to see how to use the script"
     echo
-    send_success_message "To start up Tailscale run 'sudo tailscale up' " #tailscale#
+    send_message_in_green "To start up Tailscale run 'sudo tailscale up' " #tailscale#
     echo
 }
-if [ $option == "links" ]; then
+if [ $option == "links-all" ]; then
 links
 fi
-if [ $option == "linksup" ]; then
+if [ $option == "links" ]; then
 links | grep -v "Not Running"
 fi
 

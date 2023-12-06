@@ -405,7 +405,7 @@ services:
 #      PHOTOPRISM_DATABASE_SERVER: "mariadb1:3306"     # MariaDB or MySQL database server (hostname:port)
 #      PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB or MySQL database schema name
 #      PHOTOPRISM_DATABASE_USER: "photoprism"         # MariaDB or MySQL database user name
-#      PHOTOPRISM_DATABASE_PASSWORD: "${MARIADB_PASSWORD}"       # MariaDB or MySQL database user password
+#      PHOTOPRISM_DATABASE_PASSWORD: "DATABASE_PASSWORD"       # MariaDB or MySQL database user password
 #      PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
 #      PHOTOPRISM_SITE_DESCRIPTION: ""                # meta site description
 #      PHOTOPRISM_SITE_AUTHOR: ""                     # meta site author
@@ -473,8 +473,8 @@ services:
 #      MARIADB_INITDB_SKIP_TZINFO: "1"
 #      MARIADB_DATABASE: "photoprism"
 #      MARIADB_USER: "photoprism"
-#      MARIADB_PASSWORD: "${MARIADB_PASSWORD}"
-#      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+#      MARIADB_PASSWORD: "DATABASE_PASSWORD"
+#      MARIADB_ROOT_PASSWORD: "DATABASE_PASSWORD"
 ### Pass this in order to change default mariadb listening port MYSQL_TCP_PORT: 3307 - also make sure you map them correctly like 3307:3307
 ##      MYSQL_TCP_PORT: 3307
 #    ports:
@@ -498,8 +498,8 @@ services:
 #      - DB_USERNAME=immich
 #      - DB_DATABASE_NAME=immich
 #      - REDIS_HOSTNAME=immich_redis
-#      - TYPESENSE_API_KEY=${POSTGRES_PASSWORD}
-#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#      - TYPESENSE_API_KEY=DATABASE_PASSWORD
+#      - DB_PASSWORD=DATABASE_PASSWORD
 #      - DB_PORT=5436
 #    ports:
 #      - 2283:3001
@@ -537,8 +537,8 @@ services:
 #      - DB_USERNAME=immich
 #      - DB_DATABASE_NAME=immich
 #      - REDIS_HOSTNAME=immich_redis
-#      - TYPESENSE_API_KEY=${POSTGRES_PASSWORD}
-#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#      - TYPESENSE_API_KEY=DATABASE_PASSWORD
+#      - DB_PASSWORD=DATABASE_PASSWORD
 #      - DB_PORT=5436
 #    networks:
 #      - fly-hi
@@ -558,8 +558,8 @@ services:
 #      - DB_USERNAME=immich
 #      - DB_DATABASE_NAME=immich
 #      - REDIS_HOSTNAME=immich_redis
-#      - TYPESENSE_API_KEY=${POSTGRES_PASSWORD}
-#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#      - TYPESENSE_API_KEY=DATABASE_PASSWORD
+#      - DB_PASSWORD=DATABASE_PASSWORD
 #    networks:
 #      - fly-hi
 #    restart: always
@@ -568,7 +568,7 @@ services:
 #    container_name: immich_typesense
 #    image: typesense/typesense:0.24.1@sha256:9bcff2b829f12074426ca044b56160ca9d777a0c488303469143dd9f8259d4dd
 #    environment:
-#      - TYPESENSE_API_KEY=${POSTGRES_PASSWORD}
+#      - TYPESENSE_API_KEY=DATABASE_PASSWORD
 #      - TYPESENSE_DATA_DIR=/data
 #      # remove this to get debug messages
 #      - GLOG_minloglevel=1
@@ -589,7 +589,7 @@ services:
 #    container_name: immich_postgres
 #    image: postgres:14-alpine@sha256:50d9be76e9a90da4c781554955e0ffc79d9d5c4226838e64b36aacc97cbc35ad
 #    environment:
-#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#      POSTGRES_PASSWORD: DATABASE_PASSWORD
 #      POSTGRES_USER: immich
 #      POSTGRES_DB: immich
 #      PGPORT: 5436
@@ -624,19 +624,19 @@ services:
 #      - TZ=${TIMEZONE}
 ##      - PUID=${USER_ID}
 ##      - PGID=${GROUP_ID}
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_PASSWORD=DATABASE_PASSWORD
 #      - POSTGRES_DATABASE=nextcloud
 #      - POSTGRES_USER=nextcloud
 #      - POSTGRES_PORT=5434
 #      - POSTGRES_HOST=postgres4
 ##      - MYSQL_DATABASE=nextcloud
 ##      - MYSQL_USER=nextcloud
-##      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
-##      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+##      - MYSQL_PASSWORD=DATABASE_PASSWORD
+##      - MARIADB_ROOT_PASSWORD=DATABASE_PASSWORD
 ##      - MARIADB_DATABASE: "nextcloud"
 ##      - MARIADB_USER: "nextcloud"
-##      - MARIADB_PASSWORD: "${MARIADB_PASSWORD}"
-##      - MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+##      - MARIADB_PASSWORD: "DATABASE_PASSWORD"
+##      - MARIADB_ROOT_PASSWORD: "DATABASE_PASSWORD"
 #    networks:
 #      - fly-hi
 #    labels: #traefik#
@@ -662,8 +662,8 @@ services:
 ##      PGID: ${GROUP_ID}
 ##      MARIADB_DATABASE: "nextcloud"
 ##      MARIADB_USER: "nextcloud"
-##      MARIADB_PASSWORD: "${MARIADB_PASSWORD}"
-##      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD}"
+##      MARIADB_PASSWORD: "DATABASE_PASSWORD"
+##      MARIADB_ROOT_PASSWORD: "DATABASE_PASSWORD"
      ## probably missing a variable to map a different port for mariadb
 ##    ports:
 ##      - 3306:3306
@@ -686,7 +686,7 @@ services:
 #      - TZ=${TIMEZONE}
 #      - POSTGRES_USER=nextcloud
 #      - POSTGRES_DB=nextcloud
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_PASSWORD=DATABASE_PASSWORD
 #      - PGPORT=5434
 #nextcloudend
 
@@ -737,7 +737,7 @@ services:
 ##     - PGID=${GROUP_ID}
 ##     - POSTGRES_DB="linkding"
 ##     - POSTGRES_USER="linkding"
-##     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+##     - POSTGRES_PASSWORD=DATABASE_PASSWORD
 ##     - PGPORT=5432
 ## #Linka requires more testing
 ##  linka:
@@ -771,8 +771,8 @@ services:
 #      - PUID=${USER_ID}
 #      - PGID=${GROUP_ID}
 #      - TZ=${TIMEZONE}
-#      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres3:5433/postgres3
-#      - NEXTAUTH_SECRET=${POSTGRES_PASSWORD}
+#      - DATABASE_URL=postgresql://postgres:DATABASE_PASSWORD@postgres3:5433/postgres3
+#      - NEXTAUTH_SECRET=DATABASE_PASSWORD
 #      - NEXTAUTH_URL=https://linkwarden.${HOSTNAME} #traefik#
 #      - NEXTAUTH_URL_INTERNAL=http://localhost:3000 # https://github.com/linkwarden/linkwarden/issues/269 # #localhost#
 #    networks:
@@ -800,7 +800,7 @@ services:
 #    image: postgres
 #    container_name: postgres3
 #    environment:
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_PASSWORD=DATABASE_PASSWORD
 #      - PGPORT=5433
 ##    command: -p 5433 this is equivalent to environment - PGPORT=5433 and can be used to change the listening port >
 #    restart: always
@@ -833,7 +833,7 @@ services:
 #      - APP_BASE_URL=${APP_BASE_URL} #traefik#
 #      - APP_BASE_URL=http://${LOCALHOST}:22300 #localhost#
 #      - DB_CLIENT=pg
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_PASSWORD=DATABASE_PASSWORD
 #      - POSTGRES_DATABASE=joplin
 #      - POSTGRES_USER=joplin
 #      - POSTGRES_PORT=5432
@@ -868,7 +868,7 @@ services:
 #      - PGID=${GROUP_ID}
 #      - POSTGRES_USER=joplin
 #      - POSTGRES_DB=joplin
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_PASSWORD=DATABASE_PASSWORD
 ##      - PGPORT=5432
 #joplinend
 

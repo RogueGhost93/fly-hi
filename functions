@@ -1,16 +1,16 @@
 # ============================================================================================
 # Functions to ease development
 # ============================================================================================
-send_warning_message() {
+send_message_in_orange() {
     echo -e $(printf "\e[33m$1\e[0m")
 }
 
 
-send_success_message() {
+send_message_in_green() {
     echo -e $(printf "\e[32m$1\e[0m")
 }
 
-send_error_message() {
+send_message_in_red() {
     echo -e $(printf "\e[31m$1\e[0m")
     exit 255
 }
@@ -21,20 +21,24 @@ send_message_in_blue() {
     echo -e $(printf "\e[34m$1\e[0m")
 }
 
+send_message_in_purple() {
+    echo -e $(printf "\e[35m$1\e[0m")
+}
+
 check_dependencides() {
     if command -v $1 &> /dev/null; then
-        send_success_message "$1 exists ✅ "
+        send_message_in_green "$1 exists ✅ "
     else
         echo -e $(printf "\e[31m ⚠️ $1 not found! ⚠️\e[0m")
         read -p "Would you like Fly-Hi to install docker and docker-compose? IT ONLY WORKS ON DEBIAN AND UBUNTU! [y/N]: " install_docker
         install_docker=${install_docker:-"n"}
 
         if [ "$install_docker" == "y" ]; then
-            send_warning_message "After installation is complete just run this script again!"
+            send_message_in_orange "After installation is complete just run this script again!"
             sleep 2
             bash ./docker.sh
         else
-            send_error_message "Install docker and docker-compose and come back later!"
+            send_message_in_red "Install docker and docker-compose and come back later!"
         fi
     fi
 }
@@ -49,11 +53,11 @@ add_service() {
     y_n=${y_n:-"y"}
 
     if [ "$y_n" == "y" ]; then
-        send_success_message "Adding service: ${service_name^}"
+        send_message_in_green "Adding service: ${service_name^}"
         sed -i "/^#${service_name}start/,/^#${service_name}end$/{/^\(#${service_name}start\|#${service_name}end\)$/!s/^#//}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
         eval "${service_name}=y"
     else
-        send_warning_message "Skipping ${service_name^} configuration!"
+        send_message_in_orange "Skipping ${service_name^} configuration!"
         eval "${service_name}=n"
         sed -n "/^#${service_name}start/,/^#${service_name}end$/{p;}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs" >> "${install_location}/custom/docker-compose.yaml" && sed -i "/^#${service_name}start/,/^#${service_name}end$/d" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
         echo "" >> ${install_location}/custom/docker-compose.yaml
@@ -109,39 +113,39 @@ running_services_location() {
 
     echo
     echo -e $(printf "\e[34m===== MANAGEMENT =====\e[0m")
-    print_link "whoami"
-    print_link "portainer"
-    print_link "dozzle"
-    print_link "heimdall"
     print_link "homarr"
-    print_link "homeassistant"
+    print_link "heimdall"
+    send_message_in_blue "Cockpit        : http://$host_ip:9090"
+    print_link "portainer"
     print_link "netdata"
-    print_link "glances"
     print_link "uptime-kuma"
+    print_link "glances"
     print_link "scrutiny"
-    print_link "ntfy"
     print_link "phpmyadmin"
     print_link "pgadmin"
-    print_link "vaultwarden"
-    send_message_in_blue "Cockpit        : http://$host_ip:9090"
+    print_link "whoami"
+    print_link "dozzle"
     graylog=$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
     if [ -z "$graylog" ]; then
     send_message_in_blue "Graylog        : $not_running"
     else
     send_message_in_blue "Graylog        : http://$host_ip:$graylog $(printf "\e[33m https://wgeasy.$my_domain \e[0m")"
     fi
+    print_link "ntfy"
+    print_link "vaultwarden"
+    print_link "homeassistant"
     echo
 
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
     send_message_in_blue "Traefik        : http://$host_ip:8880 $(printf "\e[33m https://traefik.$my_domain \e[0m")" #traefik#
-    print_link "speedtest"
-    print_link "flaresolverr"
     wgeasy=$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
     if [ -z "$wgeasy" ]; then
     send_message_in_blue "WG-Easy        : $not_running"
     else
     send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy $(printf "\e[33mhttps://wgeasy.$my_domain \e[0m")"
     fi
+    print_link "speedtest"
+    print_link "flaresolverr"
     echo
 
     echo -e $(printf "\e[34m===== MEDIA =====\e[0m")
@@ -157,21 +161,20 @@ running_services_location() {
     print_link "overseerr"
     print_link "ombi"
     print_link "airsonic"
+    print_link "immich_server"
+    print_link "photoprism"
     print_link "calibre"
     print_link "calibre_web"
     print_link "audiobookshelf"
-    print_link "tubesync"
-    print_link "nextcloud"
     print_link "linkding"
     print_link "linkwarden"
+    print_link "stirlingpdf"
+    print_link "nextcloud"
+    print_link "filebrowser"
     print_link "joplin"
     print_link "freshrss"
-    print_link "stirlingpdf"
-    print_link "filebrowser"
     print_link "mealie"
     print_link "privatebin"
-    print_link "immich_server"
-    print_link "photoprism"
     echo
 
     echo -e $(printf "\e[34m===== STARRS =====\e[0m")
@@ -193,85 +196,106 @@ running_services_location() {
     print_link "readarr"
     print_link "prowlarr"
     print_link "bazarr"
+    print_link "tubesync"
     echo
-    send_success_message "Use 'fly-hi help' to see how to use the script"
+    send_message_in_green "Use 'fly-hi help' to see how to use the script"
     echo
-    send_success_message "To start up Tailscale run 'sudo tailscale up' " #tailscale#
+    send_message_in_green "To start up Tailscale run 'sudo tailscale up' " #tailscale#
     echo
 }
 
 running_services_management() {
-echo "=============================================================================="
-send_message_in_cyan "System Management Services"
-echo "- WhoAmI         - Gives you basic information about your Host - Used for testing and troubleshooting docker containers"
-echo "- Portainer      - Keep your docker containers in check! (https://www.portainer.io/)"
-echo "- Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
-echo "- Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
+send_message_in_cyan "---------------------"
+send_message_in_cyan "Management Services |"
+send_message_in_cyan "---------------------"
+send_message_in_purple "Dashboards"
 echo "- Homarr         - A sleek, modern dashboard that puts all of your apps and services at your fingertips (https://homarr.dev/)"
-echo "- Homeassistant  - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
+echo "- Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
+send_message_in_purple "System info and management"
+echo "- CockpitProject - System Management Tool (https://cockpit-project.org)"
+echo "- Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
+echo "- Portainer      - Keep your docker containers in check! (https://www.portainer.io/)"
 echo "- Netdata        - Distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics (https://www.netdata.cloud/)"
 echo "- Glances        - System Information (https://nicolargo.github.io/glances/)"
 echo "- Uptime-Kuma    - Real time monitoring of your services (https://github.com/louislam/uptime-kuma)"
 echo "- Scrutiny       - HDD/SSD monitoring tool with a nice dashboard (https://github.com/AnalogJ/scrutiny)"
-echo "- Ntfy           - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
-echo "- Vaultwarden    - Password Manager (https://hub.docker.com/r/vaultwarden/server)"
+send_message_in_purple "Databases"
 echo "- PhpMyAdmin     - WEBui for managing MySQL/MariaDB databases, tables, columns, relations, indexes, users, permissions, etc (https://hub.docker.com/r/phpmyadmin/phpmyadmin/)"
 echo "- PgAdmin        - WEBui for managing Postgres databases, tables, columns, relations, indexes, users, permissions, etc (https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html)"
-echo "- CockpitProject - System Management Tool (https://cockpit-project.org)"
+send_message_in_purple "Logs and troubleshooting"
+echo "- WhoAmI         - Gives you basic information about your Host - Used for testing and troubleshooting docker containers"
 echo "- Dozzle         - All docker logs in one place on a nice WEB-UI (https://dozzle.dev/)"
 echo "- Graylog        - Log Aggregator with a WEB-UI (https://graylog.org/)"
-echo "=============================================================================="
+send_message_in_purple "Miscellaneous"
+echo "- Ntfy           - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
+echo "- Vaultwarden    - Password Manager (https://hub.docker.com/r/vaultwarden/server)"
+echo "- Homeassistant  - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
 }
 running_services_network() {
-echo "=============================================================================="
-send_message_in_cyan "Network Services"
-echo "- Flaresolverr           - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)"
+send_message_in_cyan "------------------"
+send_message_in_cyan "Network Services    |"
+send_message_in_cyan "------------------"
+send_message_in_purple "Reverse-Proxy"
 echo "- Traefik                - Reverse Proxy (https://traefik.io/traefik/)"
+send_message_in_purple "VPN"
 echo "- Gluetun                - VPN Client (https://github.com/qdm12/gluetun)"
 echo "- Wireguard (wg-easy)    - Connect to your home network from anywhere in the world! (https://github.com/wg-easy/wg-easy)"
 echo "- Tailscale              - Easier, closed source alternative to private OpenVPN/Wireguard server for access from anywhere in the world! (https://tailscale.com/)"
+send_message_in_purple "Miscellaneous"
+echo "- Flaresolverr           - Proxy server to bypass Cloudflare protection in Prowlarr (https://github.com/FlareSolverr/FlareSolverr)"
 echo "- DDclient (Dynamic DNS) - Keep your Domain updated at all times (Unnecessary if you are NOT exposing any of your service to public!) (https://github.com/ddclient/ddclient)"
 echo "- Speedtest-tracker      - Monitor your internet speed on a scheduled basis (https://github.com/alexjustesen/speedtest-tracker)"
-echo "=============================================================================="
 }
 running_services_media() {
-echo "=============================================================================="
-send_message_in_cyan "Media Services"
+send_message_in_cyan "----------------"
+send_message_in_cyan "Media Services      |"
+send_message_in_cyan "----------------"
+send_message_in_purple "Videos"
 echo "- Jellyfin        - Media Streaming Service (open-source, fork of Emby, recommended) (https://jellyfin.org/)"
 echo "- Emby            - Media Streaming Service (closed-source) (https://emby.media/)"
 echo "- Plex            - Media Streaming Service (closed-source) (https://www.plex.tv/)"
-echo "- Airsonic        - Music Server (https://airsonic.github.io/)"
 echo "- Jellyseer       - Jellyfin Media Requests (https://github.com/Fallenbagel/jellyseerr)"
 echo "- Overseerr       - Plex Media Requests (https://overseerr.dev/)"
 echo "- Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)"
+send_message_in_purple "Music"
+echo "- Airsonic        - Music Server (https://airsonic.github.io/)"
+send_message_in_purple "Photos"
+echo "- Immich          - Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
+echo "- Photoprism      - Self-hosted backup solution for photos and videos (https://www.photoprism.app/)"
+send_message_in_purple "Books"
 echo "- Calibre Library - Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)"
 echo "- Calibre web     - Read your favorite Books (https://github.com/janeczku/calibre-web)"
 echo "- Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)"
-echo "- Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)"
-echo "- Tubesync        - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
+send_message_in_purple "Bookmarks"
 echo "- Linkding        - Very fancy bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)"
 echo "- Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)"
-echo "- Joplin-Server   - Nice and very popular Notes-taking app (https://joplinapp.org/)"
-echo "- FreshRSS        - Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)"
+send_message_in_purple "File management"
 echo "- Stirling-PDF    - Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)"
 echo "- Filebrowser     - Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
 echo "- Samba Server    - Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc."
+echo "- Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)"
+send_message_in_purple "Miscellaneous"
+echo "- Joplin-Server   - Nice and very popular Notes-taking app (https://joplinapp.org/)"
+echo "- FreshRSS        - Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)"
 echo "- Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
 echo "- PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)"
-echo "- Immich          - Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
-echo "- Photoprism      - Self-hosted backup solution for photos and videos (https://www.photoprism.app/)"
-echo "=============================================================================="
 }
 running_services_download() {
-echo "=============================================================================="
-send_message_in_cyan "Download Services"
+send_message_in_cyan "-------------------"
+send_message_in_cyan "Download Services   |"
+send_message_in_cyan "-------------------"
+send_message_in_purple "Starrs"
 echo "- Radarr      - Manage your Movies (https://radarr.video/)"
 echo "- Sonarr      - Manage your TV Shows (https://sonarr.tv/)"
 echo "- Readarr     - Manage your Books (https://readarr.com/)"
 echo "- Lidarr      - Manage your Music (https://lidarr.audio/)"
 echo "- Bazarr      - Manage Subtitles for you Media Collection (https://www.bazarr.media/)"
+send_message_in_purple "Torrents"
 echo "- Prowlarr    - Indexer aggregator for Sonarr and Radarr (https://github.com/Prowlarr/Prowlarr)"
 echo "- qBittorrent - Does the actual download...(https://www.qbittorrent.org/)"
+send_message_in_purple "Youtube"
 echo "- Tubesync    - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
-echo "=============================================================================="
+echo "- Ytdl-sub    - Automate downloading and metadata generation with YoutubeDL (https://github.com/jmbannon/ytdl-sub)"
+echo
+echo
 }
