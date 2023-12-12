@@ -4,7 +4,7 @@
 *Credits:*
 
 
-This project is a fork and combination of https://yams.media and https://github.com/AdrienPoupa/docker-compose-nas. 
+This project is a fork and combination of https://yams.media and https://github.com/AdrienPoupa/docker-compose-nas.
 Special thanks to these contributors for the foundation of this repository.
 
 I've repurposed it to suit my needs and wanted to share it with you!
@@ -20,6 +20,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 
 
 *Management Apps:*
+
 *Dashboards*
 - Heimdall       - Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)
 - Homarr         - A sleek, modern dashboard that puts all of your apps and services at your fingertips (https://homarr.dev/)
@@ -45,6 +46,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 
 
 *Network Apps:*
+
 *Reverse-proxy*
 - Traefik                - Reverse Proxy (https://traefik.io/traefik/)
 *VPN*
@@ -56,16 +58,18 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - DDclient (Dynamic DNS) - Keep your Domain updated at all times (Unnecessary if you are NOT exposing any of your service to public!) (https://github.com/ddclient/ddclient)
 - Speedtest-tracker      - Monitor your internet speed on a scheduled basis (https://github.com/alexjustesen/speedtest-tracker)
 
+*Media:*
 
+*Movies and TV Apps:*
 
-*Media Apps:*
 - Jellyfin        - Media Streaming Service (open-source, fork of Emby, recommended) (https://jellyfin.org/)
 - Emby            - Media Streaming Service (closed-source) (https://emby.media/)
 - Plex            - Media Streaming Service (closed-source) (https://www.plex.tv/)
-- Airsonic        - Music Server (https://airsonic.github.io/)
 - Jellyseer       - Jellyfin Media Requests (https://github.com/Fallenbagel/jellyseerr)
 - Overseerr       - Plex Media Requests (https://overseerr.dev/)
 - Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)
+*Music*
+- Airsonic        - Music Server (https://airsonic.github.io/)
 *Photos*
 - Immich          - Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)
 - Photoprism      - Self-hosted backup solution for photos and videos (https://www.photoprism.app/)
@@ -88,6 +92,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)
 
 *Starrs and Download Apps:*
+
 *Starrs*
 - Radarr      - Manage your Movies (https://radarr.video/)
 - Sonarr      - Manage your TV Shows (https://sonarr.tv/)
@@ -142,6 +147,7 @@ Before installing, make sure you have:
   + ~/media/data/Books~: For your Books
   + ~/media/data/Podcasts~: For your Podcasts
   + ~/media/data/Torrents~: For your Torrents
+  + ~/media/data/Youtube
 
 
 - *A VPN service (optional but STRONGLY recommended):* If you can, choose one from [[https://yams.media/advanced/vpn#official-supported-vpns][this list]]. The VPN I
@@ -159,7 +165,7 @@ Before installing, make sure you have:
 #+begin_src bash
 $ git clone https://github.com/RogueGhost93/fly-hi
 $ cd fly-hi
-$ chmod +x install.sh wireguard-install.sh openvpn-install.sh docker.sh permissions.sh 
+$ chmod +x install.sh wireguard-install.sh openvpn-install.sh docker.sh permissions.sh
 $ ./install.sh
 #+end_src
 
@@ -188,8 +194,7 @@ uninstall   completely remove all containers and their data from the system
 ip          checks if the VPN is working as expected
 ports       shows all ports currently used and opened by docker containers
 links       shows links to access your services
-vpn         Manage your VPN server
-
+links-all   shows all links including non running services
 #+end_src
 * How to configure?
 :PROPERTIES:

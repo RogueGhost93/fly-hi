@@ -20,6 +20,7 @@ services:
 #      - ${DATA_ROOT}/Movies:/data/Movies
 #      - ${DATA_ROOT}/TV-Shows:/data/TV-Shows
 #      - ${DATA_ROOT}/Music:/data/Music
+#      - ${DATA_ROOT}/Youtube:/data/Youtube
 #      - ${INSTALL_LOCATION}/media/jellyfin:/config
 #      #     uncomment this for intel graphic transcoding - also fix the permission problem of /dev/dri
 #      #     https://github.com/linuxserver/docker-jellyfin/issues/26
@@ -88,6 +89,7 @@ services:
 #      - ${DATA_ROOT}/Movies:/data/Movies
 #      - ${DATA_ROOT}/TV-Shows:/data/TV-Shows
 #      - ${DATA_ROOT}/Music:/data/Music
+#      - ${DATA_ROOT}/Youtube:/data/Youtube
 #      - ${INSTALL_LOCATION}/media/emby:/config
 #      #     uncomment this for intel graphic transcoding - also fix the permission problem of /dev/dri
 #      #     https://github.com/linuxserver/docker-jellyfin/issues/26
@@ -150,6 +152,7 @@ services:
 #      - ${DATA_ROOT}/Movies:/data/Movies
 #      - ${DATA_ROOT}/TV-Shows:/data/TV-Shows
 #      - ${DATA_ROOT}/Music:/data/Music
+#      - ${DATA_ROOT}/Youtube:/data/Youtube
 #    restart: unless-stopped
 #    networks:
 #      - fly-hi
@@ -243,6 +246,7 @@ services:
 #      - ${DATA_ROOT}/Music/Playlists-mp3:/var/playlists
 ##      - ${DATA_ROOT}/Podcasts:/var/podcasts
 #      - ${DATA_ROOT}/Music:/var/music
+#      - ${DATA_ROOT}/Youtube:/data/Youtube
 #    networks:
 #      - fly-hi
 #    labels: #traefik#

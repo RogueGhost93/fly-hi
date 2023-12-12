@@ -279,7 +279,7 @@ services:
 #    volumes:
 #      - ${INSTALL_LOCATION}/starrs/tubesync:/config
 #      #- ${DATA_ROOT}:/data/downloads
-#      - ${DATA_ROOT}/Youtube-Channels:/data/downloads
+#      - ${DATA_ROOT}/Youtube:/data/downloads
 #    environment:
 #      - TZ=${TIMEZONE}
 #      - PUID=${USER_ID}
@@ -308,11 +308,11 @@ services:
 #      - PUID=${USER_ID}
 #      - PGID=${GROUP_ID}
 #    volumes:
-#      - ${INSTALL_LOCATION}/starrs/ytdl-sub/config>:/config
-#      - ${DATA_ROOT}/TV-Shows:/tv_shows  # optional
-#      - ${DATA_ROOT}/Movies:/movies  # optional
-#      - ${DATA_ROOT}/Music_videos:/music_videos  # optional
-#      - ${DATA_ROOT}/Music:/music  # optional
+#      - ${INSTALL_LOCATION}/starrs/ytdl-sub/config:/config
+#      - ${DATA_ROOT}/Youtube/TV-Shows:/tv_shows  # optional
+#      - ${DATA_ROOT}/Youtube/Movies:/movies  # optional
+#      - ${DATA_ROOT}/Youtube/Music_videos:/music_videos  # optional
+#      - ${DATA_ROOT}/Youtube/Music:/music  # optional
 #    devices:
 #      - /dev/dri:/dev/dri  # CPU passthrough
 #    ports:
