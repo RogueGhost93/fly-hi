@@ -1,7 +1,6 @@
 ############################################################################################################
                                        ##### MEDIA SERVICES #####
 ############################################################################################################
-version: "3"
 
 services:
 
@@ -698,7 +697,7 @@ services:
 ## Linkding        - Very fancy bookmarks managers with support for tags (https://github.com/sissbruecker/linkding)
 #  linkding:
 #    container_name: linkding
-#    image: sissbruecker/linkding:latest
+#    image: sissbruecker/linkding:latest-plus
 #    environment:
 #      - TZ=${TIMEZONE}
 #      - PUID=${USER_ID}
