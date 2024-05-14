@@ -256,6 +256,39 @@ services:
 ##      - "traefik.http.routers.airsonic.entrypoints=websecure"                         #httpchallenge# #traefik#
 #airsonicend
 
+#navidromestart
+#  navidrome:
+#    image: deluan/navidrome:latest
+##    user: 1000:1000 # should be owner of volumes
+#    container_name: navidrome
+#    ports:
+#      - "4533:4533"
+#    restart: unless-stopped
+#    environment:
+#      # Optional: put your config options customization here. Examples:
+#      ND_SCANSCHEDULE: 1h
+#      ND_LOGLEVEL: info
+#      ND_SESSIONTIMEOUT: 24h
+#      ND_BASEURL: "https://navidrome.${HOSTNAME}/"
+#      TZ: ${TIMEZONE}
+#      PUID: ${USER_ID}
+#      PGID: ${GROUP_ID}
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/navidrome:/data
+#      - ${DATA_ROOT}/Youtube/Music:/music
+#      #- ${DATA_ROOT}/Music:/music
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.navidrome.rule=Host(`navidrome.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.navidrome.loadbalancer.server.port=4533" #traefik#
+#      - "traefik.http.routers.navidrome.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.navidrome.tls=true" #traefik#
+##      - "traefik.http.routers.navidrome.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.navidrome.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.navidrome.entrypoints=websecure"
+#navidromeend
 
 
 #calibre_webstart
@@ -1081,6 +1114,43 @@ services:
 #    #  - traefik.http.middlewares.limit.buffering.memRequestBodyBytes=2000000000 # necessary to enable large file uploads
 #    #  - traefik.http.middlewares.limit.buffering.memResponseBodyBytes=2000000000 # necessary to enable large file uploads
 #privatebinend
+
+#pingvinsharestart
+#  pingvinshare:
+#    image: stonith404/pingvin-share
+#    container_name: pingvinshare
+#    restart: unless-stopped
+#    ports:
+#      - 3003:3000
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/pingvinshare/data:/opt/app/backend/data"
+#      - ${INSTALL_LOCATION}/media/pingvinshare/data/images:/opt/app/frontend/public/img"
+#    networks:
+#      - fly-hi
+#    environment:
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - TZ=${TIMEZONE}
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.pingvinshare.rule=Host(`pingvinshare.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.pingvinshare.loadbalancer.server.port=3000" #traefik#
+#      - "traefik.http.routers.pingvinshare.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.pingvinshare.tls=true" #traefik#
+#        # DNS/HTTP #traefik#
+##      - "traefik.http.routers.pingvinshare.tls.domains[0].main=${HOSTNAME}"              #dnschallenge# #traefik#
+##      - "traefik.http.routers.pingvinshare.tls.domains[0].sans=*.${HOSTNAME}"            #dnschallenge# #traefik#
+##      - "traefik.http.routers.pingvinshare.entrypoints=websecure"                        #httpchallenge# #traefik#
+## Optional: If you add ClamAV, uncomment the following to have ClamAV start first.
+##    depends_on:
+##      clamav:
+##        condition: service_healthy
+## Optional: Add ClamAV (see README.md)
+## ClamAV is currently only available for AMD64 see https://github.com/Cisco-Talos/clamav/issues/482
+##  clamav:
+##    restart: unless-stopped
+##    image: clamav/clamav
+#pingvinshareend
 
 
 networks:

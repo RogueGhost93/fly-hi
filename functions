@@ -161,6 +161,7 @@ running_services_location() {
     print_link "overseerr"
     print_link "ombi"
     print_link "airsonic"
+    print_link "navidrome"
     print_link "immich_server"
     print_link "photoprism"
     print_link "calibre"
@@ -175,6 +176,7 @@ running_services_location() {
     print_link "freshrss"
     print_link "mealie"
     print_link "privatebin"
+    print_link "pingvinshare"
     echo
 
     echo -e $(printf "\e[34m===== STARRS =====\e[0m")
@@ -259,6 +261,7 @@ echo "- Overseerr       - Plex Media Requests (https://overseerr.dev/)"
 echo "- Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)"
 send_message_in_purple "Music"
 echo "- Airsonic        - Music Server (https://airsonic.github.io/)"
+echo "- Navidrome       - Music Server (https://www.navidrome.org/)"
 send_message_in_purple "Photos"
 echo "- Immich          - Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
 echo "- Photoprism      - Self-hosted backup solution for photos and videos (https://www.photoprism.app/)"
@@ -267,8 +270,8 @@ echo "- Calibre Library - Manage all your books in famous Calibre Library (https
 echo "- Calibre web     - Read your favorite Books (https://github.com/janeczku/calibre-web)"
 echo "- Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)"
 send_message_in_purple "Bookmarks"
-echo "- Linkding        - Very fancy bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)"
-echo "- Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)"
+echo "- Linkding        - Simple bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)"
+echo "- Linkwarden      - Fancy modern bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)"
 send_message_in_purple "File management"
 echo "- Stirling-PDF    - Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)"
 echo "- Filebrowser     - Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
@@ -279,6 +282,7 @@ echo "- Joplin-Server   - Nice and very popular Notes-taking app (https://joplin
 echo "- FreshRSS        - Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)"
 echo "- Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
 echo "- PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)"
+echo "- Pingvinshare    - Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer (https://github.com/stonith404/pingvin-share)"
 }
 running_services_download() {
 send_message_in_cyan "-------------------"
