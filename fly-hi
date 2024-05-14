@@ -282,7 +282,7 @@ links() {
     port=$(docker port $service_name 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://' || true)
 
     if [ -n "$port" ]; then
-        printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[33m%s\e[0m\n" "${service_name^}" "https" "$host_ip" "$port"  "https://$1.$my_domain"
+        printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[33m%s\e[0m\n" "${service_name^}" "http" "$host_ip" "$port"  "https://$1.$my_domain"
     else
         printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
     fi
