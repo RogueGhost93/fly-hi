@@ -231,7 +231,7 @@ echo "- Graylog        - Log Aggregator with a WEB-UI (https://graylog.org/)"
 send_message_in_purple "Miscellaneous"
 echo "- Ntfy           - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
 echo "- Vaultwarden    - Password Manager (https://hub.docker.com/r/vaultwarden/server)"
-echo "- Homeassistant  - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
+echo "- HomeAssistant  - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
 }
 running_services_network() {
 send_message_in_cyan "------------------"

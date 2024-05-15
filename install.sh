@@ -62,7 +62,7 @@ send_message_in_orange "Unless you are sure your previous docker installation ha
 send_message_in_orange "permissions for non-root users run permissions.sh script, otherwise continue!"
 read -p "Would you like to continue? [Y/n]: " start
 start=${start:-"y"}
-if [ "$start" == "n" ]; then
+if [[ "$start" =~ "nN" ]]; then
 exit 0
 fi
 # ============================================================================================
@@ -180,10 +180,6 @@ echo
 
 
 clear
-send_message_in_orange "=============================================================================="
-send_message_in_orange "ANY SKIPPED SERVICE CAN BE FOUND IN $install_location/custom/docker-compose.yaml!"
-send_message_in_orange "=============================================================================="
-echo
 running_services_management
 echo
 send_message_in_purple "=============================================================================="
@@ -192,6 +188,10 @@ send_message_in_cyan "Time to choose your Management Services."
 send_message_in_cyan "Management Services are supposed to make your Self-Hosting life easier!"
 echo
 send_message_in_purple "=============================================================================="
+echo
+send_message_in_orange "=============================================================================="
+send_message_in_orange "ANY SKIPPED SERVICE CAN BE FOUND IN $install_location/custom/docker-compose.yaml!"
+send_message_in_orange "=============================================================================="
 echo
 add_service "heimdall" "Keep your services organized on a nice Dashboard (https://github.com/linuxserver/Heimdall)"
 add_service "homarr" "A sleek, modern dashboard that puts all of your apps and services at your fingertips (https://homarr.dev/)"
@@ -211,7 +211,7 @@ add_service "homeassistant" "Open source home automation that puts local control
 
 
 add_service "graylog" "Log Aggregator with a WEB-UI (https://graylog.org/)"
-if [[ $graylog == "y" ]]; then
+if [[ $graylog =~ "yY" ]]; then
     send_message_in_orange "Graylog will use sha256sum of password you input here - make sure you remember it"
     password=$(get_password "graylog")
     sed -i -e "s;<graylog_password>;$(echo -n $password | sha256sum | awk '{ print $1 }');g" "$env_management"
@@ -223,7 +223,7 @@ echo "Would you like to add Cockpit Project? [y/N]: "
 send_message_in_orange "Note: This will require your sudo password!"
 read -p "" cockpit
 cockpit=${cockpit:-"n"}
-if [ "$cockpit" == "y" ]; then
+if [[ "$cockpit" =~ "yY" ]]; then
 . /etc/os-release
 sudo apt install -t ${VERSION_CODENAME}-backports cockpit
 sudo systemctl enable --now cockpit.socket
@@ -263,7 +263,7 @@ echo
 echo
 read -p "Would you like to proceed with installation of Traefik? [y/N]:" traefik
 traefik=${traefik:-"n"}
-if [[ $traefik == "y" ]]; then
+if [[ $traefik =~ "yY" ]]; then
     # Uncomment lines between #traefikstart and #traefikend
     sed -i '/^#traefikstart$/,/^#traefikend$/{/^\(#traefikstart\|#traefikend\)$/!s/^#//}' "$compose_network"
     # delete lines with #localhost#
@@ -276,7 +276,7 @@ if [[ $traefik == "y" ]]; then
     echo "and here https://doc.traefik.io/traefik/user-guides/docker-compose/acme-dns/"
     echo
     read -rp "[DNS/http]:" -e -i dns traefik_tls
-    if [ "$traefik_tls" == "dns" ]; then
+    if [[ "$traefik_tls" == "dns" ]]; then
         read -p "Please, input your let's encrypt email address: " letsencrypt_email
         read -p "Please, input your cloudflare email address [$letsencrypt_email]: " cloudflare_email
         cloudflare_email=${cloudflare_email:-"$letsencrypt_email"}
@@ -287,7 +287,7 @@ if [[ $traefik == "y" ]]; then
         read -p "Please, input your your domain name: " my_domain
     fi
     # Set Traefik config
-    if [ "$traefik_tls" == "dns" ]; then
+    if [[ "$traefik_tls" == "dns" ]]; then
         sed -i -e "s;<letsencrypt_email>;$letsencrypt_email;g" "$env_network"
         sed -i -e "s;<cloudflare_email>;$cloudflare_email;g" "$env_network"
         sed -i -e "s;<cloudflare_api>;$cloudflare_api;g" "$env_network"
@@ -309,14 +309,14 @@ send_message_in_blue "==========================================================
 send_message_in_blue "=============================================================================="
 
 add_service "wgeasy" "Connect to your home network from anywhere in the world! https://github.com/wg-easy/wg-easy"
-if [[ $wgeasy == "y" ]]; then
+if [[ $wgeasy =~ "yY" ]]; then
     password=$(get_password "wgeasy")
     sed -i -e "s;<wgeasy_password>;$password;g" "$env_network"
     echo
     read -rp "Please, input the port you forwarded from your router to your wg-easy VPN server: " -e -i 51820 portfwd_wgeasy
     sed -i -e "s;<forwarded_port_wgeasy>;$portfwd_wgeasy;g" "$env_network"
     sed -i '/#port_forwarding_wgeasy#/s/^#//' "$env_network"
-    if [[ $traefik == "n" ]]; then
+    if [[ $traefik =~ "nN" ]]; then
         sudo apt install curl -y
         echo
         my_current_public_ip=$(curl -s ifconfig.me)
@@ -334,9 +334,9 @@ fi
 send_message_in_blue "=============================================================================="
 send_message_in_blue "=============================================================================="
 #VPN CLIENT
-read -p "Would you like to configure a VPN Clinet (Used for qBittorrent but with a few tweaks it can be used for any of your services)? [Y/n]: " gluetun
+read -p "Would you like to configure a VPN Client (Used for qBittorrent but with a few tweaks it can be used for any of your services)? [Y/n]: " gluetun
 gluetun=${gluetun:-"y"}
-if [[ $gluetun == "y" ]]; then
+if [[ $gluetun =~ "yY" ]]; then
     # Uncomment lines between #gluetunstart and #gluetunend
     sed -i '/^#gluetunstart$/,/^#gluetunend$/{/^\(#gluetunstart\|#gluetunend\)$/!s/^#//}' "$compose_network"
     # Comment lines with #yes_gluetun#
@@ -362,7 +362,7 @@ if [[ $gluetun == "y" ]]; then
     echo "Recently popular services such as Mullvad removed their option to use port forwarding, if you have a service which provides such a"
     read -p "feature and you would like to use it, answer yes [N/y]: " portfwd_y_n
     portfwd_y_n=${portfwd_y_n:-"n"}
-    if [[ $portfwd_y_n == "y" ]]; then
+    if [[ $portfwd_y_n =~ "yY" ]]; then
     read -rp "Please, input your forwarded port for seeding: " -e -i 57778 portfwd
     sed -i -e "s;<forwarded_port>;$portfwd;g" "$env_network" "$env_starrs" "$env_media"
     sed -i '/#port_forwarding#/s/^#//' "$env_network" "$env_starrs" "$env_media" "$compose_network" "$compose_starrs" "$compose_media"
@@ -390,7 +390,7 @@ echo "Would you like to install Tailscale (Not open source)? [y/N]: "
 read -p "" tailscale
 tailscale=${tailscale:-"n"}
 #INSTALL TAILSCALE
-if [ "$tailscale" == "y" ]; then
+if [[ "$tailscale" =~ "yY" ]]; then
 sudo -s <<EOF
 curl -fsSL https://tailscale.com/install.sh | sh
 EOF
@@ -442,7 +442,7 @@ add_service "pingvinshare" "Pingvin Share is self-hosted file sharing platform a
 add_service "immich" "Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
 add_service "photoprism" "Self-hosted backup solution for photos and videos"
 # keep photoprism last due to password prompt
-if [ "$photoprism" == "y" ]; then
+if [[ "$photoprism" =~ "yY" ]]; then
     send_message_in_orange "Note that photoprism could create a huge amount of cached thumbnails which can fill up your OS drive if there is not enough space"
     read -rp "What will be your admin username?:" -e -i admin admin_username
     password=$(get_password "photoprism")
@@ -458,7 +458,7 @@ send_message_in_blue "==========================================================
 echo "Would you like to install Samba server? "
 read -p "Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc.s [n/Y]:" samba
 samba=${samba:-"y"}
-if [[ $samba == "y" ]]; then
+if [[ $samba =~ "yY" ]]; then
     sudo apt update
     sudo apt install samba
         send_message_in_green "Adding Samba configuration..."
@@ -530,10 +530,10 @@ send_message_in_green "Fixing firewall rules..."
 sleep 1
 # Tweaks that should be done for some apps to work properly
 #allow forwarded ports on router for wgeasy and vpn client
-if [ "$wgeasy" == "y" ]; then
+if [[ "$wgeasy" =~ "yY" ]]; then
     sudo /usr/sbin/ufw allow $portfwd_wgeasy
 fi
-if [[ $portfwd_y_n == "y" ]]; then
+if [[ $portfwd_y_n =~ "yY" ]]; then
     sudo /usr/sbin/ufw allow $portfwd
 fi
 # this is used so docker containers can easily access each other
@@ -550,13 +550,13 @@ send_message_in_green "Done!✅"
 send_message_in_green "Adding cronjobs..."
 sleep 1
 # Add photoprism indexing crontab as user
-if [ "$nextcloud" == "y" ]; then
+if [[ "$nextcloud" =~ "yY" ]]; then
     # Define the cron job command for Nextcloud
      nextcloud_cron_command="50 11 * * * sudo docker exec nextcloud sudo -u abc php /config/www/nextcloud/occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1"
     # Check if the cron job already exists
      existing_nextcloud_cron_job=$(sudo crontab -l -u root 2>/dev/null | grep "files:scan --all")
 
-    if [ -z "$existing_nextcloud_cron_job" ]; then
+    if [[ -z "$existing_nextcloud_cron_job" ]]; then
         send_message_in_green "Adding cronjob to user root"
         # If the cron job doesn't exist, add it
         (sudo crontab -u root -l 2>/dev/null; echo "$nextcloud_cron_command") | sudo crontab -u root -
@@ -565,7 +565,7 @@ if [ "$nextcloud" == "y" ]; then
         send_message_in_green "Nextcloud cron job already exists in user root crontab."
     fi
 fi
-if [[ $photoprism == "y" ]]; then
+if [[ $photoprism =~ "yY" ]]; then
     # Define the cron job command for Photoprism
     photoprism_cron_command="30 11 * * * docker exec -t photoprism photoprism index --cleanup > /home/$USER/photoprism.log 2>&1 && date >> test/cron-logs/photoprism-scan.log 2>&1"
 
@@ -573,7 +573,7 @@ if [[ $photoprism == "y" ]]; then
     existing_photoprism_cron_job=$(sudo crontab -l -u $USER 2>/dev/null | grep "docker exec -t photoprism photoprism index --cleanup")
 
 
-    if [ -z "$existing_photoprism_cron_job" ]; then
+    if [[ -z "$existing_photoprism_cron_job" ]]; then
         # If the cron job doesn't exist, add it using crontab
         send_message_in_green "Adding cronjob to user $USER"
         (sudo crontab -u $USER -l 2>/dev/null; echo "$photoprism_cron_command") | sudo crontab -u $USER -
@@ -585,7 +585,7 @@ fi
 send_message_in_green "Done!✅"
 
 
-send_message_in_green 🎉🎉🎉🎉🎉"Everything installed correctly! 🎉🎉🎉🎉🎉"
+send_message_in_green "🎉🎉🎉🎉🎉 Everything installed correctly! 🎉🎉🎉🎉🎉"
 
 
 send_message_in_green "If we need your sudo password to correct permissions you will be prompted for it..."
@@ -636,7 +636,7 @@ echo "Calibre web:       username: admin               password: admin123"  >> ~
 echo "Linkding           username: admin               password: adminadmin"  >> ~/fly-hi-links.txt
 echo "Airsonic:          username: admin               password: admin"  >> ~/fly-hi-links.txt
 echo "Mealie:            username: changeme@email.com  password: MyPassword"  >> ~/fly-hi-links.txt
-if [[ $traefik == "y" ]]; then
+if [[ $traefik =~ "yY" ]]; then
         # If traefik is enabled accessing nextcloud over https wont be easy unless an override rule is added to the config
     #  * When generating URLs, Nextcloud attempts to detect whether the server is
     #  * accessed via ``https`` or ``http``. However, if Nextcloud is behind a proxy
