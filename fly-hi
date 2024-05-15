@@ -42,24 +42,24 @@ send_message_in_blue() {
 }
 
 
-if [ $option == "help" ]; then
+if [[ $option == "help" ]]; then
     help
     exit 0
 fi
-if [ $option == "ports" ]; then
+if [[ $option == "ports" ]]; then
         docker ps --format '{{.Names}}\t{{.Ports}}'
 fi
 
 
-if [ $option == "vpn" ]; then
+if [[ $option == "vpn" ]]; then
 bash ${install_location}/*install.sh
 fi
-if [ $option == "noip" ]; then
+if [[ $option == "noip" ]]; then
 sudo /usr/local/bin/noip2 -S
 fi
 
-if [ $option == "restart" ]; then
-    if [ -z "$compose_file" ]; then
+if [[ $option == "restart" ]]; then
+    if [[ -z "$compose_file" ]]; then
         $dc_management stop && $dc_management up -d
         $dc_network stop && $dc_network up -d
         $dc_media stop && $dc_media up -d
@@ -90,8 +90,8 @@ if [ $option == "restart" ]; then
     exit 0
 fi
 
-if [ $option == "stop" ]; then
-    if [ -z "$compose_file" ]; then
+if [[ $option == "stop" ]]; then
+    if [[ -z "$compose_file" ]]; then
         $dc_media stop
         $dc_starrs stop
         $dc_network stop
@@ -122,8 +122,8 @@ if [ $option == "stop" ]; then
     exit 0
 fi
 
-if [ $option == "start" ]; then
-    if [ -z "$compose_file" ]; then
+if [[ $option == "start" ]]; then
+    if [[ -z "$compose_file" ]]; then
         $dc_management up -d
         $dc_network up -d
         $dc_media up -d
@@ -154,8 +154,8 @@ if [ $option == "start" ]; then
     exit 0
 fi
 
-if [ $option == "update" ]; then
-    if [ -z "$compose_file" ]; then
+if [[ $option == "update" ]]; then
+    if [[ -z "$compose_file" ]]; then
         $dc_media pull && $dc_media up -d
         $dc_starrs pull && $dc_starrs up -d
         $dc_network pull && $dc_network up -d
@@ -183,8 +183,8 @@ if [ $option == "update" ]; then
     exit 0
 fi
 
-if [ $option == "destroy" ]; then
-    if [ -z "$compose_file" ]; then
+if [[ $option == "destroy" ]]; then
+    if [[ -z "$compose_file" ]]; then
         $dc_media down --remove-orphans
         $dc_starrs down --remove-orphans
         $dc_network down --remove-orphans
@@ -214,7 +214,7 @@ if [ $option == "destroy" ]; then
     exit 0
 fi
 
-if [ $option == "ip" ]; then
+if [[ $option == "ip" ]]; then
     echo "Getting your qBittorrent IP..."
     qbittorrent_ip=$(docker exec qbittorrent sh -c "curl -s ifconfig.me");
     echo "$qbittorrent_ip"
@@ -227,7 +227,7 @@ if [ $option == "ip" ]; then
     echo "Your local IP country is $(curl -s https://am.i.mullvad.net/country)"
     echo "Your local IP city is $(curl -s curl https://am.i.mullvad.net/city)"
     echo
-    if [ $qbittorrent_ip == $your_ip ]; then
+    if [[ $qbittorrent_ip == $your_ip ]]; then
            send_message_in_red "Your IPs are the same! qBittorrent is NOT working! ⚠️"
    else
            send_message_in_green "Your IPs are different. qBittorrent is working as expected! ✅ "
@@ -235,10 +235,10 @@ if [ $option == "ip" ]; then
 fi
 
 
-if [ $option == "uninstall" ]; then
+if [[ $option == "uninstall" ]]; then
     read -p "This will uninstall your fly-hi script and remove all container data including the ones not installed with this script, proceed? [n,Y]:" uninstall
     uninstall=${uninstall:-"y"}
-    if [ "$uninstall" == "y" ]; then
+    if [[ "$uninstall" =~ "yY" ]]; then
         read -p "Would you like to also delete container persistant data from your original install location? [N,y]:" delete_persistant
         uninstall=${delete_persistant:-"n"}
         read -p "Would you like to also uninstall and purge your docker installation? [N,y]:" uninstall_docker
@@ -249,11 +249,11 @@ if [ $option == "uninstall" ]; then
         fly-hi destroy management || true
         docker network rm fly-hi || true
         sudo docker system prune -a || true
-        if [ $option == "delete_persistant" ]; then
+        if [[ $option == "delete_persistant" ]]; then
             sudo rm -r ${install_location} || true
             send_message_in_green "You successefully delete your persistant container data!"
         fi
-        if [ "$uninstall_docker" == "y" ]; then
+        if [[ "$uninstall_docker" =~ "yY" ]]; then
             sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-buildx-plugin docker-compose-plugin docker* || true
             sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-ce-cli docker-buildx-plugin docker-compose-plugin || true
             sudo umount /var/lib/docker/ || true
@@ -281,7 +281,7 @@ links() {
     service_name=$1
     port=$(docker port $service_name 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://' || true)
 
-    if [ -n "$port" ]; then
+    if [[ -n "$port" ]]; then
         printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[33m%s\e[0m\n" "${service_name^}" "http" "$host_ip" "$port"  "https://$1.$my_domain"
     else
         printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
@@ -303,7 +303,7 @@ links() {
     print_link "whoami"
     print_link "dozzle"
     graylog=$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
-    if [ -z "$graylog" ]; then
+    if [[ -z "$graylog" ]]; then
     send_message_in_blue "Graylog        : $not_running"
     else
     send_message_in_blue "Graylog        : http://$host_ip:$graylog $(printf "\e[33m https://wgeasy.$my_domain \e[0m")"
@@ -316,7 +316,7 @@ links() {
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
     send_message_in_blue "Traefik        : http://$host_ip:8880 $(printf "\e[33m https://traefik.$my_domain \e[0m")" #traefik#
     wgeasy=$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
-    if [ -z "$wgeasy" ]; then
+    if [[ -z "$wgeasy" ]]; then
     send_message_in_blue "WG-Easy        : $not_running"
     else
     send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy $(printf "\e[33mhttps://wgeasy.$my_domain \e[0m")"
@@ -329,7 +329,7 @@ links() {
     print_link "jellyfin"
     print_link "emby"
     plex=$(cat ${install_location}/media/docker-compose.yaml | grep webUI | awk -F":" '{ print $2 }' | awk '{ print $1 }') || true
-    if [ -z "$plex" ]; then
+    if [[ -z "$plex" ]]; then
     send_message_in_blue "Plex           : $not_running"
     else
     send_message_in_blue "Plex           : http://$host_ip:$plex $(printf "\e[33mhttps://plex.$my_domain \e[0m")"
@@ -358,13 +358,13 @@ links() {
 
     echo -e $(printf "\e[34m===== STARRS =====\e[0m")
     qbittorrent=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentport | grep -Eo '[0-9]{1,4}' | head -1) || true
-    if [ -z "$qbittorrent" ]; then
+    if [[ -z "$qbittorrent" ]]; then
     send_message_in_blue "Qbittorrent    : $not_running"
     else
     send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent $(printf "\e[33mhttps://qbittorrent.$my_domain \e[0m")"
     fi
     qbittorrentpub=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1) || true
-    if [ -z "$qbittorrentpub" ]; then
+    if [[ -z "$qbittorrentpub" ]]; then
     send_message_in_blue "Qbittorrentpub : $not_running"
     else
     send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub $(printf "\e[33mhttps://qbittorrentpub.$my_domain \e[0m")"
@@ -382,10 +382,10 @@ links() {
     send_message_in_green "To start up Tailscale run 'sudo tailscale up' " #tailscale#
     echo
 }
-if [ $option == "links-all" ]; then
+if [[ $option == "links-all" ]]; then
 links
 fi
-if [ $option == "links" ]; then
+if [[ $option == "links" ]]; then
 links | grep -v "Not Running"
 fi
 

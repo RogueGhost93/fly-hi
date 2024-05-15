@@ -498,7 +498,7 @@ services:
 #      #memory: 1g
 #    #networks:
 #      #- fly-hi
-#
+##
 #  opensearch:
 #    container_name: opensearch
 #    image: "opensearchproject/opensearch:2.4.0"
@@ -524,7 +524,7 @@ services:
 #    restart: "on-failure"
 #    networks:
 #      - fly-hi
-#
+##
 ##
 ##   Cant find an easy way to change default password for opensearch, until there is an easy way this will be commented out
 ##  opensearch-dashboards:

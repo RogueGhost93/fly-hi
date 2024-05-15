@@ -33,7 +33,7 @@ check_dependencides() {
         read -p "Would you like Fly-Hi to install docker and docker-compose? IT ONLY WORKS ON DEBIAN AND UBUNTU! [y/N]: " install_docker
         install_docker=${install_docker:-"n"}
 
-        if [ "$install_docker" == "y" ]; then
+        if [[ "$install_docker" =~ "yY" ]]; then
             send_message_in_orange "After installation is complete just run this script again!"
             sleep 2
             bash ./docker.sh
@@ -52,7 +52,7 @@ add_service() {
     read -p "Would you like to install ${service_name^}? ${comment:+ ($comment)} [n/Y]:" y_n
     y_n=${y_n:-"y"}
 
-    if [ "$y_n" == "y" ]; then
+    if [[ "$y_n" =~ "yY" ]]; then
         send_message_in_green "Adding service: ${service_name^}"
         sed -i "/^#${service_name}start/,/^#${service_name}end$/{/^\(#${service_name}start\|#${service_name}end\)$/!s/^#//}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
         eval "${service_name}=y"
@@ -80,7 +80,7 @@ get_password() {
             break
         fi
         if [[ $char == $'\177' ]]; then
-            if [ $charcount -gt 0 ]; then
+            if [[ $charcount -gt 0 ]]; then
                 charcount=$((charcount - 1))
                 prompt=$'\b \b'
                 password="${password%?}"
@@ -104,7 +104,7 @@ running_services_location() {
     service_name=$1
     port=$(docker port $service_name 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://' || true)
 
-    if [ -n "$port" ]; then
+    if [[ -n "$port" ]]; then
         printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[33m%s\e[0m\n" "${service_name^}" "https" "$host_ip" "$port"  "https://$1.$my_domain"
     else
         printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
@@ -126,7 +126,7 @@ running_services_location() {
     print_link "whoami"
     print_link "dozzle"
     graylog=$(cat ${install_location}/management/docker-compose.yaml | grep WEB-UI | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
-    if [ -z "$graylog" ]; then
+    if [[ -z "$graylog" ]]; then
     send_message_in_blue "Graylog        : $not_running"
     else
     send_message_in_blue "Graylog        : http://$host_ip:$graylog $(printf "\e[33m https://wgeasy.$my_domain \e[0m")"
@@ -139,7 +139,7 @@ running_services_location() {
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
     send_message_in_blue "Traefik        : http://$host_ip:8880 $(printf "\e[33m https://traefik.$my_domain \e[0m")" #traefik#
     wgeasy=$(cat ${install_location}/network/docker-compose.yaml | grep WEB | awk '{ print $2 }' | awk -F":" '{ print $1 }') || true
-    if [ -z "$wgeasy" ]; then
+    if [[ -z "$wgeasy" ]]; then
     send_message_in_blue "WG-Easy        : $not_running"
     else
     send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy $(printf "\e[33mhttps://wgeasy.$my_domain \e[0m")"
@@ -152,7 +152,7 @@ running_services_location() {
     print_link "jellyfin"
     print_link "emby"
     plex=$(cat ${install_location}/media/docker-compose.yaml | grep webUI | awk -F":" '{ print $2 }' | awk '{ print $1 }') || true
-    if [ -z "$plex" ]; then
+    if [[ -z "$plex" ]]; then
     send_message_in_blue "Plex           : $not_running"
     else
     send_message_in_blue "Plex           : http://$host_ip:$plex $(printf "\e[33mhttps://plex.$my_domain \e[0m")"
@@ -181,13 +181,13 @@ running_services_location() {
 
     echo -e $(printf "\e[34m===== STARRS =====\e[0m")
     qbittorrent=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentport | grep -Eo '[0-9]{1,4}' | head -1) || true
-    if [ -z "$qbittorrent" ]; then
+    if [[ -z "$qbittorrent" ]]; then
     send_message_in_blue "Qbittorrent    : $not_running"
     else
     send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent $(printf "\e[33mhttps://qbittorrent.$my_domain \e[0m")"
     fi
     qbittorrentpub=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1) || true
-    if [ -z "$qbittorrentpub" ]; then
+    if [[ -z "$qbittorrentpub" ]]; then
     send_message_in_blue "Qbittorrentpub : $not_running"
     else
     send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub $(printf "\e[33mhttps://qbittorrentpub.$my_domain \e[0m")"

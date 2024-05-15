@@ -59,6 +59,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)
 *Music*
 - Airsonic        - Music Server (https://airsonic.github.io/)
+- Navidrome       - Music Server (https://www.navidrome.org/)
 *Photos*
 - Immich          - Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)
 - Photoprism      - Self-hosted backup solution for photos and videos (https://www.photoprism.app/)
@@ -79,6 +80,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - FreshRSS        - Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)
 - Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)
 - PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)
+- Pingvinshare    - Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer (https://github.com/stonith404/pingvin-share)
 
 *Starrs and Download Apps:*
 
