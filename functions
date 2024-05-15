@@ -33,7 +33,7 @@ check_dependencides() {
         read -p "Would you like Fly-Hi to install docker and docker-compose? IT ONLY WORKS ON DEBIAN AND UBUNTU! [y/N]: " install_docker
         install_docker=${install_docker:-"n"}
 
-        if [[ "$install_docker" =~ "yY" ]]; then
+        if [[ "$install_docker" =~ [yY] ]]; then
             send_message_in_orange "After installation is complete just run this script again!"
             sleep 2
             bash ./docker.sh
@@ -52,7 +52,7 @@ add_service() {
     read -p "Would you like to install ${service_name^}? ${comment:+ ($comment)} [n/Y]:" y_n
     y_n=${y_n:-"y"}
 
-    if [[ "$y_n" =~ "yY" ]]; then
+    if [[ "$y_n" =~ [yY] ]]; then
         send_message_in_green "Adding service: ${service_name^}"
         sed -i "/^#${service_name}start/,/^#${service_name}end$/{/^\(#${service_name}start\|#${service_name}end\)$/!s/^#//}" "$compose_media" "$compose_management" "$compose_network" "$compose_starrs"
         eval "${service_name}=y"
