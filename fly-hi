@@ -10,7 +10,7 @@ option=${1:-"help"}
 compose_file=${2:-""}
 container=${3:-""}
 not_running=$(printf "\e[34m\e[0m\e[33mNot Running\e[0m\n")
-my_domain=<my_domain>
+my_domain="<my_domain>"
 help() {
    echo "Fly-Hi Media"
    echo

@@ -554,7 +554,7 @@ if [[ "$nextcloud" =~ [yY] ]]; then
     # Define the cron job command for Nextcloud
      nextcloud_cron_command="50 11 * * * sudo docker exec nextcloud sudo -u abc php /config/www/nextcloud/occ files:scan --all >> $install_location/cron-logs/nextcloud-scan.log 2>&1"
     # Check if the cron job already exists
-     existing_nextcloud_cron_job=$(sudo crontab -l -u root 2>/dev/null | grep "files:scan --all")
+     existing_nextcloud_cron_job=$(sudo crontab -l -u root 2>/dev/null | grep "files:scan --all") || true
 
     if [[ -z "$existing_nextcloud_cron_job" ]]; then
         send_message_in_green "Adding cronjob to user root"
@@ -570,7 +570,7 @@ if [[ $photoprism =~ [yY] ]]; then
     photoprism_cron_command="30 11 * * * docker exec -t photoprism photoprism index --cleanup > /home/$USER/photoprism.log 2>&1 && date >> test/cron-logs/photoprism-scan.log 2>&1"
 
     # Check if the cron job already exists
-    existing_photoprism_cron_job=$(sudo crontab -l -u $USER 2>/dev/null | grep "docker exec -t photoprism photoprism index --cleanup")
+    existing_photoprism_cron_job=$(sudo crontab -l -u $USER 2>/dev/null | grep "docker exec -t photoprism photoprism index --cleanup") || true
 
 
     if [[ -z "$existing_photoprism_cron_job" ]]; then
