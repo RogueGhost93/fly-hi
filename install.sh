@@ -559,7 +559,7 @@ if [[ "$nextcloud" =~ [yY] ]]; then
     if [[ -z "$existing_nextcloud_cron_job" ]]; then
         send_message_in_green "Adding cronjob to user root"
         # If the cron job doesn't exist, add it
-        (sudo crontab -u root -l 2>/dev/null; echo "$nextcloud_cron_command") | sudo crontab -u root -
+        (sudo crontab -u root -l 2>/dev/null; echo "$nextcloud_cron_command") | sudo crontab -u root - || true
     else
         # If the cron job already exists, notify or handle accordingly
         send_message_in_green "Nextcloud cron job already exists in user root crontab."
@@ -567,7 +567,7 @@ if [[ "$nextcloud" =~ [yY] ]]; then
 fi
 if [[ $photoprism =~ [yY] ]]; then
     # Define the cron job command for Photoprism
-    photoprism_cron_command="30 11 * * * docker exec -t photoprism photoprism index --cleanup > /home/$USER/photoprism.log 2>&1 && date >> test/cron-logs/photoprism-scan.log 2>&1"
+    photoprism_cron_command="30 11 * * * docker exec -t photoprism photoprism index --cleanup > /home/$USER/photoprism.log 2>&1 && date >> $install_location/cron-logs/photoprism-scan.log 2>&1"
 
     # Check if the cron job already exists
     existing_photoprism_cron_job=$(sudo crontab -l -u $USER 2>/dev/null | grep "docker exec -t photoprism photoprism index --cleanup") || true
@@ -576,7 +576,7 @@ if [[ $photoprism =~ [yY] ]]; then
     if [[ -z "$existing_photoprism_cron_job" ]]; then
         # If the cron job doesn't exist, add it using crontab
         send_message_in_green "Adding cronjob to user $USER"
-        (sudo crontab -u $USER -l 2>/dev/null; echo "$photoprism_cron_command") | sudo crontab -u $USER -
+        (sudo crontab -u $USER -l 2>/dev/null; echo "$photoprism_cron_command") | sudo crontab -u $USER - || true
     else
         # If the cron job already exists, notify or handle accordingly
         send_message_in_green "Photoprism cron job already exists in user $USER crontab."
