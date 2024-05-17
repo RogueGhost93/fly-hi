@@ -1097,7 +1097,7 @@ services:
 #    restart: always
 #    networks:
 #      - fly-hi
-#    labels:
+#    labels: #traefik#
 #      - "traefik.enable=true" #traefik#
 #      - "traefik.http.routers.privatebin.rule=Host(`privatebin.${HOSTNAME}`)" #traefik#
 #      - "traefik.http.services.privatebin.loadbalancer.server.port=8080" #traefik#
