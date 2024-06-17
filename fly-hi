@@ -344,6 +344,7 @@ links() {
     print_link "calibre"
     print_link "calibre_web"
     print_link "audiobookshelf"
+    print_link "readeck"
     print_link "linkding"
     print_link "linkwarden"
     print_link "stirlingpdf"

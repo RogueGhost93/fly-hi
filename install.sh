@@ -429,6 +429,7 @@ add_service "ombi" "Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-a
 add_service "calibre_library" "Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)"
 add_service "calibre_web" "Web based Front End for Calibre-Library (https://github.com/janeczku/calibre-web)"
 add_service "audiobookshelf" "Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)"
+add_service "readeck" "Nice Open Source alternative to Pocket (https://readeck.org/en/)"
 add_service "linkding" "Simple bookmarks managers with support for tags (https://github.com/sissbruecker/linkding)"
 add_service "linkwarden" "Fancy modern bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)"
 add_service "stirlingpdf" "Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)"

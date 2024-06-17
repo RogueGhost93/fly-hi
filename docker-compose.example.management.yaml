@@ -429,7 +429,7 @@ services:
 #  netdata:
 #    image: netdata/netdata
 #    container_name: netdata
-#    pid: host
+##    pid: host
 ##    network_mode: host
 #    restart: unless-stopped
 #    ports:

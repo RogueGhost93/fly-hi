@@ -68,6 +68,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Calibre web     - Read your favorite Books (https://github.com/janeczku/calibre-web)
 - Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)
 *Bookmarks*
+- Readeck         - Nice Open Source alternative to Pocket (https://readeck.org/en/)
 - Linkding        - Very fancy bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)
 - Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)
 *Files*

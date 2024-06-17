@@ -723,6 +723,69 @@ services:
 #      - PGPORT=5434
 #nextcloudend
 
+#readeckstart
+#  readeck:
+#    image: codeberg.org/readeck/readeck:latest
+#    container_name: readeck
+#    depends_on:
+#      - postgres6
+#    ports:
+#      - 8000:8000
+#    environment:
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      # The URL of the instance's database.
+#      - READECK_DATABASE_SOURCE=postgres://readeck:${POSTGRES_PASSWORD}@postgres6:5432/readeck
+##      - READECK_DATABASE_SOURCE=postgres://readeck:${POSTGRES_PASSWORD}@postgres6:5432/readeck
+#      # Defines the application log level. Can be error, warning, info, debug.
+#      - READECK_LOG_LEVEL=info
+#      # The IP address on which Readeck listens.
+#      - READECK_SERVER_HOST=0.0.0.0
+#      # The TCP port on which Readeck listens. Update container port above to match (right of colon).
+#      - READECK_SERVER_PORT=8000
+#      # The URL prefix of Readeck.
+#      - READECK_SERVER_PREFIX=/
+#      # A list of hostnames allowed in HTTP requests. Required for reverse proxy configuration.
+#      - READECK_ALLOWED_HOSTS=readeck.${HOSTNAME}
+#      # Use the 'X-Forwarded-' headers. Required for reverse proxy configuration.
+#      - READECK_USE_X_FORWARDED=true
+#      - TZ=${TIMEZONE}
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#    volumes:
+#       - ${INSTALL_LOCATION}/media/readeck:/readeck
+#    restart: unless-stopped
+#    healthcheck:
+#      test: ["CMD", "/bin/readeck", "healthcheck", "-config", "config.toml"]
+#      interval: 30s
+#      timeout: 2s
+#      retries: 3
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.readeck.rule=Host(`readeck.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.readeck.loadbalancer.server.port=8000" #traefik#
+#      - "traefik.http.routers.readeck.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.readeck.tls=true" #traefik#
+#       # DNS/HTTP #traefik#
+##      - "traefik.http.routers.readeck.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.readeck.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.readeck.entrypoints=websecure"                         #httpchallenge# #traefik#
+#  postgres6:
+#    image: postgres:16-alpine
+#    container_name: postgres6
+#    environment:
+#      - POSTGRES_DB=readeck
+#      - POSTGRES_USER=readeck
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#    networks:
+#      - fly-hi
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/readeck/database:/var/lib/postgresql/data
+#    restart: unless-stopped
+#readeckend
+
+
 #linkdingstart
 ## Linkding        - Very fancy bookmarks managers with support for tags (https://github.com/sissbruecker/linkding)
 #  linkding:
