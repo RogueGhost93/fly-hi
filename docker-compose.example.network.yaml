@@ -302,7 +302,7 @@ services:
 #      - ${INSTALL_LOCATION}/network/wireguard:/etc/wireguard
 #    ports:
 #      - "${WG_EASY_PORT:-51820}:51820/udp" # map left port to the port you forwarded on your router
-#      - "51821:51821/tcp" #WEBui
+#      - 51821:51821/tcp #WEBui
 #    restart: unless-stopped
 #    cap_add:
 #      - NET_ADMIN

@@ -298,6 +298,7 @@ if [[ $traefik =~ [yY] ]]; then
         sed -i -e "s;<letsencrypt_email>;$letsencrypt_email;g" "$env_network"
         sudo sed -i -e "s;<my_domain>;$my_domain;g" "$env_media" "$env_starrs" "$env_network" "$env_management" "/usr/local/bin/fly-hi"
         sed -i '/#httpchallenge#/s/^#//' "$compose_network" "$compose_starrs" "$compose_management" "$compose_media"
+        sudo sed -i -e "s;<traefik>;$traefik;g" "/usr/local/bin/fly-hi"
     fi
 else
   sudo sed -i '/#traefik#/d' "$compose_network" "$compose_starrs" "$compose_management" "$compose_media" "$env_media" "/usr/local/bin/fly-hi"
@@ -461,7 +462,7 @@ read -p "Samba can be use as a Network Attached Storage which can be mounted on 
 samba=${samba:-"y"}
 if [[ $samba =~ [yY] ]]; then
     sudo apt update
-    sudo apt install samba
+    sudo apt install samba cifs-utils -y
         send_message_in_green "Adding Samba configuration..."
     # Check if the configuration already exists in smb.conf
     if ! grep -q "\[data\]" /etc/samba/smb.conf; then

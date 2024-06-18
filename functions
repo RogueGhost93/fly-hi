@@ -105,7 +105,11 @@ running_services_location() {
     port=$(docker port $service_name 2>/dev/null | awk '{ print $3 }' | head -1 | sed 's/0.0.0.0://' || true)
 
     if [[ -n "$port" ]]; then
-        printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[33m%s\e[0m\n" "${service_name^}" "https" "$host_ip" "$port"  "https://$1.$my_domain"
+        if [[ $traefik =~ [yY] ]]; then
+        printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[33m%s\e[0m\n" "${service_name^}" "http" "$host_ip" "$port"  "https://$1.$my_domain"
+        else
+        printf "\e[34m%-15s\e[0m: \e[34m%s://%s:%s\e[0m \e[33m%s\e[0m\n" "${service_name^}" "http" "$host_ip" "$port"
+        fi
     else
         printf "\e[34m%-15s\e[0m: \e[33mNot Running\e[0m\n" "${service_name^}"
     fi
@@ -129,7 +133,11 @@ running_services_location() {
     if [[ -z "$graylog" ]]; then
     send_message_in_blue "Graylog        : $not_running"
     else
-    send_message_in_blue "Graylog        : http://$host_ip:$graylog $(printf "\e[33m https://wgeasy.$my_domain \e[0m")"
+        if [[ $traefik =~ [yY] ]]; then
+        send_message_in_blue "Graylog        : http://$host_ip:$graylog $(printf "\e[33m https://wgeasy.$my_domain \e[0m")"
+        else
+        send_message_in_blue "Graylog        : http://$host_ip:$graylog"
+        fi
     fi
     print_link "ntfy"
     print_link "vaultwarden"
@@ -142,7 +150,11 @@ running_services_location() {
     if [[ -z "$wgeasy" ]]; then
     send_message_in_blue "WG-Easy        : $not_running"
     else
-    send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy $(printf "\e[33mhttps://wgeasy.$my_domain \e[0m")"
+        if [[ $traefik =~ [yY] ]]; then
+        send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy $(printf "\e[33mhttps://wgeasy.$my_domain \e[0m")"
+        else
+        send_message_in_blue "WG-Easy        : http://$host_ip:$wgeasy"
+        fi
     fi
     print_link "speedtest"
     print_link "flaresolverr"
@@ -155,7 +167,11 @@ running_services_location() {
     if [[ -z "$plex" ]]; then
     send_message_in_blue "Plex           : $not_running"
     else
-    send_message_in_blue "Plex           : http://$host_ip:$plex $(printf "\e[33mhttps://plex.$my_domain \e[0m")"
+        if [[ $traefik =~ [yY] ]]; then
+        send_message_in_blue "Plex           : http://$host_ip:$plex $(printf "\e[33mhttps://plex.$my_domain \e[0m")"
+        else
+        send_message_in_blue "Plex           : http://$host_ip:$plex"
+        fi
     fi
     print_link "jellyseerr"
     print_link "overseerr"
@@ -185,13 +201,21 @@ running_services_location() {
     if [[ -z "$qbittorrent" ]]; then
     send_message_in_blue "Qbittorrent    : $not_running"
     else
-    send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent $(printf "\e[33mhttps://qbittorrent.$my_domain \e[0m")"
+        if [[ $traefik =~ [yY] ]]; then
+        send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent $(printf "\e[33mhttps://qbittorrent.$my_domain \e[0m")"
+        else
+        send_message_in_blue "Qbittorrent    : http://$host_ip:$qbittorrent"
+        fi
     fi
     qbittorrentpub=$(cat ${install_location}/network/docker-compose.yaml | grep qbittorrentpubport | grep -Eo '[0-9]{1,4}' | head -1) || true
     if [[ -z "$qbittorrentpub" ]]; then
     send_message_in_blue "Qbittorrentpub : $not_running"
     else
-    send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub $(printf "\e[33mhttps://qbittorrentpub.$my_domain \e[0m")"
+        if [[ $traefik =~ [yY] ]]; then
+        send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub $(printf "\e[33mhttps://qbittorrentpub.$my_domain \e[0m")"
+        else
+        send_message_in_blue "Qbittorrentpub : http://$host_ip:$qbittorrentpub"
+        fi
     fi
     print_link "radarr"
     print_link "sonarr"
