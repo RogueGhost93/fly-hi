@@ -321,6 +321,7 @@ links() {
     print_link "ntfy"
     print_link "vaultwarden"
     print_link "homeassistant"
+    print_link "maybe"
     echo
 
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
@@ -369,10 +370,13 @@ links() {
     print_link "nextcloud"
     print_link "filebrowser"
     print_link "joplin"
+    print_link "todo"
+    print_link "vikunja"
     print_link "freshrss"
     print_link "mealie"
     print_link "privatebin"
     print_link "pingvinshare"
+    print_link "snapdrop"
     echo
 
     echo -e $(printf "\e[34m===== STARRS =====\e[0m")
@@ -402,7 +406,8 @@ links() {
     print_link "readarr"
     print_link "prowlarr"
     print_link "bazarr"
-    print_link "tubesync"
+    print_link "pinchflat"
+    print_link "ytdl-sub"
     echo
     send_message_in_green "Use 'fly-hi help' to see how to use the script"
     echo

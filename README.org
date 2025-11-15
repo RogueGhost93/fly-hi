@@ -31,6 +31,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Ntfy           - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)
 - Vaultwarden    - Password Manager (https://hub.docker.com/r/vaultwarden/server)
 - Home-Assistant - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)
+- Maybe          - The OS for your personal finances (https://github.com/maybe-finance/maybe)
 
 
 
@@ -57,31 +58,34 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Jellyseer       - Jellyfin Media Requests (https://github.com/Fallenbagel/jellyseerr)
 - Overseerr       - Plex Media Requests (https://overseerr.dev/)
 - Ombi            - Jellyfin/Plex/Emby Media Requests (https://github.com/Ombi-app/Ombi)
-*Music*
+send_message_in_purple "Music"
 - Airsonic        - Music Server (https://airsonic.github.io/)
 - Navidrome       - Music Server (https://www.navidrome.org/)
-*Photos*
+send_message_in_purple "Photos"
 - Immich          - Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)
 - Photoprism      - Self-hosted backup solution for photos and videos (https://www.photoprism.app/)
-*Books*
+send_message_in_purple "Books"
 - Calibre Library - Manage all your books in famous Calibre Library (https://hub.docker.com/r/linuxserver/calibre)
 - Calibre web     - Read your favorite Books (https://github.com/janeczku/calibre-web)
 - Audiobookshelf  - Listen to your favorite Audiobooks (https://www.audiobookshelf.org/)
-*Bookmarks*
+send_message_in_purple "Bookmarks"
 - Readeck         - Nice Open Source alternative to Pocket (https://readeck.org/en/)
-- Linkding        - Very fancy bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)
-- Linkwarden      - Very fancy bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)
-*Files*
-- Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)
+- Linkding        - Simple bookmarks manager with support for tags (https://github.com/sissbruecker/linkding)
+- Linkwarden      - Fancy modern bookmarks manager with support for tags (https://github.com/linkwarden/linkwarden)
+send_message_in_purple "File management"
 - Stirling-PDF    - Your locally hosted one-stop-shop for all your PDF needs (https://github.com/Frooodle/Stirling-PDF)
 - Filebrowser     - Nice WebUI for accessing and managing your files (https://filebrowser.org/)
 - Samba Server    - Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc.
-*Misc*
+- Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)
+- Pingvinshare    - Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer (https://github.com/stonith404/pingvin-share)
+send_message_in_purple "Notes Management"
 - Joplin-Server   - Nice and very popular Notes-taking app (https://joplinapp.org/)
+- Todo            - todo is a self-hosted todo web app that lets you keep track of your todos in a easy and minimal way (https://hub.docker.com/r/prologic/todo)
+- Vikunja         - Plan your projects with the elegance of a sloth on a sunny day (https://vikunja.io/)
+- PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)
+send_message_in_purple "Miscellaneous"
 - FreshRSS        - Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)
 - Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)
-- PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)
-- Pingvinshare    - Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer (https://github.com/stonith404/pingvin-share)
 
 *Starrs and Download Apps:*
 
@@ -95,7 +99,7 @@ Fly-Hi is a versatile server setup that secures, manages, downloads, categorizes
 - Prowlarr    - Indexer aggregator for Sonarr and Radarr (https://github.com/Prowlarr/Prowlarr)
 - qBittorrent - Does the actual download...(https://www.qbittorrent.org/)
 *Youtube*
-- Tubesync    - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)
+- Pinchflat    - Manage your favorite Youtube Channels (https://github.com/kieraneglin/pinchflat)
 - Ytdl-sub    - Automate downloading and metadata generation with YoutubeDL (https://github.com/jmbannon/ytdl-sub)
 
 

@@ -8,7 +8,8 @@ services:
 ## Speedtest-tracker - Monitor your internet speed on da scheduled basis (https://github.com/alexjustesen/speedtest-tracker)
 #  speedtest:
 #    container_name: speedtest
-#    image: ghcr.io/alexjustesen/speedtest-tracker:latest
+##    image: ghcr.io/alexjustesen/speedtest-tracker:latest
+#    image: lscr.io/linuxserver/speedtest-tracker:latest
 #    ports:
 #      - '8044:80'
 #      - '8442:443'

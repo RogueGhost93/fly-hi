@@ -620,7 +620,58 @@ services:
 
 
 
-
+#maybestart
+#  maybe:
+#    container_name: maybe
+#    image: ghcr.io/maybe-finance/maybe:latest
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/maybe:/rails/storage
+#    ports:
+#      - 3000:3000
+#    restart: unless-stopped
+#    environment:
+#      SELF_HOSTED: "true"
+#      RAILS_FORCE_SSL: "false"
+#      RAILS_ASSUME_SSL: "false"
+#      GOOD_JOB_EXECUTION_MODE: async
+#      SECRET_KEY_BASE: ${DATABASE_PASSWORD}
+#      DB_HOST: postgres3
+#      POSTGRES_DB: maybe_production
+#      POSTGRES_USER: maybe_user
+#      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+#    depends_on:
+#      postgres3:
+#        condition: service_healthy
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.maybe.rule=Host(`maybe.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.maybe.loadbalancer.server.port=3000" #traefik#
+#      - "traefik.http.routers.maybe.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.maybe.tls=true" #traefik#
+##      - "traefik.http.routers.maybe.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.maybe.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.maybe.entrypoints=websecure"                        #httpchallenge# #traefik#
+#
+#  postgres3:
+#    container_name: postgres3
+#    image: postgres:16
+#    restart: unless-stopped
+#    volumes:
+#      - ${INSTALL_LOCATION}/management/postgres-data:/var/lib/postgresql/data
+#    environment:
+#      POSTGRES_USER: maybe_user
+#      POSTGRES_DB: maybe_production
+#      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
+#    networks:
+#      - fly-hi
+#maybeend
 
 networks:
   fly-hi:

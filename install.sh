@@ -208,7 +208,7 @@ add_service "dozzle" "All docker logs in one place on a nice WEB-UI (https://doz
 add_service "ntfy" "Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
 add_service "vaultwarden" "Password Manager (https://hub.docker.com/r/vaultwarden/server)"
 add_service "homeassistant" "Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
-
+add_service "maybe" "The OS for your personal finances (https://github.com/maybe-finance/maybe)"
 
 add_service "graylog" "Log Aggregator with a WEB-UI (https://graylog.org/)"
 if [[ $graylog =~ [yY] ]]; then
@@ -437,10 +437,13 @@ add_service "stirlingpdf" "Your locally hosted one-stop-shop for all your PDF ne
 add_service "nextcloud" "Popular Open Source Google Cloud alternative (https://nextcloud.com/)"
 add_service "filebrowser" "Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
 add_service "joplin" "Nice and very popular Notes-taking app - This is only a Server (https://joplinapp.org/)"
+add_service "todo" "todo is a self-hosted todo web app that lets you keep track of your todos in a easy and minimal way (https://hub.docker.com/r/prologic/todo)"
+add_service "vikunja" "Plan your projects with the elegance of a sloth on a sunny day (https://vikunja.io/)"
 add_service "freshrss" "Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)"
 add_service "mealie" "A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
 add_service "privatebin" "A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)"
 add_service "pingvinshare" "Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer (https://github.com/stonith404/pingvin-share)"
+add_service "snapdrop" "Snapdrop A local file sharing in your browser. Inspired by Apple's Airdrop. (https://github.com/linuxserver/docker-snapdrop?tab=readme-ov-file)"
 add_service "immich" "Self-hosted backup solution for photos and videos on mobile device (https://immich.app/)"
 add_service "photoprism" "Self-hosted backup solution for photos and videos"
 # keep photoprism last due to password prompt
@@ -517,7 +520,8 @@ add_service "bazarr" "Manage Subtitles for you Media Collection https://www.baza
 add_service "prowlarr" "Indexer aggregator for Sonarr and Radarr https://github.com/Prowlarr/Prowlarr"
 add_service "qbittorrent" "Does the actual download...https://www.qbittorrent.org/"
 add_service "qbittorrentpub" "This is just a second instance of qbittorrent that can be used to separate public from private torrent!"
-add_service "tubesync" "Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
+add_service "pinchflat" "Manage your favorite Youtube Channels (https://github.com/kieraneglin/pinchflat)"
+add_service "ytdl-sub" "Automate downloading and metadata generation with YoutubeDL (https://github.com/jmbannon/ytdl-sub)"
 
 
 # ============================================================================================
@@ -629,7 +633,35 @@ docker-compose -f "$compose_starrs" up -d
 # sudo chown -R "$puid":"$pgid" "$install_location/media/freshrss" || true
 # sudo chown -R "$puid":"$pgid" "$install_location/media/stirling_pdf" || true
 # sudo chown -R "$puid":"$pgid" "$install_location/media/filebrowser" || true
-sleep 5
+sleep 5#nullboardstart
+#  nullboard:
+#    container_name: nullboard
+#    image: luismedel/nullboard
+#    ports:
+#      - 8032:80
+#      - 10001:10001
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/nullboard/data:/data
+#    networks:
+#      - fly-hi
+#    environment:
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - TZ=${TIMEZONE}
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.nullboard.rule=Host(`nullboard.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.nullboard.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.nullboard.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.nullboard.tls=true" #traefik#
+#        # DNS/HTTP #traefik#
+##      - "traefik.http.routers.nullboard.tls.domains[0].main=${HOSTNAME}"              #dnschallenge# #traefik#
+##      - "traefik.http.routers.nullboard.tls.domains[0].sans=*.${HOSTNAME}"            #dnschallenge# #traefik#
+##      - "traefik.http.routers.nullboard.entrypoints=websecure"                        #httpchallenge# #traefik#
+#    # exclude from automatic updates
+#      - com.centurylinklabs.watchtower.enable=false
+#      - com.centurylinklabs.watchtower.monitor-only=true
+#nullboardend
 running_services_location > ~/fly-hi-links.txt
 echo "Speedtest tracker: username: admin@example.com   password: password" >> ~/fly-hi-links.txt
 echo "Qbittorrrent:      username: admin               password: The password can be obtained from docker logs"  >> ~/fly-hi-links.txt

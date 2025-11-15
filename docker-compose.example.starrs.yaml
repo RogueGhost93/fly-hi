@@ -267,35 +267,34 @@ services:
 #    network_mode: "container:gluetun" #no_gluetun#
 #qbittorrentpubend
 
-#tubesyncstart
-## Tubesync        - Manage downloads of your favorite Youtube Channels (https://github.com/meeb/tubesync)
-#  tubesync:
-#    image: ghcr.io/meeb/tubesync:latest
-#    container_name: tubesync
-#    restart: unless-stopped
-#    ports:
-#      - 4848:4848
-#    volumes:
-#      - ${INSTALL_LOCATION}/starrs/tubesync:/config
-#      #- ${DATA_ROOT}:/data/downloads
-#      - ${DATA_ROOT}/Youtube:/data/downloads
+#pinchflatstart
+##Ytdl-sub    - Automate downloading and metadata generation with Pinchflat (https://github.com/kieraneglin/pinchflat)"
+#  pinchflat:
+#    image: ghcr.io/kieraneglin/pinchflat:latest
+#    container_name: pinchflat
 #    environment:
 #      - TZ=${TIMEZONE}
 #      - PUID=${USER_ID}
 #      - PGID=${GROUP_ID}
+#    ports:
+#      - 8945:8945
+#    volumes:
+#      - ${INSTALL_LOCATION}/starrs/pinchflat:/config
+#      - ${DATA_ROOT}/Youtube/:/downloads
+#    restart: unless-stopped
 #    networks:
 #      - fly-hi
 #    labels: #traefik#
 #      - "traefik.enable=true" #traefik#
-#      - "traefik.http.routers.tubesync.rule=Host(`tubesync.${HOSTNAME}`)" #traefik#
-#      - "traefik.http.services.tubesync.loadbalancer.server.port=4848" #traefik#
-#      - "traefik.http.routers.tubesync.tls.certresolver=myresolver" #traefik#
-#      - "traefik.http.routers.tubesync.tls=true" #traefik#
+#      - "traefik.http.routers.pinchflat.rule=Host(`pinchflat.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.pinchflat.loadbalancer.server.port=8945" #traefik#
+#      - "traefik.http.routers.pinchflat.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.pinchflat.tls=true" #traefik#
 #       # DNS/HTTP #traefik#
-##      - "traefik.http.routers.tubesync.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
-##      - "traefik.http.routers.tubesync.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
-##      - "traefik.http.routers.tubesync.entrypoints=websecure"                         #httpchallenge# #traefik#
-#tubesyncend
+##      - "traefik.http.routers.pinchflat.tls.domains[0].main=${HOSTNAME}"               #dnschallenge# #traefik#
+##      - "traefik.http.routers.pinchflat.tls.domains[0].sans=*.${HOSTNAME}"             #dnschallenge# #traefik#
+##      - "traefik.http.routers.pinchflat.entrypoints=websecure"                         #httpchallenge# #traefik#
+#pinchflatend
 
 #ytdl-substart
 ##Ytdl-sub    - Automate downloading and metadata generation with YoutubeDL (https://github.com/jmbannon/ytdl-sub)"

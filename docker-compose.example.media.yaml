@@ -1004,7 +1004,7 @@ services:
 #      # So if changes are made (or in .env file), first delete the service and volumes.
 #      # ℹ️ All the --db-* parameters can be omitted if using built-in SQLite database.
 ##      FRESHRSS_INSTALL: |-
-##        --api_enabled
+##        --api_enabledletsflyhi.com
 ##        --base_url ${BASE_URL}
 ##        --db-base ${DB_BASE}
 ##        --db-host ${DB_HOST}
@@ -1076,8 +1076,11 @@ services:
 #    image: filebrowser/filebrowser:latest
 #    volumes:
 #      - ${DATA_ROOT}:/srv
-#      - ${INSTALL_LOCATION}/media/filebrowser/filebrowser.db:/database/filebrowser.db
-#      - ${INSTALL_LOCATION}/media/filebrowser/settings.json:/config/settings.json
+##      - ${INSTALL_LOCATION}/media/filebrowser/filebrowser.db:/database/filebrowser.db
+##      - ${INSTALL_LOCATION}/media/filebrowser/settings.json:/config/settings.json
+#      - ${INSTALL_LOCATION}/media/filebrowser:/database
+#      - ${INSTALL_LOCATION}/media/filebrowser:/config
+
 #    ports:
 #      - 8020:80
 #    environment:
@@ -1214,6 +1217,100 @@ services:
 ##    restart: unless-stopped
 ##    image: clamav/clamav
 #pingvinshareend
+
+#snapdropstart
+#  snapdrop:
+#    image: lscr.io/linuxserver/snapdrop:latest
+#    container_name: snapdrop
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/snapdrop/config:/config
+#    ports:
+#      - 8008:80
+##      - 4430:443
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    environment:
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - TZ=${TIMEZONE}
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.snapdrop.rule=Host(`snapdrop.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.snapdrop.loadbalancer.server.port=80" #traefik#
+#      - "traefik.http.routers.snapdrop.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.snapdrop.tls=true" #traefik#
+#        # DNS/HTTP #traefik#
+##      - "traefik.http.routers.snapdrop.tls.domains[0].main=${HOSTNAME}"              #dnschallenge# #traefik#
+##      - "traefik.http.routers.snapdrop.tls.domains[0].sans=*.${HOSTNAME}"            #dnschallenge# #traefik#
+##      - "traefik.http.routers.snapdrop.entrypoints=websecure"                        #httpchallenge# #traefik#
+#snapdropend
+
+#todostart
+#  todo:
+#    image: prologic/todo
+#    container_naadminadminme: todo
+#    restart: always
+#    ports:
+#      - 8232:8000
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/todo:/usr/local/go/src/todo/todo.db
+#    networks:
+#      - fly-hi
+#    environment:
+#      - THEME=monokai
+#      - PUID=${USER_ID}
+#      - PGID=${GROUP_ID}
+#      - TZ=${TIMEZONE}
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.todo.rule=Host(`todo.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.todo.loadbalancer.server.port=8000" #traefik#
+#      - "traefik.http.routers.todo.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.todo.tls=true" #traefik#
+#        # DNS/HTTP #traefik#
+##      - "traefik.http.routers.todo.tls.domains[0].main=${HOSTNAME}"              #dnschallenge# #traefik#
+##      - "traefik.http.routers.todo.tls.domains[0].sans=*.${HOSTNAME}"            #dnschallenge# #traefik#
+##      - "traefik.http.routers.todo.entrypoints=websecure"                        #httpchallenge# #traefik#
+#    # exclude from automatic updates
+#      - com.centurylinklabs.watchtower.enable=false
+#      - com.centurylinklabs.watchtower.monitor-only=true
+#todoend
+
+
+#vikunjastart
+#  vikunja:
+#    image: vikunja/vikunja
+#    container_name: vikunja
+#    environment:
+#      TZ: ${TIMEZONE}
+#      PUID: ${USER_ID}
+#      PGID: ${GROUP_ID}
+#      VIKUNJA_SERVICE_JWTSECRET: ${DATABASE_PASSWORD}
+#      VIKUNJA_SERVICE_PUBLICURL: https://vikunja.${HOSTNAME}/
+#      # Note the default path is /app/vikunja/vikunja.db.
+#      # This config variable moves it to a different folder so you can use a volume and
+#      # store the database file outside the container so state is persisted even if the container is destroyed.
+#      VIKUNJA_DATABASE_PATH: /db/vikunja.db
+#    ports:
+#      - 3456:3456
+#    volumes:
+#      - ${INSTALL_LOCATION}/media/vikunja/files:/app/vikunja/files
+#      - ${INSTALL_LOCATION}/media/vikunja/db:/db
+#    restart: unless-stopped
+#    networks:
+#      - fly-hi
+#    labels: #traefik#
+#      - "traefik.enable=true" #traefik#
+#      - "traefik.http.routers.vikunja.rule=Host(`vikunja.${HOSTNAME}`)" #traefik#
+#      - "traefik.http.services.vikunja.loadbalancer.server.port=3456" #traefik#
+#      - "traefik.http.routers.vikunja.tls.certresolver=myresolver" #traefik#
+#      - "traefik.http.routers.vikunja.tls=true" #traefik#
+#        # DNS/HTTP #traefik#
+##      - "traefik.http.routers.vikunja.tls.domains[0].main=${HOSTNAME}"              #dnschallenge# #traefik#
+##      - "traefik.http.routers.vikunja.tls.domains[0].sans=*.${HOSTNAME}"            #dnschallenge# #traefik#
+##      - "traefik.http.routers.vikunja.entrypoints=websecure"
+#vikunjastartend
 
 
 networks:

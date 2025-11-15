@@ -142,6 +142,7 @@ running_services_location() {
     print_link "ntfy"
     print_link "vaultwarden"
     print_link "homeassistant"
+    print_link "maybe"
     echo
 
     echo -e $(printf "\e[34m===== NETWORK =====\e[0m")
@@ -190,10 +191,13 @@ running_services_location() {
     print_link "nextcloud"
     print_link "filebrowser"
     print_link "joplin"
+    print_link "todo"
+    print_link "vikunja"
     print_link "freshrss"
     print_link "mealie"
     print_link "privatebin"
     print_link "pingvinshare"
+    print_link "snapdrop"
     echo
 
     echo -e $(printf "\e[34m===== STARRS =====\e[0m")
@@ -223,7 +227,8 @@ running_services_location() {
     print_link "readarr"
     print_link "prowlarr"
     print_link "bazarr"
-    print_link "tubesync"
+    print_link "pinchflat"
+    print_link "ytdl-sub"
     echo
     send_message_in_green "Use 'fly-hi help' to see how to use the script"
     echo
@@ -241,7 +246,7 @@ echo "- Heimdall       - Keep your services organized on a nice Dashboard (https
 send_message_in_purple "System info and management"
 echo "- CockpitProject - System Management Tool (https://cockpit-project.org)"
 echo "- Watchtower     - Keep your docker containers up to date! (https://github.com/containrrr/watchtower)"
-echo "- Portainer      - Keep your docker containers in check! (https://www.portainer.io/)"
+echo "- Portainer      - K    print_link "pinchflat"eep your docker containers in check! (https://www.portainer.io/)"
 echo "- Netdata        - Distributed real-time, health monitoring platform for systems, hardware, containers & applications, collecting metrics (https://www.netdata.cloud/)"
 echo "- Glances        - System Information (https://nicolargo.github.io/glances/)"
 echo "- Uptime-Kuma    - Real time monitoring of your services (https://github.com/louislam/uptime-kuma)"
@@ -257,6 +262,7 @@ send_message_in_purple "Miscellaneous"
 echo "- Ntfy           - Beautiful push notification server for docker services, ssh, cronjobs etc. (https://docs.ntfy.sh/)"
 echo "- Vaultwarden    - Password Manager (https://hub.docker.com/r/vaultwarden/server)"
 echo "- HomeAssistant  - Open source home automation that puts local control and privacy first (https://www.home-assistant.io/)"
+echo "- Maybe          - The OS for your personal finances (https://github.com/maybe-finance/maybe)"
 }
 running_services_network() {
 send_message_in_cyan "------------------"
@@ -303,12 +309,15 @@ echo "- Stirling-PDF    - Your locally hosted one-stop-shop for all your PDF nee
 echo "- Filebrowser     - Nice WebUI for accessing and managing your files (https://filebrowser.org/)"
 echo "- Samba Server    - Samba can be use as a Network Attached Storage which can be mounted on your other devices like KODI, PC, Phones etc."
 echo "- Nextcloud       - Popular Open Source Google Cloud alternative (https://nextcloud.com/)"
-send_message_in_purple "Miscellaneous"
+echo "- Pingvinshare    - Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer (https://github.com/stonith404/pingvin-share)"
+send_message_in_purple "Notes Management"
 echo "- Joplin-Server   - Nice and very popular Notes-taking app (https://joplinapp.org/)"
+echo "- Todo            - todo is a self-hosted todo web app that lets you keep track of your todos in a easy and minimal way (https://hub.docker.com/r/prologic/todo)"
+echo "- Vikunja         - Plan your projects with the elegance of a sloth on a sunny day (https://vikunja.io/)"
+echo "- PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)"
+send_message_in_purple "Miscellaneous"
 echo "- FreshRSS        - Nice RSS agregator (https://github.com/FreshRSS/FreshRSS/tree/edge/Docker#docker-compose)"
 echo "- Mealie          - A self-hosted recipe manager and meal planner (https://docs.mealie.io/)"
-echo "- PrivateBin      - A pastebin allows users to share plain text through the web for a certain period of time(https://github.com/gabrielesh/PrivateBin)"
-echo "- Pingvinshare    - Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer (https://github.com/stonith404/pingvin-share)"
 }
 running_services_download() {
 send_message_in_cyan "-------------------"
@@ -324,7 +333,7 @@ send_message_in_purple "Torrents"
 echo "- Prowlarr    - Indexer aggregator for Sonarr and Radarr (https://github.com/Prowlarr/Prowlarr)"
 echo "- qBittorrent - Does the actual download...(https://www.qbittorrent.org/)"
 send_message_in_purple "Youtube"
-echo "- Tubesync    - Manage your favorite Youtube Channels (https://github.com/meeb/tubesync)"
+echo "- Pinchflat    - Manage your favorite Youtube Channels (https://github.com/kieraneglin/pinchflat)"
 echo "- Ytdl-sub    - Automate downloading and metadata generation with YoutubeDL (https://github.com/jmbannon/ytdl-sub)"
 echo
 echo
