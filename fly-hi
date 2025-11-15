@@ -65,7 +65,8 @@ if [[ $option == "restart" ]]; then
         $dc_management stop && $dc_management up -d
         $dc_network stop && $dc_network up -d
         $dc_media stop && $dc_media up -d
-        $dc_starrs stop && $dc_starrs up -d
+#        $dc_starrs stop && $dc_starrs up -d
+        $dc_starrs stop && $dc_starrs rm -f qbittorrent && $dc_starrs rm -f qbittorrentpub && $dc_starrs up -d
     else
         case $compose_file in
             "media")
@@ -129,7 +130,8 @@ if [[ $option == "start" ]]; then
         $dc_management up -d
         $dc_network up -d
         $dc_media up -d
-        $dc_starrs up -d
+        $dc_starrs stop qbittorrent qbittorrentpub && $dc_starrs rm -f qbittorrent && $dc_starrs rm -f qbittorrentpub && $dc_starrs up -d
+#        $dc_starrs up -d
     else
         case $compose_file in
             "media")
